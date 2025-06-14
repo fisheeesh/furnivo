@@ -1,6 +1,6 @@
-import { Button } from "./components/ui/button";
+import { Button } from "../components/ui/button";
 
-export default function App() {
+export default function Home() {
   return (
     <div>
       <Button variant='default'>Click Me</Button>

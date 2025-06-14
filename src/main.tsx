@@ -1,8 +1,8 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
 import './index.css'
+import RouterDel from './route'
+// import Router from './router/index.tsx'
 
 createRoot(document.getElementById('root')!).render(
-
-  <App />
+  <RouterDel />
 )
