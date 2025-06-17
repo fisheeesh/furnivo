@@ -3,14 +3,10 @@ import type { MainNavItem } from "@/types"
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
-    SheetClose,
     SheetContent,
-    SheetDescription,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+    SheetTrigger
 } from "@/components/ui/sheet"
+import { Icons } from "../icons"
 
 interface MainNavigationProps {
     items?: MainNavItem[]
@@ -18,18 +14,17 @@ interface MainNavigationProps {
 
 export default function MobileNavigation({ items }: MainNavigationProps) {
     return (
-        <Sheet>
-            <SheetTrigger asChild>
-                <Button variant="outline">Open</Button>
-            </SheetTrigger>
-            <SheetContent side="left">
-                <SheetHeader>
-                    <SheetTitle>Edit profile</SheetTitle>
-                    <SheetDescription>
-                        Make changes to your profile here. Click save when you&apos;re done.
-                    </SheetDescription>
-                </SheetHeader>
-            </SheetContent>
-        </Sheet>
+        <div className="lg:hidden">
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon" className="ml-4">
+                        <Icons.menu aria-hidden="true" className="size-7" />
+                        <span className="sr-only">Toggle Menu</span>
+                    </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="pl-1 pr-0 pt-9">
+                </SheetContent>
+            </Sheet>
+        </div>
     )
 }
