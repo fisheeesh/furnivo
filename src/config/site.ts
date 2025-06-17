@@ -8,7 +8,6 @@ const links = {
 export const siteConfig = {
     name: "Furniture Shop",
     description: "A Furniture Shopp build with react router.",
-    links,
     mainNav: [
         {
             title: "Products",
