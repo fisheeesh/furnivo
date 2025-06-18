@@ -1,4 +1,5 @@
 import { BiMenuAltLeft } from "react-icons/bi";
+import { FaPaperPlane } from "react-icons/fa";
 
 export type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -9,5 +10,6 @@ export const Icons = {
         </svg>
     ),
     // home: HomeIcon,
-    menu: BiMenuAltLeft
+    menu: BiMenuAltLeft,
+    paperPlane: FaPaperPlane
 }

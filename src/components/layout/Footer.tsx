@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { Icons } from "../Icons";
 import { siteConfig } from "@/config/site";
+import NewsLetterForm from "../NewsLetter";
 
 export default function Footer() {
     return (
@@ -34,6 +35,9 @@ export default function Footer() {
                                 </div>
                             ))
                         }
+                    </section>
+                    <section>
+                        <NewsLetterForm />
                     </section>
                 </section>
             </div>
