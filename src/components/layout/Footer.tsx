@@ -36,7 +36,8 @@ export default function Footer() {
                             ))
                         }
                     </section>
-                    <section>
+                    <section className="space-y-4">
+                        <h4 className="font-medium">Subscribe to our newsletter</h4>
                         <NewsLetterForm />
                     </section>
                 </section>

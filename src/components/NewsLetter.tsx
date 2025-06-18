@@ -1,18 +1,20 @@
+
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { useForm, type ControllerRenderProps, type SubmitHandler } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
+    FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Icons } from "./Icons"
+import { Loader } from "lucide-react"
 
 const emailSchema = z.object({
     email: z.string().email({
@@ -28,30 +30,43 @@ export default function NewsLetterForm() {
         resolver: zodResolver(emailSchema)
     })
 
-    const onSubmit: SubmitHandler<z.infer<typeof emailSchema>> = (values) => {
-        console.log(values)
+    const onSubmit: SubmitHandler<z.infer<typeof emailSchema>> = async () => {
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        form.reset()
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full" autoComplete="off">
                 <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email Address</FormLabel>
+                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof emailSchema>, "email"> }) => (
+                        <FormItem className="relative space-y-0">
+                            <FormLabel className="sr-only">Email Address</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email" {...field} />
+                                <Input
+                                    className="pr-12"
+                                    disabled={form.formState.isSubmitting}
+                                    placeholder="furniture@gmail.com"
+                                    {...field}
+                                />
                             </FormControl>
-                            <FormDescription>
-                                We do not share you email address.
-                            </FormDescription>
                             <FormMessage />
+                            <Button
+                                className="absolute top-[4px] right-[3.5px] size-7 z-20"
+                                size='icon'
+                                disabled={form.formState.isSubmitting}>
+                                {
+                                    form.formState.isSubmitting ?
+                                        <Loader className="size-3 animate-spin" aria-hidden="true" /> :
+                                        <Icons.paperPlane className="size-3" aria-hidden="true" />
+                                }
+                                <span className="sr-only">Join newsletter</span>
+                            </Button>
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
             </form>
         </Form>
     )
