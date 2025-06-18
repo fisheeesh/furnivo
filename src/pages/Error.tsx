@@ -1,3 +1,4 @@
+import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,7 @@ export default function Error() {
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="mx-auto flex flex-1 items-center">
-                <Card className="w-[350px] md:w-[500px]">
+                <Card className="w-[350px] md:w-[500px] lg:w-[500px]">
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl">Oops!</CardTitle>
                         <CardDescription className="text-destructive">
@@ -28,6 +29,7 @@ export default function Error() {
                     </CardFooter>
                 </Card>
             </main>
+            <Footer />
         </div>
     )
 }
