@@ -37,7 +37,7 @@ export default function NewsLetterForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full" autoComplete="off">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid w-full pr-8 lg:pr-0" autoComplete="off">
                 <FormField
                     control={form.control}
                     name="email"
