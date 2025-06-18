@@ -1,8 +1,11 @@
-import ContactPage from '@/pages/Contact'
-import HomePage from '@/pages/Home'
 import { createBrowserRouter, RouterProvider } from 'react-router'
+import HomePage from '@/pages/Home'
+import AboutPage from '@/pages/About'
 import RootLayout from './pages/RootLayout'
 import ErrorPage from './pages/Error'
+import BlogPage from './pages/blogs/Blog'
+import BlogDetailPage from './pages/blogs/BlogDetail'
+import BlogRootLayout from './pages/blogs/BlogRootLayout'
 
 export default function Router() {
 
@@ -17,9 +20,24 @@ export default function Router() {
                     Component: HomePage,
                 },
                 {
-                    path: 'contact',
-                    Component: ContactPage
-                }
+                    path: 'about',
+                    Component: AboutPage
+                },
+                {
+                    path: 'blogs',
+                    Component: BlogRootLayout,
+                    children: [
+                        {
+                            index: true,
+                            Component: BlogPage
+                        },
+                        {
+                            path: ':postId',
+                            Component: BlogDetailPage
+                        }
+                    ]
+                },
+
             ]
         },
     ])
