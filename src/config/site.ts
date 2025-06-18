@@ -1,7 +1,7 @@
 const links = {
     x: "https://twitter.com/sample",
-    github: "https://github.com/sample/furniture",
-    githubAccount: "https://github.com/sample",
+    github: "https://github.com/fisheeesh/furniture",
+    githubAccount: "https://github.com/fisheeesh",
     discord: "https://discord.com/users/sample",
 };
 
