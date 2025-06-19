@@ -5,8 +5,8 @@ import NewsLetterForm from "../NewsLetter";
 
 export default function Footer() {
     return (
-        <footer className="w-full border-t ml-4 lg:ml-0">
-            <div className="mx-auto container pb-8 pt-6 lg:py-6 px-4">
+        <footer className="w-full border-t px-4 md:px-0">
+            <div className="mx-auto container pb-8 pt-6 lg:py-6">
                 <section className="flex flex-col xl:flex-row gap-10 lg:gap-20 lg:justify-between">
                     <section>
                         <Link to='/' className="flex items-center space-x-2">

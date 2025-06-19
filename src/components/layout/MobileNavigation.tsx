@@ -37,7 +37,7 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
         <div className="lg:hidden">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="ml-4">
+                    <Button variant="ghost" size="icon" className="">
                         <Icons.menu aria-hidden="true" className="size-7" />
                         <span className="sr-only">Toggle Menu</span>
                     </Button>
