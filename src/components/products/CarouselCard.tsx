@@ -1,7 +1,6 @@
-import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
+import * as React from "react"
 
-import { Card, CardContent } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
@@ -9,28 +8,44 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import type { Product } from "@/types"
+import { Link } from "react-router"
 
-export default function CarouselCard() {
+interface ProductProps {
+    products: Product[]
+}
+
+export default function CarouselCard({ products }: ProductProps) {
     const plugin = React.useRef(
-        Autoplay({ delay: 2000, stopOnInteraction: true })
+        Autoplay({ delay: 300, stopOnInteraction: true })
     )
 
     return (
         <Carousel
             plugins={[plugin.current]}
-            className="w-full max-w-xs"
+            className="w-full"
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
         >
             <CarouselContent className="-ml-1">
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
-                        <div className="p-1">
-                            <Card>
-                                <CardContent className="flex aspect-square items-center justify-center p-6">
-                                    <span className="text-2xl font-semibold">{index + 1}</span>
-                                </CardContent>
-                            </Card>
+                {products.map((product) => (
+                    <CarouselItem
+                        key={product.id}
+                        className="pl-1 lg:basis-1/3">
+                        <div className="p-4 flex lg:px-4 gap-4">
+                            <img
+                                src={product.images[0]}
+                                alt={product.name}
+                                className="size-28 rounded-md"
+                            />
+                            <div className="">
+                                <h3 className="text-sm font-bold">{product.name}</h3>
+                                <p className="my-2 text-sm text-gray-600">{product.description}</p>
+                                <Link
+                                    className="text-sm font-semibold text-own hover:underline"
+                                    to={`/products/${product.id}`}
+                                >Read More</Link>
+                            </div>
                         </div>
                     </CarouselItem>
                 ))}

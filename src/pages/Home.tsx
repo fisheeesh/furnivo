@@ -1,6 +1,7 @@
-import { CarouselCard } from '@/components/products/CarouselCard'
+import CarouselCard from '@/components/products/CarouselCard'
 import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
+import { products } from '@/data/products'
 import { Link } from 'react-router'
 
 
@@ -27,7 +28,7 @@ export default function Home() {
         {/* Image Section */}
         <img src={Couch} alt="couch" className='w-full lg:w-3/5' />
       </div>
-      <CarouselCard />
+      <CarouselCard products={products} />
     </div>
   )
 }
