@@ -4,9 +4,9 @@ import { Outlet } from "react-router";
 
 export default function RootLayout() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen overflow-hidden">
             <Header />
-            <main className="flex-1">
+            <main className="flex-1 mt-16">
                 <Outlet />
             </main>
             <Footer />
