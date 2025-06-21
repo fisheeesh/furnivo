@@ -1,3 +1,4 @@
+import RichTextRender from "@/components/blogs/RichTextRender"
 import { Icons } from "@/components/Icons"
 import { Button } from "@/components/ui/button"
 import { posts } from "@/data/posts"
@@ -28,7 +29,7 @@ export default function BlogDetail() {
                                 <h3 className="font-[400] my-6">{post.content}</h3>
                                 <img src={post.image} alt={post.title} className="w-full rounded-xl" />
 
-                                <p>{post.body}</p>
+                                <RichTextRender content={post.body} className="my-8" />
 
                                 <div className="mb-12 space-x-2">
                                     {

@@ -25,7 +25,7 @@ export default function Home() {
             functionality, comfort, and aesthietic appeal.
           </p>
           <div className=''>
-            <Button asChild className='mr-2 rounded-full bg-orange-300 px-8 py-6 font-bold'>
+            <Button asChild className='mr-2 rounded-full bg-orange-300  px-8 py-6 font-bold'>
               <Link to="#">Shop Now</Link>
             </Button>
             <Button variant='outline' asChild className='rounded-full px-8 py-6 text-own font-bold'>
