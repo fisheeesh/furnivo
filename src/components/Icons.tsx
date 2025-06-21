@@ -1,7 +1,7 @@
 import { BiMenuAltLeft } from "react-icons/bi";
 import { FaPaperPlane } from "react-icons/fa";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Layers } from "lucide-react";
 
 export type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -14,5 +14,6 @@ export const Icons = {
     menu: BiMenuAltLeft,
     paperPlane: FaPaperPlane,
     exclamation: BsExclamationTriangle,
-    arrowLeft: ArrowLeftIcon
+    arrowLeft: ArrowLeftIcon,
+    layers: Layers
 }

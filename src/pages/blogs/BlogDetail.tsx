@@ -46,8 +46,24 @@ export default function BlogDetail() {
                         )
                     }
                 </section>
-                <section className="w-full lg:w-1/4 lg:mt-24">
-                    Other
+                <section className="w-full lg:w-1/4 lg:mt-24 mb-4 lg:mb-0">
+                    <div className="flex items-center mb-8 gap-2 font-semibold">
+                        <Icons.layers />
+                        <h3 className="">Other Blog Posts</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1">
+                        {
+                            posts.map(post => (
+                                <Link to={`/blogs/${post.id}`} key={post.id} className="mb-6 flex items-start gap-2">
+                                    <img src={post.image} alt={post.title} className="w-1/4 rounded" />
+                                    <div className="w-3/4 text-sm font-[500] text-muted-foreground">
+                                        <p className="line-clamp-2">{post.content}</p>
+                                        <i>See More</i>
+                                    </div>
+                                </Link>
+                            ))
+                        }
+                    </div>
                 </section>
             </section>
         </div>
