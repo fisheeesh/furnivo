@@ -1,5 +1,6 @@
 import BlogCard from '@/components/blogs/BlogCard'
 import CarouselCard from '@/components/products/CarouselCard'
+import ProductCard from '@/components/products/ProductCard'
 import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
 import { posts } from '@/data/posts'
@@ -38,6 +39,12 @@ export default function Home() {
       </div>
       {/* Carousel */}
       <CarouselCard products={products} />
+      <Title title='Featured Products' href='/products' sideText='View All Products' />
+      {
+        products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))
+      }
       <Title title='Recent Blog' href='/blogs' sideText='View All Posts' />
       <BlogCard posts={posts.slice(0, 3)} />
     </div>

@@ -6,6 +6,9 @@ import ErrorPage from './pages/Error'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import BlogRootLayout from './pages/blogs/BlogRootLayout'
+import ProductRootLayout from './pages/products/ProductRootLayout'
+import ProductPage from './pages/products/Product'
+import ProductDetailPage from './pages/products/ProductDetail'
 
 export default function Router() {
 
@@ -37,7 +40,20 @@ export default function Router() {
                         }
                     ]
                 },
-
+                {
+                    path: 'products',
+                    Component: ProductRootLayout,
+                    children: [
+                        {
+                            index: true,
+                            Component: ProductPage
+                        },
+                        {
+                            path: ':productId',
+                            Component: ProductDetailPage
+                        }
+                    ]
+                },
             ]
         },
     ])
