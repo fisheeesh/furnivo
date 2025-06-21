@@ -6,7 +6,7 @@ export default function RootLayout() {
     return (
         <div className="flex flex-col min-h-screen overflow-hidden">
             <Header />
-            <main className="flex-1 mt-16 px-4 md:px-0">
+            <main className="flex-1 mt-16 px-4">
                 <Outlet />
             </main>
             <Footer />

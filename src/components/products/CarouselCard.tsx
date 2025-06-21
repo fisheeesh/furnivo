@@ -17,7 +17,7 @@ interface ProductProps {
 
 export default function CarouselCard({ products }: ProductProps) {
     const plugin = React.useRef(
-        Autoplay({ delay: 300, stopOnInteraction: true })
+        Autoplay({ delay: 1000, stopOnInteraction: true })
     )
 
     return (
