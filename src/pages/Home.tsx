@@ -40,11 +40,13 @@ export default function Home() {
       {/* Carousel */}
       <CarouselCard products={products} />
       <Title title='Featured Products' href='/products' sideText='View All Products' />
-      {
-        products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))
-      }
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+        {
+          products.slice(0, 4).map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        }
+      </div>
       <Title title='Recent Blog' href='/blogs' sideText='View All Posts' />
       <BlogCard posts={posts.slice(0, 3)} />
     </div>

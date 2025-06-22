@@ -1,6 +1,4 @@
 import { Icons } from "@/components/Icons";
-import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -14,7 +12,7 @@ import { Link } from "react-router";
 export default function Error() {
     return (
         <div className="flex flex-col min-h-screen overflow-hidden">
-            <Header />
+            {/* <Header /> */}
             <main className="mx-auto flex flex-1 items-center my-32">
                 <Card className="w-[350px] md:w-[500px] lg:w-[500px]">
                     <CardHeader className="grid place-items-center gap-2">
@@ -33,7 +31,7 @@ export default function Error() {
                     </CardFooter>
                 </Card>
             </main>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     )
 }
