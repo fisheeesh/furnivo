@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator"
 import { useRef } from "react"
 import { formatPrice } from "@/lib/utils"
 import Rating from "@/components/products/Rating"
+import AddToFavorite from "@/components/products/AddToFavorite"
 
 export default function ProductDetail() {
     const { productId } = useParams()
@@ -57,6 +58,7 @@ export default function ProductDetail() {
                     <p className="text-base text-muted-foreground">{product?.inventory} in stock</p>
                     <div className="flex items-center justify-between">
                         <Rating rating={Number(product?.rating)} />
+                        <AddToFavorite productId={String(product?.id)} rating={Number(product?.rating)} />
                     </div>
                 </div>
             </section>
