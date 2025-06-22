@@ -57,7 +57,7 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
                             className="w-full border-b"
                         >
                             <AccordionItem value="item-1">
-                                <AccordionTrigger className="">{items?.[0]?.title}</AccordionTrigger>
+                                <AccordionTrigger className="text-base">{items?.[0]?.title}</AccordionTrigger>
                                 <AccordionContent className="flex flex-col space-y-3 pl-2">
                                     {
                                         items?.[0].card?.map(item => (

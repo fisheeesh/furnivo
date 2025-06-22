@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { Toaster } from "@/components/ui/sonner"
 import { Outlet } from "react-router";
 
 export default function RootLayout() {
@@ -8,6 +9,7 @@ export default function RootLayout() {
             <Header />
             <main className="flex-1 mt-16 px-4">
                 <Outlet />
+                <Toaster />
             </main>
             <Footer />
         </div>
