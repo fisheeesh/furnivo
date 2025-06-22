@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import type { Product } from "@/types"
 import { Link } from "react-router"
 import { Icons } from "../Icons"
+import { formatPrice } from "@/lib/utils"
 
 interface Props {
     product: Product
@@ -20,10 +21,10 @@ export default function ProductCard({ product }: Props) {
             </Link>
             <div className="space-y-1.5 px-4 py-2">
                 <p className="line-clamp-1">{product.name}</p>
-                <div className="line-clamp-1">
-                    ${product.price}
+                <div className="line-clamp-1 text-gray-400">
+                    {formatPrice(product.price)}
                     {product.discount > 0 && (
-                        <span className="ml-2 font-extralight line-through">${product.discount}</span>
+                        <span className="ml-2 font-extralight line-through">{formatPrice(product.discount)}</span>
                     )}
                 </div>
             </div>
