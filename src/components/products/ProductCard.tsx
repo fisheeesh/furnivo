@@ -1,17 +1,17 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
+import { cn, formatPrice } from "@/lib/utils"
 import type { Product } from "@/types"
 import { Link } from "react-router"
 import { Icons } from "../Icons"
-import { formatPrice } from "@/lib/utils"
 
-interface Props {
+interface ProductProps extends React.HTMLAttributes<HTMLDivElement> {
     product: Product
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, className }: ProductProps) {
     return (
-        <div className="size-full overflow-hidden rounded-lg p-0 pb-4 border">
+        <div className={cn('size-full overflow-hidden rounded-lg p-0 pb-4 border ', className)}>
             <Link to={`/products/${product.id}`} aria-label={product.name} className="p-0">
                 <div className="p-0">
                     <AspectRatio ratio={1 / 1} className="border-b">
