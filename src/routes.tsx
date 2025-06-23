@@ -5,10 +5,10 @@ import RootLayout from './pages/RootLayout'
 import ErrorPage from './pages/Error'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
-import BlogRootLayout from './pages/blogs/BlogRootLayout'
 import ProductRootLayout from './pages/products/ProductRootLayout'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
+import { Suspense } from 'react'
 
 export default function Router() {
 
@@ -24,11 +24,14 @@ export default function Router() {
                 },
                 {
                     path: 'about',
-                    Component: AboutPage
+                    Component: AboutPage,
                 },
                 {
                     path: 'blogs',
-                    Component: BlogRootLayout,
+                    lazy: async () => {
+                        const { default: BlogRootLayout } = await import('@/pages/blogs/BlogRootLayout');
+                        return { Component: BlogRootLayout };
+                    },
                     children: [
                         {
                             index: true,
@@ -58,5 +61,9 @@ export default function Router() {
         },
     ])
 
-    return <RouterProvider router={router} />
+    return (
+        <Suspense fallback={<p>Loading...</p>}>
+            <RouterProvider router={router} />
+        </Suspense>
+    )
 }
