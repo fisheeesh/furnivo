@@ -17,6 +17,7 @@ import { useRef } from "react"
 import { formatPrice } from "@/lib/utils"
 import Rating from "@/components/products/Rating"
 import AddToFavorite from "@/components/products/AddToFavorite"
+import AddToCartForm from "@/components/products/AddToCartForm"
 
 export default function ProductDetail() {
     const { productId } = useParams()
@@ -60,6 +61,7 @@ export default function ProductDetail() {
                         <Rating rating={Number(product?.rating)} />
                         <AddToFavorite productId={String(product?.id)} rating={Number(product?.rating)} />
                     </div>
+                    <AddToCartForm sold={product?.status === 'active' ? false : true} />
                 </div>
             </section>
             <section className="space-y-6 overflow-hidden">

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, Heart, Layers, PlusIcon, Star } from "lucide-react";
+import { ArrowLeftIcon, Heart, Layers, MinusIcon, PlusIcon, Star } from "lucide-react";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { FaPaperPlane } from "react-icons/fa";
@@ -17,6 +17,7 @@ export const Icons = {
     arrowLeft: ArrowLeftIcon,
     layers: Layers,
     plus: PlusIcon,
+    minus: MinusIcon,
     star: Star,
     heart: Heart
 }
