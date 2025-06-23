@@ -2,6 +2,8 @@ import { siteConfig } from "@/config/site";
 import MainNavigation from "./MainNavigation";
 import MobileNavigation from "./MobileNavigation";
 import { ModeToggle } from "../ModeToggle";
+import AuthDropdown from "./AuthDropdown";
+import { User } from "@/data/user";
 
 export default function Header() {
     return (
@@ -11,6 +13,7 @@ export default function Header() {
                 <MobileNavigation items={siteConfig.mainNav} />
                 <div className="flex flex-1 justify-end items-center space-x-4">
                     <ModeToggle />
+                    <AuthDropdown user={User} />
                 </div>
             </nav>
         </header>

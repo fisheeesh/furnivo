@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, Heart, Layers, MinusIcon, PlusIcon, Star } from "lucide-react";
+import { ArrowLeftIcon, CreditCard, Heart, Layers, LayoutDashboard, LogOut, MinusIcon, PlusIcon, Settings, Star } from "lucide-react";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { FaPaperPlane } from "react-icons/fa";
@@ -19,5 +19,9 @@ export const Icons = {
     plus: PlusIcon,
     minus: MinusIcon,
     star: Star,
-    heart: Heart
+    heart: Heart,
+    dashbord: LayoutDashboard,
+    settings: Settings,
+    card: CreditCard,
+    exist: LogOut
 }
