@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "react-router"
 
+import google from '@/assets/google.png'
+
 export default function LoginForm({
     className,
     ...props
@@ -28,7 +30,7 @@ export default function LoginForm({
                     <form>
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-3">
-                                <Label htmlFor="phone">Phone Number</Label>
+                                <Label htmlFor="phone">Phone Number <span className="text-red-600">*</span></Label>
                                 <Input
                                     id="phone"
                                     type="email"
@@ -37,12 +39,12 @@ export default function LoginForm({
                                 />
                             </div>
                             <div className="grid gap-3">
-                                <Label htmlFor="password">Password</Label>
-                                <Input id="password" type="password" required />
+                                <Label htmlFor="password">Password <span className="text-red-600">*</span></Label>
+                                <Input id="password" type="password" placeholder="******" required />
                             </div>
                             <div className="grid gap-3">
-                                <Label htmlFor="confirm-password">Confirm Password</Label>
-                                <Input id="confirm-password" type="password" required />
+                                <Label htmlFor="confirm-password">Confirm Password <span className="text-red-600">*</span></Label>
+                                <Input id="confirm-password" type="password" placeholder="******" required />
                             </div>
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" className="w-full" asChild>
@@ -50,14 +52,17 @@ export default function LoginForm({
                                         Register
                                     </Link>
                                 </Button>
-                                <Button variant="outline" className="w-full">
-                                    Register with Google
+                                <Button variant="outline" className="w-full" asChild>
+                                    <Link to='/' className="flex items-center gap-4">
+                                        <img src={google} alt="Google" className="w-4 h-4" />
+                                        Register with Google
+                                    </Link>
                                 </Button>
                             </div>
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Alreay have an account?{" "}
-                            <Link to="/login" className="underline underline-offset-4">
+                            <Link to="/login" className="underline-offset-4 hover:underline font-bold">
                                 Login
                             </Link>
                         </div>

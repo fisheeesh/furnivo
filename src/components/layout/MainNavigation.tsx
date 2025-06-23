@@ -19,7 +19,7 @@ interface MainNavigationProps {
 
 export default function MainNavigation({ items }: MainNavigationProps) {
     return (
-        <div className="hidfden lg:flex gap-6">
+        <div className="hidden lg:flex gap-6">
             <Logo />
             <NavigationMenu viewport={false}>
                 <NavigationMenuList>

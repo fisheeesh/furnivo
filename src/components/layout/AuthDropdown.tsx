@@ -57,21 +57,21 @@ export default function AuthDropdown({ user }: UserProps) {
                 <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                         <Link to='/admin'>
-                            <Icons.dashbord className="size-4 text-black mr-1" aria-hidden="true" />
+                            <Icons.dashbord className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Dashboard
                             <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link to='/admin'>
-                            <Icons.card className="size-4 text-black mr-1" aria-hidden="true" />
+                            <Icons.card className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Billing
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link to='/admin'>
-                            <Icons.settings className="size-4 text-black mr-1" aria-hidden="true" />
+                            <Icons.settings className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Settings
                             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                         </Link>
@@ -80,7 +80,7 @@ export default function AuthDropdown({ user }: UserProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                     <Link to='/login'>
-                        <Icons.exist className="size-4 text-black mr-1" aria-hidden="true" />
+                        <Icons.exist className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                         Logout
                         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                     </Link>
