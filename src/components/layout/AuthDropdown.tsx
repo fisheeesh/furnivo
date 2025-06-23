@@ -27,7 +27,7 @@ export default function AuthDropdown({ user }: UserProps) {
     if (!user) {
         return (
             <Button asChild>
-                <Link to='/sign-in'>
+                <Link to='/login'>
                     Sign In
                     <span className="sr-only">Sign In Button</span>
                 </Link>
@@ -79,7 +79,7 @@ export default function AuthDropdown({ user }: UserProps) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link to='/sign-in'>
+                    <Link to='/login'>
                         <Icons.exist className="size-4 text-black mr-1" aria-hidden="true" />
                         Logout
                         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

@@ -5,9 +5,9 @@ import RootLayout from './pages/RootLayout'
 import ErrorPage from './pages/Error'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
-import ProductRootLayout from './pages/products/ProductRootLayout'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
+import NotFoundPage from './pages/NotFound'
 import { Suspense } from 'react'
 
 export default function Router() {
@@ -45,7 +45,10 @@ export default function Router() {
                 },
                 {
                     path: 'products',
-                    Component: ProductRootLayout,
+                    lazy: async () => {
+                        const { default: ProductRootLayout } = await import('@/pages/products/ProductRootLayout')
+                        return { Component: ProductRootLayout };
+                    },
                     children: [
                         {
                             index: true,
@@ -59,6 +62,24 @@ export default function Router() {
                 },
             ]
         },
+        {
+            path: '/login',
+            lazy: async () => {
+                const { default: LoginPage } = await import('@/pages/auth/Login')
+                return { Component: LoginPage }
+            }
+        },
+        {
+            path: '/register',
+            lazy: async () => {
+                const { default: RegisterPage } = await import('@/pages/auth/Register')
+                return { Component: RegisterPage }
+            }
+        },
+        {
+            path: '*',
+            Component: NotFoundPage
+        }
     ])
 
     return (
