@@ -12,6 +12,12 @@ import {
     CarouselContent,
     CarouselItem
 } from "@/components/ui/carousel"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Separator } from "@/components/ui/separator"
 import { useRef } from "react"
 import { formatPrice } from "@/lib/utils"
@@ -62,6 +68,20 @@ export default function ProductDetail() {
                         <AddToFavorite productId={String(product?.id)} rating={Number(product?.rating)} />
                     </div>
                     <AddToCartForm sold={product?.status === 'active' ? false : true} />
+                    <Separator className="mt-5" />
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className="w-full"
+                        defaultValue="item-1"
+                    >
+                        <AccordionItem value="item-1" className="border-none">
+                            <AccordionTrigger className="text-base">Description</AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-4 text-balance">
+                                {product?.description ?? 'No description is available for this product.'}
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </div>
             </section>
             <section className="space-y-6 overflow-hidden">
