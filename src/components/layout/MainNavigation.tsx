@@ -7,10 +7,11 @@ import {
     NavigationMenuTrigger,
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { siteConfig } from "@/config/site"
 import type { MainNavItem } from "@/types"
 import { Link } from "react-router"
 import { Icons } from "../Icons"
-import { siteConfig } from "@/config/site"
+import Logo from "../Logo"
 
 interface MainNavigationProps {
     items?: MainNavItem[]
@@ -18,12 +19,8 @@ interface MainNavigationProps {
 
 export default function MainNavigation({ items }: MainNavigationProps) {
     return (
-        <div className="hidden lg:flex gap-6">
-            <Link to='/' className="items-center flex space-x-2">
-                <Icons.logo className="size-7" aria-hidden="true" />
-                <span className="font-bold">{siteConfig.name}</span>
-                <span className="sr-only">Home</span>
-            </Link>
+        <div className="hidfden lg:flex gap-6">
+            <Logo />
             <NavigationMenu viewport={false}>
                 <NavigationMenuList>
                     {

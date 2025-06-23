@@ -1,6 +1,6 @@
-import { Link } from "react-router";
-import { Icons } from "../Icons";
 import { siteConfig } from "@/config/site";
+import { Link } from "react-router";
+import Logo from "../Logo";
 import NewsLetterForm from "../NewsLetter";
 
 export default function Footer() {
@@ -9,11 +9,7 @@ export default function Footer() {
             <div className="mx-auto container pb-8 pt-6 lg:py-6">
                 <section className="flex flex-col xl:flex-row gap-10 lg:gap-20 lg:justify-between">
                     <section>
-                        <Link to='/' className="flex items-center space-x-2">
-                            <Icons.logo className="size-7" aria-hidden="true" />
-                            <span className="font-bold">{siteConfig.name}</span>
-                            <span className="sr-only">Home</span>
-                        </Link>
+                        <Logo />
                     </section>
                     <section className="grid grid-cols-2 md:grid-cols-4 gap-10">
                         {
