@@ -1,6 +1,7 @@
-import LoginForm from '@/components/auth/LoginForm'
+import AuthForm from '@/components/auth/AuthForm'
 import Logo from '@/components/Logo'
 import banner from '@/data/images/house.webp'
+import { LogInSchema } from '@/lib/validator'
 
 export default function Login() {
     return (
@@ -9,7 +10,16 @@ export default function Login() {
             <main className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
                 <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
                     <div className="w-full max-w-[420px]">
-                        <LoginForm />
+                        {/* <LoginForm /> */}
+                        <AuthForm
+                            formType='LOGIN'
+                            schema={LogInSchema}
+                            defaultValues={{
+                                phone: '',
+                                password: ''
+                            }}
+                            onSubmit={(data) => Promise.resolve({ success: true, data })}
+                        />
                     </div>
                 </div>
                 <div className="relative hidden lg:block">

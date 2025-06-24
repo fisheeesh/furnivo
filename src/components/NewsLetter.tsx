@@ -13,26 +13,23 @@ import {
     FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Icons } from "./Icons"
 import { Loader } from "lucide-react"
-
-const emailSchema = z.object({
-    email: z.string().email({
-        message: "Please enter a valid email address",
-    }),
-})
+import { Icons } from "./Icons"
+import { NewsLetterSchema } from "@/lib/validator"
+import { toast } from "sonner"
 
 export default function NewsLetterForm() {
-    const form = useForm<z.infer<typeof emailSchema>>({
+    const form = useForm<z.infer<typeof NewsLetterSchema>>({
         defaultValues: {
             email: ''
         },
-        resolver: zodResolver(emailSchema)
+        resolver: zodResolver(NewsLetterSchema)
     })
 
-    const onSubmit: SubmitHandler<z.infer<typeof emailSchema>> = async () => {
+    const onSubmit: SubmitHandler<z.infer<typeof NewsLetterSchema>> = async () => {
         await new Promise(resolve => setTimeout(resolve, 2000))
         form.reset()
+        toast("Subscribed to newsletter")
     }
 
     return (
@@ -41,7 +38,7 @@ export default function NewsLetterForm() {
                 <FormField
                     control={form.control}
                     name="email"
-                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof emailSchema>, "email"> }) => (
+                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof NewsLetterSchema>, "email"> }) => (
                         <FormItem className="relative space-y-0">
                             <FormLabel className="sr-only">Email Address</FormLabel>
                             <FormControl>

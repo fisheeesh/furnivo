@@ -14,30 +14,22 @@ import {
 } from "@/components/ui/form"
 import type { Category } from "@/types"
 import { toast } from "sonner"
+import { ProductFilterSchema } from "@/lib/validator"
 
 interface FilterProps {
     filterList: { categories: Category[], types: Category[] }
 }
 
-const FormSchema = z.object({
-    categories: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    }),
-    types: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    }),
-})
-
 export default function ProudctFilter({ filterList }: FilterProps) {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<z.infer<typeof ProductFilterSchema>>({
+        resolver: zodResolver(ProductFilterSchema),
         defaultValues: {
             categories: [],
             types: [],
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    function onSubmit(data: z.infer<typeof ProductFilterSchema>) {
         toast.success(`You have selected ${data.categories.length} categories and ${data.types.length} types`)
     }
 
@@ -57,7 +49,7 @@ export default function ProudctFilter({ filterList }: FilterProps) {
                                     key={item.id}
                                     control={form.control}
                                     name="categories"
-                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof FormSchema>, "categories"> }) => {
+                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "categories"> }) => {
                                         return (
                                             <FormItem
                                                 key={item.id}
@@ -102,7 +94,7 @@ export default function ProudctFilter({ filterList }: FilterProps) {
                                     key={item.id}
                                     control={form.control}
                                     name="types"
-                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof FormSchema>, "types"> }) => {
+                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "types"> }) => {
                                         return (
                                             <FormItem
                                                 key={item.id}

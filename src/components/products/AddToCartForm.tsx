@@ -16,24 +16,21 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import { Icons } from "../Icons"
-
-const quantitySchema = z.object({
-    quantity: z.number().min(0)
-})
+import { QuantitySchema } from "@/lib/validator"
 
 interface AddToCartFormProps {
     sold: boolean
 }
 
 export default function AddToCartForm({ sold }: AddToCartFormProps) {
-    const form = useForm<z.infer<typeof quantitySchema>>({
+    const form = useForm<z.infer<typeof QuantitySchema>>({
         defaultValues: {
             quantity: 1
         },
-        resolver: zodResolver(quantitySchema)
+        resolver: zodResolver(QuantitySchema)
     })
 
-    const onSubmit: SubmitHandler<z.infer<typeof quantitySchema>> = async () => {
+    const onSubmit: SubmitHandler<z.infer<typeof QuantitySchema>> = async () => {
         toast("Added to cart")
     }
 
@@ -48,7 +45,7 @@ export default function AddToCartForm({ sold }: AddToCartFormProps) {
                     <FormField
                         control={form.control}
                         name="quantity"
-                        render={({ field }: { field: ControllerRenderProps<z.infer<typeof quantitySchema>, "quantity"> }) => (
+                        render={({ field }: { field: ControllerRenderProps<z.infer<typeof QuantitySchema>, "quantity"> }) => (
                             <FormItem className="space-y-0">
                                 <FormLabel className="sr-only">Quantity</FormLabel>
                                 <FormControl>
