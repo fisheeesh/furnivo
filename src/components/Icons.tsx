@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, CreditCard, Heart, Layers, LayoutDashboard, LogOut, MinusIcon, PlusIcon, Settings, Star } from "lucide-react";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane, FaRegTrashAlt } from "react-icons/fa";
 import { GiShoppingCart } from "react-icons/gi";
 
 export type IconProps = React.HTMLAttributes<SVGElement>
@@ -25,5 +25,6 @@ export const Icons = {
     settings: Settings,
     card: CreditCard,
     exist: LogOut,
-    cart: GiShoppingCart
+    cart: GiShoppingCart,
+    trash: FaRegTrashAlt
 }
