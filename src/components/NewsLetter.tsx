@@ -51,7 +51,7 @@ export default function NewsLetterForm() {
                             </FormControl>
                             <FormMessage />
                             <Button
-                                className="absolute top-[4px] right-[3.5px] size-7 z-20"
+                                className="absolute top-[4px] right-[3.5px] size-7 z-20 cursor-pointer"
                                 size='icon'
                                 disabled={form.formState.isSubmitting}>
                                 {

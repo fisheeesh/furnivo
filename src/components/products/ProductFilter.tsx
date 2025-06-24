@@ -126,7 +126,7 @@ export default function ProudctFilter({ filterList }: FilterProps) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" variant='outline'>Filter</Button>
+                <Button type="submit" variant='outline' className="cursor-pointer">Filter</Button>
             </form>
         </Form>
     )

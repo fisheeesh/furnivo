@@ -9,7 +9,7 @@ export default function BlogDetail() {
     const post = posts.find(post => post.id === postId)
 
     return (
-        <div className="container mx-auto">
+        <div className="max-w-7xl mx-auto">
             <section className="flex flex-col lg:flex-row">
                 <section className="w-full lg:w-3/4 lg:pr-16">
                     <Button variant='outline' asChild className="mb-6 mt-8">

@@ -38,7 +38,7 @@ export default function AddToCartForm({ sold }: AddToCartFormProps) {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex max-w-[260px] gap-4 flex-col">
                 <div className="flex items-center">
-                    <Button type="button" variant='outline' size='icon' className="size-8 shrink-0 rounded-r-none">
+                    <Button type="button" variant='outline' size='icon' className="size-8 shrink-0 rounded-r-none cursor-pointer">
                         <Icons.minus className="size-3" aria-hidden="true" />
                         <span className="sr-only">Remove one item</span>
                     </Button>
@@ -62,16 +62,16 @@ export default function AddToCartForm({ sold }: AddToCartFormProps) {
                             </FormItem>
                         )}
                     />
-                    <Button type="button" variant='outline' size='icon' className="size-8 shrink-0 rounded-l-none">
+                    <Button type="button" variant='outline' size='icon' className="size-8 shrink-0 rounded-l-none cursor-pointer">
                         <Icons.plus className="size-3" aria-hidden="true" />
                         <span className="sr-only">Add one item</span>
                     </Button>
                 </div>
                 <div className="flex items-center space-x-2.5">
-                    <Button disabled={sold} type="button" size='sm' className={cn(sold && 'bg-muted-foreground', "w-fit px-8 font-bold bg-own")} aria-label="Buy Now">
+                    <Button disabled={sold} type="button" size='sm' className={cn(sold && 'bg-muted-foreground', "w-fit px-8 font-bold bg-own hover:bg-own-hover cursor-pointer")} aria-label="Buy Now">
                         Buy Now
                     </Button>
-                    <Button size='sm' type="submit" variant={sold ? 'default' : 'outline'} className="w-fit px-8 font-semibold" aria-label="Add to Cart">
+                    <Button size='sm' type="submit" variant={sold ? 'default' : 'outline'} className="w-fit px-8 font-semibold cursor-pointer" aria-label="Add to Cart">
                         Add to Cart
                     </Button>
                 </div>

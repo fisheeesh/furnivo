@@ -16,17 +16,17 @@ export default function Home() {
   )
 
   return (
-    <div className='container mx-auto'>
-      <div className='flex flex-col lg:flex-row lg:justify-between'>
+    <div className='max-w-7xl mx-auto'>
+      <div className='flex flex-col min-[1055px]:flex-row min-[1055px]:justify-between min-[1055px]:gap-2'>
         {/* Text Sectioin */}
-        <div className='text-center lg:text-left my-8 lg:mt-[5.5rem] lg:mb-0 lg:w-2/5'>
-          <h1 className='text-4xl font-extrabold mb-4 lg:mb-8 lg:text-6xl text-own'>Modern Interior Design Studio</h1>
-          <p className='mb-6 lg:mb-8'>
+        <div className='text-center min-[1055px]:text-left my-8 min-[1055px]:mt-[5.5rem] min-[1055px]:mb-0 min-[1055px]:w-2/5'>
+          <h1 className='text-4xl font-extrabold mb-4 min-[1055px]:mb-8 min-[1055px]:text-5xl xl:text-6xl text-own'>Modern Interior Design Studio</h1>
+          <p className='mb-6 min-[1055px]:mb-8 max-w-md mx-auto min-[1055px]:mx-0'>
             Furniture is an essential component of any living space, providing
             functionality, comfort, and aesthietic appeal.
           </p>
           <div className=''>
-            <Button asChild className='mr-2 rounded-full bg-orange-300  px-8 py-6 font-bold'>
+            <Button asChild className='mr-2 rounded-full bg-orange-300 hover:bg-orange-400/80 dark:hover:bg-orange-300/80  px-8 py-6 font-bold'>
               <Link to="#">Shop Now</Link>
             </Button>
             <Button variant='outline' asChild className='rounded-full px-8 py-6 text-own font-bold'>
@@ -35,7 +35,7 @@ export default function Home() {
           </div>
         </div>
         {/* Image Section */}
-        <img src={Couch} alt="couch" className='w-full lg:w-3/5' />
+        <img src={Couch} alt="couch" className='w-full min-[1055px]:w-3/5' />
       </div>
       {/* Carousel */}
       <CarouselCard products={products} />

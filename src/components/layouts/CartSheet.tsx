@@ -24,7 +24,7 @@ export default function CartSheet() {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline" size='icon' className="relative" aria-label="Open Cart">
+                <Button variant="outline" size='icon' className="relative cursor-pointer" aria-label="Open Cart">
                     <Badge variant='destructive' className="h-5 min-w-5 absolute -top-2 -right-2 rounded-full px-1">
                         {itemCount}
                     </Badge>
@@ -35,7 +35,7 @@ export default function CartSheet() {
                 <SheetHeader className="pb-0">
                     <SheetTitle className="text-center text-2xl">Cart - {itemCount}</SheetTitle>
                 </SheetHeader>
-                <Separator className="my-4" />
+                <Separator className="mt-4 mb-2" />
                 {
                     cartItems.length > 0 ? (
                         <>

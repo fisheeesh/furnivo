@@ -34,7 +34,7 @@ export default function ProductDetail() {
     )
 
     return (
-        <div className="container mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
             <Button asChild variant='outline' className="mt-8">
                 <Link to='/products' className="flex items-center gap-2">
                     <Icons.arrowLeft /> All Products

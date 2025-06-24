@@ -34,7 +34,7 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
     if (!collapsed) return null
 
     return (
-        <div className="lg:hidden">
+        <div className="md:hidden">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="ghost" size="icon" className="">

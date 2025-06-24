@@ -5,6 +5,7 @@
 
 @theme{
   --color-own: #3b5d50;
+  --color-own-hover: #2f4a41;
 }
 
 @theme inline {

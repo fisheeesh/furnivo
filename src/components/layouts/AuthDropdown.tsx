@@ -40,7 +40,7 @@ export default function AuthDropdown({ user }: UserProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="secondary" className="size-8 rounded-full">
+                <Button variant="secondary" className="size-8 rounded-full cursor-pointer">
                     <Avatar className="size-8">
                         <AvatarImage src={user.imageUrl} alt={initialName} />
                         <AvatarFallback>{initialName}</AvatarFallback>
@@ -55,21 +55,21 @@ export default function AuthDropdown({ user }: UserProps) {
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuGroup>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="cursor-pointer">
                         <Link to='/admin'>
                             <Icons.dashbord className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Dashboard
                             <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="cursor-pointer">
                         <Link to='/admin'>
                             <Icons.card className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Billing
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="cursor-pointer">
                         <Link to='/admin'>
                             <Icons.settings className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                             Settings
@@ -78,7 +78,7 @@ export default function AuthDropdown({ user }: UserProps) {
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild className="cursor-pointer">
                     <Link to='/login'>
                         <Icons.exist className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                         Logout

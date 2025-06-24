@@ -11,7 +11,7 @@ interface FavoriteProps {
 
 export default function AddToFavorite({ productId, rating, className, ...props }: FavoriteProps) {
     return (
-        <Button variant='secondary' size='icon' className={cn('size-8 shrink-0', className)} {...props}>
+        <Button variant='secondary' size='icon' className={cn('size-8 shrink-0 cursor-pointer', className)} {...props}>
             <Icons.heart className="size-4" />
         </Button>
     )

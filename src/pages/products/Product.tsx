@@ -5,7 +5,7 @@ import { filterList, products } from "@/data/products";
 
 export default function Product() {
     return (
-        <div className="container mx-auto">
+        <div className="max-w-7xl mx-auto">
             <section className="flex flex-col lg:flex-row">
                 <section className="my-8 w-full lg:w-1/5">
                     <ProductFilter filterList={filterList} />
