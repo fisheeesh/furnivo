@@ -2,6 +2,7 @@ import { ArrowLeftIcon, CreditCard, Heart, Layers, LayoutDashboard, LogOut, Minu
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { FaPaperPlane } from "react-icons/fa";
+import { GiShoppingCart } from "react-icons/gi";
 
 export type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -23,5 +24,6 @@ export const Icons = {
     dashbord: LayoutDashboard,
     settings: Settings,
     card: CreditCard,
-    exist: LogOut
+    exist: LogOut,
+    cart: GiShoppingCart
 }

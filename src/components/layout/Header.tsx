@@ -4,6 +4,7 @@ import MobileNavigation from "./MobileNavigation";
 import { ModeToggle } from "../ModeToggle";
 import AuthDropdown from "./AuthDropdown";
 import { User } from "@/data/user";
+import CartSheet from "./CartSheet";
 
 export default function Header() {
     return (
@@ -12,6 +13,7 @@ export default function Header() {
                 <MainNavigation items={siteConfig.mainNav} />
                 <MobileNavigation items={siteConfig.mainNav} />
                 <div className="flex flex-1 justify-end items-center space-x-4">
+                    <CartSheet />
                     <ModeToggle />
                     <AuthDropdown user={User} />
                 </div>

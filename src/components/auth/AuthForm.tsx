@@ -10,7 +10,8 @@ import { useForm, type ControllerRenderProps, type DefaultValues, type Path, typ
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LOGIN, LOGIN_SUBTITLE, LOGIN_TITLE, REGISTER, REGISTER_SUBTITLE, REGISTER_TITLE } from "@/lib/constants";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Loader } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { useState } from "react";
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {
     formType: "LOGIN" | "REGISTER",
@@ -28,6 +29,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
 }: AuthFormProps<T>) {
     type FormData = z.infer<T>
     const naviate = useNavigate()
+    const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
 
     const form = useForm({
         defaultValues: defaultValues as DefaultValues<FormData>,
@@ -76,13 +78,28 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                                         </Link>}
                                                     </FormLabel>
                                                     <FormControl>
-                                                        <Input
-                                                            disabled={form.formState.isSubmitting}
-                                                            placeholder={field.name === 'phone' ? '09924****' : '******'}
-                                                            type={field.name === 'password' ? 'password' : 'text'}
-                                                            className=""
-                                                            {...field}
-                                                        />
+                                                        <div className="relative">
+                                                            <Input
+                                                                disabled={form.formState.isSubmitting}
+                                                                placeholder={field.name === 'phone' ? '09924****' : '******'}
+                                                                type={(field.name === 'password' || field.name === 'confirmPassword') && showPassword[field.name] ? 'text' : (field.name === 'password' || field.name === 'confirmPassword') ? 'password' : 'text'}
+                                                                {...field}
+                                                            />
+                                                            {(field.name === 'password' || field.name === 'confirmPassword') && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        setShowPassword(prev => ({
+                                                                            ...prev,
+                                                                            [field.name]: !prev[field.name]
+                                                                        }))
+                                                                    }
+                                                                    className="absolute right-3 top-2.5 text-muted-foreground"
+                                                                >
+                                                                    {showPassword[field.name] ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
