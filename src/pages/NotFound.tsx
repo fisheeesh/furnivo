@@ -7,9 +7,12 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
+import useTitle from "@/hooks/useTitle";
 import { Link } from "react-router";
 
 export default function NotFound() {
+    useTitle('Not Found')
+
     return (
         <div className="flex flex-col min-h-screen overflow-hidden">
             {/* <Header /> */}

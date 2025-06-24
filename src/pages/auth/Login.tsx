@@ -1,9 +1,12 @@
 import AuthForm from '@/components/auth/AuthForm'
 import Logo from '@/components/Logo'
 import banner from '@/data/images/house.webp'
+import useTitle from '@/hooks/useTitle'
 import { LogInSchema } from '@/lib/validator'
 
 export default function Login() {
+    useTitle('Login')
+
     return (
         <section className='relative'>
             <Logo className='fixed top-6 left-8' />

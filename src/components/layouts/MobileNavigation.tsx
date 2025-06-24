@@ -37,7 +37,7 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
         <div className="md:hidden">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="">
+                    <Button variant="ghost" size="icon" className=" cursor-pointer">
                         <Icons.menu aria-hidden="true" className="size-7" />
                         <span className="sr-only">Toggle Menu</span>
                     </Button>
@@ -57,12 +57,12 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
                             className="w-full border-b"
                         >
                             <AccordionItem value="item-1">
-                                <AccordionTrigger className="text-base">{items?.[0]?.title}</AccordionTrigger>
+                                <AccordionTrigger className="text-base cursor-pointer">{items?.[0]?.title}</AccordionTrigger>
                                 <AccordionContent className="flex flex-col space-y-3 pl-2">
                                     {
                                         items?.[0].card?.map(item => (
                                             <SheetClose asChild key={item.href}>
-                                                <Link to={String(item.href)} className="text-muted-foreground">
+                                                <Link to={String(item.href)} className="text-muted-foreground hover:text-foreground duration-200">
                                                     {item.title}
                                                 </Link>
                                             </SheetClose>

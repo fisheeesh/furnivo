@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CreditCard, Heart, Layers, LayoutDashboard, LogOut, MinusIcon, PlusIcon, Settings, Star } from "lucide-react";
+import { ArrowLeftIcon, CreditCard, Heart, Layers, LayoutDashboard, LogOut, MinusIcon, PlusIcon, Settings, Star, ArrowUp } from "lucide-react";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { FaPaperPlane, FaRegTrashAlt } from "react-icons/fa";
@@ -26,5 +26,6 @@ export const Icons = {
     card: CreditCard,
     exist: LogOut,
     cart: GiShoppingCart,
-    trash: FaRegTrashAlt
+    trash: FaRegTrashAlt,
+    up: ArrowUp
 }

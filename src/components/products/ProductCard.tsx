@@ -37,7 +37,7 @@ export default function ProductCard({ product, className }: ProductProps) {
                             </Button>
                         ) :
                         (
-                            <Button size='sm' aria-label="Add to Cart Button" className="w-full cursor-pointer h-10 rounded-sm font-bold bg-own hover:bg-own-hover">
+                            <Button size='sm' aria-label="Add to Cart Button" className="w-full cursor-pointer text-white h-10 rounded-sm font-bold bg-own hover:bg-own-hover">
                                 <Icons.plus /> Add to Cart
                             </Button>
                         )

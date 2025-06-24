@@ -1,8 +1,11 @@
 import AuthForm from "@/components/auth/AuthForm";
 import Logo from "@/components/Logo";
+import useTitle from "@/hooks/useTitle";
 import { RegisterSchema } from "@/lib/validator";
 
 export default function Register() {
+    useTitle('Register')
+
     return (
         <section className="relative">
             <Logo className='fixed top-6 left-8' />

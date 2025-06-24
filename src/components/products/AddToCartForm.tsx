@@ -68,7 +68,7 @@ export default function AddToCartForm({ sold }: AddToCartFormProps) {
                     </Button>
                 </div>
                 <div className="flex items-center space-x-2.5">
-                    <Button disabled={sold} type="button" size='sm' className={cn(sold && 'bg-muted-foreground', "w-fit px-8 font-bold bg-own hover:bg-own-hover cursor-pointer")} aria-label="Buy Now">
+                    <Button disabled={sold} type="button" size='sm' className={cn(sold && 'bg-muted-foreground', "w-fit px-8 font-bold bg-own text-white hover:bg-own-hover cursor-pointer")} aria-label="Buy Now">
                         Buy Now
                     </Button>
                     <Button size='sm' type="submit" variant={sold ? 'default' : 'outline'} className="w-fit px-8 font-semibold cursor-pointer" aria-label="Add to Cart">

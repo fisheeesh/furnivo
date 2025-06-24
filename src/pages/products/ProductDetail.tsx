@@ -24,10 +24,15 @@ import { formatPrice } from "@/lib/utils"
 import Rating from "@/components/products/Rating"
 import AddToFavorite from "@/components/products/AddToFavorite"
 import AddToCartForm from "@/components/products/AddToCartForm"
+import useTitle from "@/hooks/useTitle"
 
 export default function ProductDetail() {
     const { productId } = useParams()
     const product = products.find(product => product.id === productId)
+
+    if (!product) throw new Error("Product not found")
+
+    useTitle(product.name)
 
     const plugin = useRef(
         Autoplay({ delay: 3000, stopOnInteraction: true })
@@ -76,7 +81,7 @@ export default function ProductDetail() {
                         defaultValue="item-1"
                     >
                         <AccordionItem value="item-1" className="border-none">
-                            <AccordionTrigger className="text-base">Description</AccordionTrigger>
+                            <AccordionTrigger className="text-base cursor-pointer">Description</AccordionTrigger>
                             <AccordionContent className="flex flex-col gap-4 text-balance">
                                 {product?.description ?? 'No description is available for this product.'}
                             </AccordionContent>

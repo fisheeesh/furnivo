@@ -2,11 +2,16 @@ import RichTextRender from "@/components/blogs/RichTextRender"
 import { Icons } from "@/components/Icons"
 import { Button } from "@/components/ui/button"
 import { posts } from "@/data/posts"
+import useTitle from "@/hooks/useTitle"
 import { Link, useParams } from "react-router"
 
 export default function BlogDetail() {
     const { postId } = useParams()
     const post = posts.find(post => post.id === postId)
+
+    if (!post) throw new Error("Post not found")
+
+    useTitle(post.title)
 
     return (
         <div className="max-w-7xl mx-auto">

@@ -40,7 +40,7 @@ export default function CarouselCard({ products }: ProductProps) {
                             />
                             <div className="">
                                 <h3 className="text-sm font-bold line-clamp-1">{product.name}</h3>
-                                <p className="my-2 text-sm text-gray-600 line-clamp-2">{product.description}</p>
+                                <p className="my-2 text-sm text-muted-foreground line-clamp-2">{product.description}</p>
                                 <Link
                                     className="text-sm font-semibold text-own hover:underline"
                                     to={`/products/${product.id}`}

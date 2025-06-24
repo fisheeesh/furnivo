@@ -11,7 +11,7 @@ export default function Home() {
   const Title = ({ title, href, sideText }: { title: string; href: string; sideText: string }) => (
     <div className='flex md:items-center flex-col mt-28 mb-10 md:flex-row md:justify-between'>
       <h2 className='text-2xl font-bold mb-4 md:mb-0'>{title}</h2>
-      <Link to={href} className='text-muted-foreground font-semibold underline'>{sideText}</Link>
+      <Link to={href} className='text-muted-foreground hover:text-foreground duration-200 font-semibold underline'>{sideText}</Link>
     </div>
   )
 
@@ -27,10 +27,10 @@ export default function Home() {
           </p>
           <div className=''>
             <Button asChild className='mr-2 rounded-full bg-orange-300 hover:bg-orange-400/80 dark:hover:bg-orange-300/80  px-8 py-6 font-bold'>
-              <Link to="#">Shop Now</Link>
+              <Link to="/products">Shop Now</Link>
             </Button>
             <Button variant='outline' asChild className='rounded-full px-8 py-6 text-own font-bold'>
-              <Link to="#">Explore</Link>
+              <Link to="/blogs">Explore</Link>
             </Button>
           </div>
         </div>
