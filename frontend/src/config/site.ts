@@ -6,8 +6,8 @@ const links = {
 };
 
 export const siteConfig = {
-    name: "Furniture Shop",
-    description: "A Furniture Shopp build with react router.",
+    name: "Furnivo",
+    description: "A Furniture Shop build with react router.",
     mainNav: [
         {
             title: "Products",

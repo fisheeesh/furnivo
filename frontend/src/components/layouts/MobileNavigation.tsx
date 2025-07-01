@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/accordion"
 import { Icons } from "../Icons"
 import { Link } from "react-router"
-import { siteConfig } from "@/config/site"
 import { ScrollArea } from "../ui/scroll-area"
 import { useEffect, useState } from "react"
 import { useMediaQuery } from "@uidotdev/usehooks";
+import Logo from "../Logo"
 
 interface MainNavigationProps {
     items?: MainNavItem[]
@@ -44,11 +44,7 @@ export default function MobileNavigation({ items }: MainNavigationProps) {
                 </SheetTrigger>
                 <SheetContent side="left" className="py-9 px-5">
                     <SheetClose asChild>
-                        <Link to='/' className="flex items-center gap-2">
-                            <Icons.logo className="size-7" />
-                            <span className="font-bold">{siteConfig.name}</span>
-                            <span className="sr-only">Home</span>
-                        </Link>
+                        <Logo />
                     </SheetClose>
 
                     <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-8">
