@@ -1,11 +1,12 @@
 import compression from "compression"
 import cors from "cors"
-import express from "express"
+import express, { NextFunction, Request, Response } from "express"
 import helmet from "helmet"
 import morgan from "morgan"
+import { check } from "./middlewares/check"
 import { limiter } from "./middlewares/rate_limiter"
 
-//* client -> req -> middle -> controller -> res -> client
+//* client -> req -> middleware -> controller -> res -> client
 export const app = express()
 
 /**
@@ -21,6 +22,24 @@ app.use(morgan("dev"))
     .use(compression({}))
     .use(limiter)
 
-app.get('/health', (req, res) => {
-    res.status(200).json({ message: 'hello we are ready for response.' })
+interface CustomRequest extends Request {
+    userId?: number
+}
+
+app.get('/health', check, (req: CustomRequest, res: Response) => {
+    throw new Error("An error occured")
+    res.status(200).json({
+        message: 'hello we are ready for response.',
+        userId: req.userId || 7
+    })
+})
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    const status = error.status || 500
+    const message = error.message || 'Server Error'
+    const errorCode = error.code || "Error_Code"
+
+    res.status(status).json({
+        message, error: errorCode
+    })
 })
