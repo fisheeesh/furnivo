@@ -3,8 +3,8 @@ import cors from "cors"
 import express, { NextFunction, Request, Response } from "express"
 import helmet from "helmet"
 import morgan from "morgan"
-import { check } from "./middlewares/check"
 import { limiter } from "./middlewares/rate_limiter"
+import healthRoutes from "./routes/v1/health"
 
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
@@ -22,17 +22,7 @@ app.use(morgan("dev"))
     .use(compression({}))
     .use(limiter)
 
-interface CustomRequest extends Request {
-    userId?: number
-}
-
-app.get('/health', check, (req: CustomRequest, res: Response) => {
-    throw new Error("An error occured")
-    res.status(200).json({
-        message: 'hello we are ready for response.',
-        userId: req.userId || 7
-    })
-})
+app.use("/api/v1", healthRoutes)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500
