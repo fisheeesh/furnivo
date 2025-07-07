@@ -39,7 +39,7 @@ export default function CartSheet() {
                 {
                     cartItems.length > 0 ? (
                         <>
-                            <ScrollArea className="my-4 h-[calc(100vh-20rem)] px-4">
+                            <ScrollArea className="my-4 h-[calc(100vh-19rem)] px-4">
                                 {
                                     cartItems.map(item => (
                                         <CartItem key={item.id} cart={item} />
