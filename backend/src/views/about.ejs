@@ -3,7 +3,6 @@
 
 <head>
     <%- include("includes/head") %>
-        <link rel="stylesheet" href="/css/specific.css">
 </head>
 
 <body>
@@ -11,6 +10,13 @@
         <h1 class="title">
             <%= title %>
         </h1>
+        <ul>
+            <% users.forEach(user=> { %>
+                <li>
+                    <%= user.name %>: <%= user.age %>
+                </li>
+                <% }) %>
+        </ul>
 </body>
 
 </html>
