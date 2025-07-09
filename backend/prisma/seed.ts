@@ -45,7 +45,7 @@ const userData = faker.helpers.multiple(createRandomUser, {
 });
 
 async function main() {
-    await prisma.user.deleteMany()
+    // await prisma.user.deleteMany()
 
     console.log('Start seeding...')
     const salt = await bcrypt.genSalt(10)
