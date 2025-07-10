@@ -4,7 +4,7 @@ import { register, verifyOtp, confirmPassword, login } from "../../contorllers/a
 const router = express.Router()
 
 router.post('/register', register)
-router.post('/verifty-otp', verifyOtp)
+router.post('/verify-otp', verifyOtp)
 router.post('/confirm-password', confirmPassword)
 router.post('/login', login)
 
