@@ -8,6 +8,4 @@ router.post('/verifty-otp', verifyOtp)
 router.post('/confirm-password', confirmPassword)
 router.post('/login', login)
 
-router.post('/')
-
 export default router
