@@ -1,10 +1,11 @@
+import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { body, validationResult } from 'express-validator'
-import bcrypt from 'bcrypt'
 
-import { getUserByPhone, createOTP, getOTPByPhone, updateOTP } from '../services/authServices'
-import { checkOTPErrorIfSameDate, checkUserExit } from '../utils/auth'
-import { generateOTP, generateToken } from '../utils/generate'
+import { createOTP, getOTPByPhone, getUserByPhone, updateOTP } from '../services/authServices'
+import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit } from '../utils/auth'
+import { generateToken } from '../utils/generate'
+import moment from 'moment'
 
 export const register = [
     body("phone", "Invalid phone number")
@@ -132,7 +133,81 @@ export const verifyOtp = [
             return next(error)
         }
 
-        res.status(200).json({ message: 'register' })
+        const { phone, otp, token } = req.body
+        const user = await getUserByPhone(phone)
+        checkUserExit(user)
+
+        const otpRow = await getOTPByPhone(phone)
+        checkOTPRow(otpRow)
+
+        const lastOtpVerify = new Date(otpRow!.updatedAt).toLocaleDateString()
+        const today = new Date().toLocaleDateString()
+        const isSameDate = lastOtpVerify === today
+        //* If OTP verify is in the same date and over limit
+        checkOTPErrorIfSameDate(isSameDate, otpRow!.error)
+
+        if (otpRow?.rememberToken !== token) {
+            const otpData = {
+                error: 5
+            }
+            await updateOTP(otpRow!.id, otpData)
+
+            const error: any = new Error('Token is wrong')
+            error.status = 400
+            error.code = 'Error_Invalid'
+            return next(error)
+        }
+
+        const isExpired = moment().diff(otpRow?.updatedAt, "minutes") > 2
+
+        //* Check if otp is expired
+        if (isExpired) {
+            const error: any = new Error('OTP is expired')
+            error.status = 403
+            error.code = 'Error_Expried'
+            return next(error)
+        }
+
+        const isMatchOtp = await bcrypt.compare(otp, otpRow!.otp)
+
+        //* Check if otp is match
+        if (!isMatchOtp) {
+            //* If OTP is first time today
+            if (!isSameDate) {
+                const otpData = {
+                    error: 1
+                }
+
+                await updateOTP(otpRow!.id, otpData)
+            } else {
+                //* If OTP error is not first time today
+                const otpData = {
+                    error: { increment: 1 }
+                }
+
+                await updateOTP(otpRow!.id, otpData)
+            }
+
+            const error: any = new Error('OTP is incorrect')
+            error.status = 400
+            error.code = 'Error_Invalid'
+            return next(error)
+        }
+
+        const verifyToken = generateToken()
+        const otpData = {
+            verifyToken,
+            error: 0,
+            count: 1
+        }
+
+        const result = await updateOTP(otpRow!.id, otpData)
+
+        res.status(200).json({
+            message: "OTP is successfully verified",
+            phone: result.phone,
+            token: result.verifyToken
+        })
     }
 ]
 
