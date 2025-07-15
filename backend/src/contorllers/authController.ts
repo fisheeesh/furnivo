@@ -1,11 +1,12 @@
 import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { body, validationResult } from 'express-validator'
+import jwt from 'jsonwebtoken'
 
-import { createOTP, getOTPByPhone, getUserByPhone, updateOTP } from '../services/authServices'
-import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit } from '../utils/auth'
-import { generateToken } from '../utils/generate'
 import moment from 'moment'
+import { createOTP, createUser, getOTPByPhone, getUserByPhone, updateOTP, updateUser } from '../services/authService'
+import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, createHttpError } from '../utils/auth'
+import { generateToken } from '../utils/generate'
 
 export const register = [
     body("phone", "Invalid phone number")
@@ -211,10 +212,102 @@ export const verifyOtp = [
     }
 ]
 
-export const confirmPassword = async (req: Request, res: Response) => {
-    res.status(200).json({ message: 'register' })
-}
+export const confirmPassword = async (req: Request, res: Response, next: NextFunction) => [
+    body("phone", "Invalid phone number")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 5, max: 12 }),
+    body("password", "Password must be at least 8 digits.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 8, max: 6 }),
+    body('token', "Invalid Token")
+        .trim()
+        .notEmpty()
+        .escape(),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) {
+            const error: any = new Error(errors[0].msg)
+            error.status = 400
+            error.code = "Error_Invalid"
+            return next(error)
+        }
 
-export const login = async (req: Request, res: Response) => {
+        const { phone, password, token } = req.body
+
+        const user = await getUserByPhone(phone)
+        checkUserExit(user)
+
+        const otpRow = await getOTPByPhone(phone)
+        checkOTPRow(otpRow)
+
+        //* OTP error count is over-limit
+        if (otpRow?.error === 5) {
+            const error: any = new Error("This request maybe an attack.")
+            error.status = 400
+            error.code = "Error_Invalid"
+            return next(error)
+        }
+
+        //* Token is wrong
+        if (otpRow?.verifyToken !== token) {
+            const otpData = {
+                error: 5
+            }
+            await updateOTP(otpRow!.id, otpData)
+            const error: any = new Error("Invalid token")
+            error.status = 400
+            error.code = "Error_Invalid"
+            return next(error)
+        }
+
+        //* request is expired
+        const isExpired = moment().diff(otpRow!.updatedAt, "minutes") > 10
+        if (isExpired) return next(createHttpError({
+            message: "Your request is expired. Please try again.",
+            status: 403,
+            code: "Error_Expried"
+        }))
+
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(password, salt)
+        const randToken = "@TODO://"
+
+        const userData = {
+            phone,
+            password: hashPassword,
+            randToken,
+        }
+        const newUser = await createUser(userData)
+
+        const accessTokenPayload = { id: newUser.id }
+        const refreshTokenPayload = { id: newUser.id, phone: newUser.phone }
+
+        const accessToken = jwt.sign(
+            accessTokenPayload,
+            process.env.ACCESS_TOKEN_SECRET!,
+            { expiresIn: 60 * 15 }
+        )
+
+        const refreshToken = jwt.sign(
+            refreshTokenPayload,
+            process.env.REFRESH_TOKEN_SECRET!,
+            { expiresIn: "30d" }
+        )
+
+        const userUpdatedData = {
+            randToken: refreshToken
+        }
+
+        await updateUser(newUser.id, userUpdatedData)
+
+        res.status(201).json({ message: 'Successfully created an accouht.', userId: newUser.id, accessToken, refreshToken })
+    }
+]
+
+export const login = async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: 'register' })
 }
