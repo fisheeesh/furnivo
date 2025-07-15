@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 
 import moment from 'moment'
 import { createOTP, createUser, getOTPByPhone, getUserByPhone, updateOTP, updateUser } from '../services/authService'
-import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, createHttpError } from '../utils/auth'
+import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
 import { generateToken } from '../utils/generate'
 
 export const register = [
@@ -97,8 +97,6 @@ export const register = [
                 }
             }
         }
-
-
 
         res.status(200).json({
             message: `We are sending OTP to 09${result.phone}`,
@@ -319,6 +317,76 @@ export const confirmPassword = [
     }
 ]
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({ message: 'register' })
-}
+export const login = [
+    body("phone", "Invalid phone number")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 5, max: 12 }),
+    body("password", "Password must be at least 8 digits.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 8, max: 8 }),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) {
+            const error: any = new Error(errors[0].msg)
+            error.status = 400
+            error.code = "Error_Invalid"
+            return next(error)
+        }
+
+        const { phone, password } = req.body
+
+        const user = await getUserByPhone(phone)
+        checkUserIfNotExist(user)
+
+        if (user?.status === 'FREEZE') {
+            const error: any = new Error("Your account is temporarily locked. Please contact us.")
+            error.status = 401
+            error.code = "Error_Freeze"
+            return next(error)
+        }
+
+        const isMatchPassword = await bcrypt.compare(password, user!.password)
+
+        if (!isMatchPassword) {
+            //* ------------ Starting to record wrong times
+            const lastRequest = new Date(user!.updatedAt).toLocaleDateString()
+            const isSameDate = lastRequest === new Date().toLocaleDateString()
+
+            if (!isSameDate) {
+                const userData = {
+                    errorLoginCount: 1
+                }
+
+                await updateUser(user!.id, userData)
+            } else {
+                if (user!.errorLoginCount >= 2) {
+                    const userData = {
+                        status: 'FREEZE'
+                    }
+
+                    await updateUser(user!.id, userData)
+                } else {
+                    const userData = {
+                        errorLoginCount: { increment: 1 }
+                    }
+
+                    await updateUser(user!.id, userData)
+                }
+            }
+            //* ------------ Ending -------------
+            const error: any = new Error("Incorrect Password")
+            error.status = 401
+            error.code = "Error_Invalid"
+            return next(error)
+        }
+
+        res.status(200).json({
+            message: 'Successfully logged in.',
+            userId: user!.id,
+        })
+    }
+]
