@@ -337,7 +337,11 @@ export const login = [
             return next(error)
         }
 
-        const { phone, password } = req.body
+        const password = req.body.password
+        let phone = req.body.phone
+        if (phone.slice(0, 2) === '09') {
+            phone = phone.substring(2, phone.length)
+        }
 
         const user = await getUserByPhone(phone)
         checkUserIfNotExist(user)
@@ -384,8 +388,41 @@ export const login = [
             return next(error)
         }
 
-        res.status(200).json({
-            message: 'Successfully logged in.',
+        //* Authorization token
+        const accessTokenPayload = { id: user!.id }
+        const refreshTokenPayload = { id: user!.id, phone: user!.phone }
+
+        const accessToken = jwt.sign(
+            accessTokenPayload,
+            process.env.ACCESS_TOKEN_SECRET!,
+            { expiresIn: 60 * 15 }
+        )
+
+        const refreshToken = jwt.sign(
+            refreshTokenPayload,
+            process.env.REFRESH_TOKEN_SECRET!,
+            { expiresIn: "30d" }
+        )
+
+        const userData = {
+            errorLoginCount: 0,
+            randToken: refreshToken
+        }
+
+        await updateUser(user!.id, userData)
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 1000 * 60 * 15
+        }).cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 1000 * 60 * 60 * 24 * 30
+        }).status(200).json({
+            message: 'Successfully Logged In',
             userId: user!.id,
         })
     }
