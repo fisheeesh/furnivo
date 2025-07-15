@@ -222,7 +222,7 @@ export const confirmPassword = [
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
-        .isLength({ min: 8, max: 6 }),
+        .isLength({ min: 8, max: 8 }),
     body('token', "Invalid Token")
         .trim()
         .notEmpty()
@@ -298,13 +298,24 @@ export const confirmPassword = [
             { expiresIn: "30d" }
         )
 
-        const userUpdatedData = {
-            randToken: refreshToken
-        }
+        const userUpdatedData = { randToken: refreshToken }
 
         await updateUser(newUser.id, userUpdatedData)
 
-        res.status(201).json({ message: 'Successfully created an accouht.', userId: newUser.id, accessToken, refreshToken })
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 1000 * 60 * 15
+        }).cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 1000 * 60 * 60 * 24 * 30
+        }).status(201).json({
+            message: 'Successfully created an accouht.',
+            userId: newUser.id,
+        })
     }
 ]
 
