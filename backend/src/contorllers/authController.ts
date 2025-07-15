@@ -212,7 +212,7 @@ export const verifyOtp = [
     }
 ]
 
-export const confirmPassword = async (req: Request, res: Response, next: NextFunction) => [
+export const confirmPassword = [
     body("phone", "Invalid phone number")
         .trim()
         .notEmpty()
