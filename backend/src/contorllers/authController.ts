@@ -4,7 +4,7 @@ import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 
-import { createOTP, createUser, getOTPByPhone, getUserByPhone, updateOTP, updateUser } from '../services/authService'
+import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../services/authService'
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
 import { generateToken } from '../utils/generate'
 
@@ -425,3 +425,46 @@ export const login = [
         })
     }
 ]
+
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+    //* Clear HttpOnly cookies
+    const refreshToken = req.cookies ? req.cookies.refreshToken : null
+    if (!refreshToken) return next(createHttpError({
+        message: 'You are not an authenticated user.',
+        code: "Error_Unauthenticated",
+        status: 401,
+    }))
+
+    let decoded;
+    try {
+        decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as {
+            id: number, phone: string
+        }
+    } catch (error) {
+        return next(createHttpError({
+            message: 'You are not an authenticated user.',
+            code: "Error_Unauthenticated",
+            status: 401,
+        }))
+    }
+
+    const user = await getUserById(decoded.id)
+    checkUserIfNotExist(user)
+
+    if (user!.phone !== decoded.phone) return next(createHttpError({
+        message: 'You are not an authenticated user.',
+        code: "Error_Unauthenticated",
+        status: 401,
+    }))
+
+    //* Update randToken is User Table
+    const userData = {
+        randToken: generateToken(),
+    }
+    await updateUser(user!.id, userData)
+
+    res.clearCookie('accessToken')
+    res.clearCookie('refreshToken')
+
+    res.status(200).json({ message: "Successfully logged out. See you soon.!" })
+}

@@ -8,6 +8,12 @@ export const getUserByPhone = async (phone: string) => {
     })
 }
 
+export const getUserById = async (id: number) => {
+    return await prisma.user.findUnique({
+        where: { id }
+    })
+}
+
 export const createUser = async (userData: any) => {
     return await prisma.user.create({
         data: userData
