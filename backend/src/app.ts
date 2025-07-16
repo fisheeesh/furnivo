@@ -13,10 +13,25 @@ import { auth } from "./middlewares/auth"
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
 
+var whitelist = ['http://localhost:5173', 'http://localhost:4000']
+var corsOptions = {
+    origin: function (origin: any, callback: (err: Error | null, origin?: any) => void) {
+        //* Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true)
+        if (whitelist.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    //* Allow cookies or authorization header
+    credentials: true
+}
+
 app.use(morgan("dev"))
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
-    .use(cors())
+    .use(cors(corsOptions))
     .use(helmet())
     .use(compression({}))
     .use(limiter)
