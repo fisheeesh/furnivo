@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from "express"
 import helmet from "helmet"
 import morgan from "morgan"
 import { limiter } from "./middlewares/rate_limiter"
+import cookieParser from "cookie-parser"
 
 import authRoutes from "./routes/v1/auth"
 import userRoutes from './routes/v1/admin/user'
@@ -19,6 +20,7 @@ app.use(morgan("dev"))
     .use(helmet())
     .use(compression({}))
     .use(limiter)
+    .use(cookieParser())
 
 app.use('/api/v1', authRoutes)
 app.use('/api/v1/admin', auth, userRoutes)
