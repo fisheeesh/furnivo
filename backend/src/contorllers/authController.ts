@@ -7,9 +7,10 @@ import moment from 'moment'
 import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../services/authService'
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
 import { generateToken } from '../utils/generate'
+import { errorCode } from '../config/errorCode'
 
 export const register = [
-    body("phone", "Invalid phone number")
+    body("phone", "Invalid phone number.")
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
@@ -20,7 +21,7 @@ export const register = [
         if (errors.length > 0) return next(createHttpError({
             message: errors[0].msg,
             status: 400,
-            code: 'Error_Invalid',
+            code: errorCode.invalid,
         }))
 
         let phone = req.body.phone
@@ -79,7 +80,7 @@ export const register = [
                     return next(createHttpError({
                         message: "OTP is allowed to request 3 times per day.",
                         status: 405,
-                        code: 'Error_OverLimit',
+                        code: errorCode.overLimit,
                     }))
                 } else {
                     const otpData = {
@@ -96,7 +97,7 @@ export const register = [
         }
 
         res.status(200).json({
-            message: `We are sending OTP to 09${result.phone}`,
+            message: `We are sending OTP to 09${result.phone}.`,
             phone: result.phone,
             token: result.rememberToken
         })
@@ -104,17 +105,17 @@ export const register = [
 ]
 
 export const verifyOtp = [
-    body("phone", "Invalid phone number")
+    body("phone", "Invalid phone number.")
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
         .isLength({ min: 5, max: 12 }),
-    body("otp", "Invalid OTP")
+    body("otp", "Invalid OTP.")
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
         .isLength({ min: 6, max: 6 }),
-    body('token', "Invalid Token")
+    body('token', "Invalid Token.")
         .trim()
         .notEmpty()
         .escape(),
@@ -123,7 +124,7 @@ export const verifyOtp = [
         if (errors.length > 0) return next(createHttpError({
             message: errors[0].msg,
             status: 400,
-            code: 'Error_Invalid',
+            code: errorCode.invalid,
         }))
 
         const { phone, otp, token } = req.body
@@ -146,9 +147,9 @@ export const verifyOtp = [
             await updateOTP(otpRow!.id, otpData)
 
             return next(createHttpError({
-                message: 'Token is wrong',
+                message: 'Invalid Token.',
                 status: 400,
-                code: 'Error_Invalid',
+                code: errorCode.invalid,
             }))
         }
 
@@ -156,9 +157,9 @@ export const verifyOtp = [
 
         //* Check if otp is expired
         if (isExpired) return next(createHttpError({
-            message: 'OTP is expired',
+            message: 'OTP is expired.',
             status: 403,
-            code: 'Error_Expried',
+            code: errorCode.otpExpired,
         }))
 
 
@@ -183,9 +184,9 @@ export const verifyOtp = [
             }
 
             return next(createHttpError({
-                message: 'OTP is incorrect',
+                message: 'OTP is incorrect.',
                 status: 400,
-                code: 'Error_Invalid',
+                code: errorCode.invalid,
             }))
         }
 
@@ -199,7 +200,7 @@ export const verifyOtp = [
         const result = await updateOTP(otpRow!.id, otpData)
 
         res.status(200).json({
-            message: "OTP is successfully verified",
+            message: "OTP is successfully verified.",
             phone: result.phone,
             token: result.verifyToken
         })
@@ -207,7 +208,7 @@ export const verifyOtp = [
 ]
 
 export const confirmPassword = [
-    body("phone", "Invalid phone number")
+    body("phone", "Invalid phone number.")
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
@@ -217,7 +218,7 @@ export const confirmPassword = [
         .notEmpty()
         .matches(/^[\d]+$/)
         .isLength({ min: 8, max: 8 }),
-    body('token', "Invalid Token")
+    body('token', "Invalid Token.")
         .trim()
         .notEmpty()
         .escape(),
@@ -226,7 +227,7 @@ export const confirmPassword = [
         if (errors.length > 0) return next(createHttpError({
             message: errors[0].msg,
             status: 400,
-            code: 'Error_Invalid',
+            code: errorCode.invalid,
         }))
 
         const { phone, password, token } = req.body
@@ -242,7 +243,7 @@ export const confirmPassword = [
             return next(createHttpError({
                 message: "Your request is over-limit. Please try again.",
                 status: 400,
-                code: 'Error_Invalid',
+                code: errorCode.attack,
             }))
         }
 
@@ -253,9 +254,9 @@ export const confirmPassword = [
             }
             await updateOTP(otpRow!.id, otpData)
             return next(createHttpError({
-                message: "Invalid Token",
+                message: "Invalid Token.",
                 status: 400,
-                code: 'Error_Invalid',
+                code: errorCode.invalid,
             }))
         }
 
@@ -264,7 +265,7 @@ export const confirmPassword = [
         if (isExpired) return next(createHttpError({
             message: "Your request is expired. Please try again.",
             status: 403,
-            code: "Error_Expried"
+            code: errorCode.requestExpired,
         }))
 
         const salt = await bcrypt.genSalt(10)
@@ -308,14 +309,14 @@ export const confirmPassword = [
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 1000 * 60 * 60 * 24 * 30
         }).status(201).json({
-            message: 'Successfully created an accouht.',
+            message: 'Successfully created an account.',
             userId: newUser.id,
         })
     }
 ]
 
 export const login = [
-    body("phone", "Invalid phone number")
+    body("phone", "Invalid phone number.")
         .trim()
         .notEmpty()
         .matches(/^[\d]+$/)
@@ -330,7 +331,7 @@ export const login = [
         if (errors.length > 0) return next(createHttpError({
             message: errors[0].msg,
             status: 400,
-            code: 'Error_Invalid',
+            code: errorCode.invalid,
         }))
 
         const password = req.body.password
@@ -346,7 +347,7 @@ export const login = [
             return next(createHttpError({
                 message: "Your account is temporarily locked. Please contact us.",
                 status: 401,
-                code: 'Error_Freeze',
+                code: errorCode.accountFreeze,
             }))
         }
 
@@ -380,9 +381,9 @@ export const login = [
             }
             //* ------------ Ending -------------
             return next(createHttpError({
-                message: "Your password is incorrect.",
+                message: "Incorrect Password.",
                 status: 401,
-                code: 'Error_Invalid',
+                code: errorCode.invalid,
             }))
         }
 
@@ -420,7 +421,7 @@ export const login = [
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 1000 * 60 * 60 * 24 * 30
         }).status(200).json({
-            message: 'Successfully Logged In',
+            message: 'Successfully Logged In.',
             userId: user!.id,
         })
     }
@@ -431,7 +432,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     const refreshToken = req.cookies ? req.cookies.refreshToken : null
     if (!refreshToken) return next(createHttpError({
         message: 'You are not an authenticated user.',
-        code: "Error_Unauthenticated",
+        code: errorCode.unauthenticated,
         status: 401,
     }))
 
@@ -443,7 +444,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     } catch (error) {
         return next(createHttpError({
             message: 'You are not an authenticated user.',
-            code: "Error_Unauthenticated",
+            code: errorCode.unauthenticated,
             status: 401,
         }))
     }
@@ -453,7 +454,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 
     if (user!.phone !== decoded.phone) return next(createHttpError({
         message: 'You are not an authenticated user.',
-        code: "Error_Unauthenticated",
+        code: errorCode.unauthenticated,
         status: 401,
     }))
 
@@ -463,8 +464,16 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     }
     await updateUser(user!.id, userData)
 
-    res.clearCookie('accessToken')
-    res.clearCookie('refreshToken')
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    })
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    })
 
     res.status(200).json({ message: "Successfully logged out. See you soon.!" })
 }

@@ -42,7 +42,7 @@ app.use('/api/v1/admin', auth, userRoutes)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500
-    const message = error.message || 'Server Error'
+    const message = error.message || 'Server Error.'
     const errorCode = error.code || "Error_Code"
 
     res.status(status).json({
