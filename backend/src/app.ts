@@ -4,7 +4,10 @@ import express, { NextFunction, Request, Response } from "express"
 import helmet from "helmet"
 import morgan from "morgan"
 import { limiter } from "./middlewares/rate_limiter"
+
 import authRoutes from "./routes/v1/auth"
+import userRoutes from './routes/v1/admin/user'
+import { auth } from "./middlewares/auth"
 
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
@@ -18,6 +21,7 @@ app.use(morgan("dev"))
     .use(limiter)
 
 app.use('/api/v1', authRoutes)
+app.use('/api/v1/admin', auth, userRoutes)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500

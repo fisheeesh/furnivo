@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
-
 import moment from 'moment'
+
 import { createOTP, createUser, getOTPByPhone, getUserByPhone, updateOTP, updateUser } from '../services/authService'
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
 import { generateToken } from '../utils/generate'
@@ -17,13 +17,11 @@ export const register = [
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
 
-        if (errors.length > 0) {
-            const error: any = new Error(errors[0].msg)
-            error.status = 400
-            error.code = 'Error_Invalid'
-
-            return next(error)
-        }
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: 'Error_Invalid',
+        }))
 
         let phone = req.body.phone
         if (phone.slice(0, 2) === '09') {
@@ -78,12 +76,11 @@ export const register = [
             } else {
                 //* Same date and coutn is already times
                 if (otpRow.count === 3) {
-                    const error: any = new Error(
-                        "OTP is allowed to request 3 times per day."
-                    )
-                    error.status = 405
-                    error.code = 'Error_OverLimit'
-                    return next(error)
+                    return next(createHttpError({
+                        message: "OTP is allowed to request 3 times per day.",
+                        status: 405,
+                        code: 'Error_OverLimit',
+                    }))
                 } else {
                     const otpData = {
                         phone,
@@ -123,14 +120,11 @@ export const verifyOtp = [
         .escape(),
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
-
-        if (errors.length > 0) {
-            const error: any = new Error(errors[0].msg)
-            error.status = 400
-            error.code = 'Error_Invalid'
-
-            return next(error)
-        }
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: 'Error_Invalid',
+        }))
 
         const { phone, otp, token } = req.body
         const user = await getUserByPhone(phone)
@@ -151,21 +145,22 @@ export const verifyOtp = [
             }
             await updateOTP(otpRow!.id, otpData)
 
-            const error: any = new Error('Token is wrong')
-            error.status = 400
-            error.code = 'Error_Invalid'
-            return next(error)
+            return next(createHttpError({
+                message: 'Token is wrong',
+                status: 400,
+                code: 'Error_Invalid',
+            }))
         }
 
         const isExpired = moment().diff(otpRow?.updatedAt, "minutes") > 2
 
         //* Check if otp is expired
-        if (isExpired) {
-            const error: any = new Error('OTP is expired')
-            error.status = 403
-            error.code = 'Error_Expried'
-            return next(error)
-        }
+        if (isExpired) return next(createHttpError({
+            message: 'OTP is expired',
+            status: 403,
+            code: 'Error_Expried',
+        }))
+
 
         const isMatchOtp = await bcrypt.compare(otp, otpRow!.otp)
 
@@ -187,10 +182,11 @@ export const verifyOtp = [
                 await updateOTP(otpRow!.id, otpData)
             }
 
-            const error: any = new Error('OTP is incorrect')
-            error.status = 400
-            error.code = 'Error_Invalid'
-            return next(error)
+            return next(createHttpError({
+                message: 'OTP is incorrect',
+                status: 400,
+                code: 'Error_Invalid',
+            }))
         }
 
         const verifyToken = generateToken()
@@ -227,12 +223,11 @@ export const confirmPassword = [
         .escape(),
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
-        if (errors.length > 0) {
-            const error: any = new Error(errors[0].msg)
-            error.status = 400
-            error.code = "Error_Invalid"
-            return next(error)
-        }
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: 'Error_Invalid',
+        }))
 
         const { phone, password, token } = req.body
 
@@ -244,10 +239,11 @@ export const confirmPassword = [
 
         //* OTP error count is over-limit
         if (otpRow?.error === 5) {
-            const error: any = new Error("This request maybe an attack.")
-            error.status = 400
-            error.code = "Error_Invalid"
-            return next(error)
+            return next(createHttpError({
+                message: "Your request is over-limit. Please try again.",
+                status: 400,
+                code: 'Error_Invalid',
+            }))
         }
 
         //* Token is wrong
@@ -256,10 +252,11 @@ export const confirmPassword = [
                 error: 5
             }
             await updateOTP(otpRow!.id, otpData)
-            const error: any = new Error("Invalid token")
-            error.status = 400
-            error.code = "Error_Invalid"
-            return next(error)
+            return next(createHttpError({
+                message: "Invalid Token",
+                status: 400,
+                code: 'Error_Invalid',
+            }))
         }
 
         //* request is expired
@@ -330,12 +327,11 @@ export const login = [
         .isLength({ min: 8, max: 8 }),
     async (req: Request, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
-        if (errors.length > 0) {
-            const error: any = new Error(errors[0].msg)
-            error.status = 400
-            error.code = "Error_Invalid"
-            return next(error)
-        }
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: 'Error_Invalid',
+        }))
 
         const password = req.body.password
         let phone = req.body.phone
@@ -347,10 +343,11 @@ export const login = [
         checkUserIfNotExist(user)
 
         if (user?.status === 'FREEZE') {
-            const error: any = new Error("Your account is temporarily locked. Please contact us.")
-            error.status = 401
-            error.code = "Error_Freeze"
-            return next(error)
+            return next(createHttpError({
+                message: "Your account is temporarily locked. Please contact us.",
+                status: 401,
+                code: 'Error_Freeze',
+            }))
         }
 
         const isMatchPassword = await bcrypt.compare(password, user!.password)
@@ -382,10 +379,11 @@ export const login = [
                 }
             }
             //* ------------ Ending -------------
-            const error: any = new Error("Incorrect Password")
-            error.status = 401
-            error.code = "Error_Invalid"
-            return next(error)
+            return next(createHttpError({
+                message: "Your password is incorrect.",
+                status: 401,
+                code: 'Error_Invalid',
+            }))
         }
 
         //* Authorization token
