@@ -5,10 +5,15 @@ import helmet from "helmet"
 import morgan from "morgan"
 import { limiter } from "./middlewares/rate_limiter"
 import cookieParser from "cookie-parser"
+import i18next from "i18next"
+import Backend from "i18next-fs-backend"
+import middleware from "i18next-http-middleware"
+import path from 'path'
 
-import authRoutes from "./routes/v1/auth"
-import userRoutes from './routes/v1/admin/user'
-import { auth } from "./middlewares/auth"
+import authRoutes from "./routes/v1/auth-routes"
+import adminRoutes from './routes/v1/admin/admin-routes'
+import profileRoutes from './routes/v1/api/user-routes'
+import { auth } from "./middlewares/auth-middleware"
 
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
@@ -37,8 +42,30 @@ app.use(morgan("dev"))
     .use(limiter)
     .use(cookieParser())
 
+i18next.use(Backend)
+    .use(middleware.LanguageDetector)
+    .init({
+        backend: {
+            loadPath: path.join(
+                process.cwd(),
+                "src/locales",
+                "{{lng}}",
+                "{{ns}}.json"
+            )
+        },
+        detection: {
+            order: ["querystring", "cookie"],
+            caches: ["cookie"]
+        },
+        fallbackLng: "en",
+        preload: ["en", "mm"]
+    })
+
+app.use(middleware.handle(i18next))
+
 app.use('/api/v1', authRoutes)
-app.use('/api/v1/admin', auth, userRoutes)
+app.use('/api/v1/admin', auth, adminRoutes)
+app.use('/api/v1/', profileRoutes)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500

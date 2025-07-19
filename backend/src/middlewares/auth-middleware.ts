@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { createHttpError } from "../utils/auth";
 import jwt from "jsonwebtoken"
-import { errorCode } from "../config/errorCode";
-import { getUserById, updateUser } from "../services/authService";
+import { errorCode } from "../config/error-code";
+import { getUserById, updateUser } from "../services/auth-service";
 
 interface CustomRequest extends Request {
     userId?: number
 }
 
-export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
+export const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
     //* For mobil api calls only
     // const platform = req.header('x-platform')
     // if (platform === 'mobile') {
@@ -35,6 +35,14 @@ export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
                 phone: string
             }
         } catch (error) {
+            return next(createHttpError({
+                message: 'You are not an authenticated user.',
+                code: errorCode.unauthenticated,
+                status: 401,
+            }))
+        }
+
+        if (isNaN(decoded.id)) {
             return next(createHttpError({
                 message: 'You are not an authenticated user.',
                 code: errorCode.unauthenticated,
@@ -97,12 +105,21 @@ export const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
     }
 
     if (!accessToken) {
+        //* If there is not accessToken, genereate new ones
         generateNewTokens()
     } else {
         //* Verify access token
         let decoded;
         try {
             decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!) as { id: number }
+
+            if (isNaN(decoded.id)) {
+                return next(createHttpError({
+                    message: 'You are not an authenticated user.',
+                    code: errorCode.unauthenticated,
+                    status: 401,
+                }))
+            }
 
             req.userId = decoded.id
             next()

@@ -4,10 +4,10 @@ import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 
-import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../services/authService'
+import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../services/auth-service'
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
 import { generateToken } from '../utils/generate'
-import { errorCode } from '../config/errorCode'
+import { errorCode } from '../config/error-code'
 
 export const register = [
     body("phone", "Invalid phone number.")
@@ -381,10 +381,11 @@ export const login = [
             }
             //* ------------ Ending -------------
             return next(createHttpError({
-                message: "Incorrect Password.",
+                message: req.t("wrongPassword"),
                 status: 401,
                 code: errorCode.invalid,
             }))
+
         }
 
         //* Authorization token
@@ -442,6 +443,14 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
             id: number, phone: string
         }
     } catch (error) {
+        return next(createHttpError({
+            message: 'You are not an authenticated user.',
+            code: errorCode.unauthenticated,
+            status: 401,
+        }))
+    }
+
+    if (isNaN(decoded.id)) {
         return next(createHttpError({
             message: 'You are not an authenticated user.',
             code: errorCode.unauthenticated,

@@ -1,4 +1,4 @@
-import { errorCode } from "../config/errorCode"
+import { errorCode } from "../config/error-code"
 
 export const createHttpError = ({ message, status, code }: { message: string, status: number, code: string }) => {
     const error: any = new Error(message)
@@ -38,7 +38,7 @@ export const checkOTPErrorIfSameDate = (isSameDate: boolean, errorCount: number)
 
 export const checkOTPRow = (otpRow: any) => {
     if (!otpRow) {
-        const error: any = new Error('Phone number is incorrect')
+        const error: any = new Error('Phone number is incorrect.')
         error.status = 400
         error.code = errorCode.invalid
         throw error
