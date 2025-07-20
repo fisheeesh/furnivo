@@ -4,10 +4,10 @@ import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import moment from 'moment'
 
-import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../services/auth-service'
-import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../utils/auth'
-import { generateToken } from '../utils/generate'
-import { errorCode } from '../config/error-code'
+import { errorCode } from '../../config/error-code'
+import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser, updateUserByPhone } from '../../services/auth-service'
+import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../../utils/auth'
+import { generateToken } from '../../utils/generate'
 
 export const register = [
     body("phone", "Invalid phone number.")
@@ -65,7 +65,6 @@ export const register = [
             //* If not in same date
             if (!isSameDate) {
                 const otpData = {
-                    phone,
                     otp: hashOtp,
                     rememberToken: token,
                     count: 1,
@@ -84,7 +83,6 @@ export const register = [
                     }))
                 } else {
                     const otpData = {
-                        phone,
                         otp: hashOtp,
                         rememberToken: token,
                         count: { increment: 1 },
@@ -285,7 +283,7 @@ export const confirmPassword = [
         const accessToken = jwt.sign(
             accessTokenPayload,
             process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: 60 * 2 }
+            { expiresIn: 60 * 15 }
         )
 
         const refreshToken = jwt.sign(
@@ -395,7 +393,7 @@ export const login = [
         const accessToken = jwt.sign(
             accessTokenPayload,
             process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: 60 * 2 }
+            { expiresIn: 60 * 15 }
         )
 
         const refreshToken = jwt.sign(
@@ -415,7 +413,7 @@ export const login = [
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 1000 * 60 * 2
+            maxAge: 1000 * 60 * 15
         }).cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -486,3 +484,278 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 
     res.status(200).json({ message: "Successfully logged out. See you soon.!" })
 }
+
+export const forgetPassword = [
+    //* Let user to type phone number to reset password
+    body("phone", "Invalid phone number.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 5, max: 12 }),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid,
+        }))
+
+        let { phone } = req.body
+        if (phone.slice(0, 2) === '09') {
+            phone = phone.substring(2, phone.length)
+        }
+        //* Check user's phone is in db or not
+        const user = await getUserByPhone(phone)
+        checkUserIfNotExist(user)
+
+        //* Check user's account is freeze or not
+        if (user!.status === 'FREEZE') {
+            return next(createHttpError({
+                message: "Your account is temporarily locked. Please contact us.",
+                status: 401,
+                code: errorCode.accountFreeze,
+            }))
+        }
+
+        const otp = 123456
+        const salt = await bcrypt.genSalt(10)
+        const hashOtp = await bcrypt.hash(otp.toString(), salt)
+        const token = generateToken()
+
+        //* OTP Row must be in db
+        const otpRow = await getOTPByPhone(phone)
+        //$ Warning - Our app may let users change their phone number.
+        // * If so, you need to check if phone number exists in OTP table
+
+        let result;
+        const lastOtpRequest = new Date(otpRow!.updatedAt).toLocaleDateString()
+        const isSameDate = lastOtpRequest === new Date().toLocaleDateString()
+
+        checkOTPErrorIfSameDate(isSameDate, otpRow!.error)
+
+        if (!isSameDate) {
+            const otpData = {
+                otp: hashOtp,
+                rememberToken: token,
+                count: 1,
+                error: 0
+            }
+            result = await updateOTP(otpRow!.id, otpData)
+        } else {
+            if (otpRow!.count === 3) {
+                return next(createHttpError({
+                    message: 'You have reached the maximum number of attempts. Please try again tomorrow.',
+                    status: 400,
+                    code: errorCode.invalid,
+                }))
+            } else {
+                const otpData = {
+                    otp: hashOtp,
+                    rememberToken: token,
+                    count: { increment: 1 },
+                }
+
+                result = await updateOTP(otpRow!.id, otpData)
+            }
+        }
+
+        res.status(200).json({
+            message: `We are sending OTP to 09${result.phone} to reset password.`,
+            phone: result.phone,
+            token: result.rememberToken
+        })
+    }
+]
+
+export const verifyOtpForPassword = [
+    body("phone", "Invalid phone number.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 5, max: 12 }),
+    body("otp", "Invalid OTP.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 6, max: 6 }),
+    body('token', "Invalid Token.")
+        .trim()
+        .notEmpty()
+        .escape(),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid,
+        }))
+
+        const { phone, otp, token } = req.body
+
+        const user = await getUserByPhone(phone)
+        checkUserIfNotExist(user)
+
+        //* OTP row must be in db
+        const otpRow = await getOTPByPhone(phone)
+
+        const lastOtpRequest = new Date(otpRow!.updatedAt).toLocaleDateString()
+        const isSameDate = lastOtpRequest === new Date().toLocaleDateString()
+        checkOTPErrorIfSameDate(isSameDate, otpRow!.error)
+
+        if (otpRow!.rememberToken !== token) {
+            const otpData = {
+                error: 5
+            }
+            await updateOTP(otpRow!.id, otpData)
+            return next(createHttpError({
+                message: "Your request is over-limit. Please try again.",
+                status: 400,
+                code: errorCode.attack,
+            }))
+        }
+
+        const isExpired = moment().diff(otpRow!.updatedAt, "minutes") > 2
+        if (isExpired) return next(createHttpError({
+            message: "OTP is expired.",
+            status: 400,
+            code: errorCode.otpExpired,
+        }))
+
+        const isMatchOtp = await bcrypt.compare(otp, otpRow!.otp)
+
+        if (!isMatchOtp) {
+            if (!isSameDate) {
+                const otpData = {
+                    error: 1
+                }
+                await updateOTP(otpRow!.id, otpData)
+            } else {
+                const otpData = {
+                    error: { increment: 1 }
+                }
+                await updateOTP(otpRow!.id, otpData)
+            }
+
+            return next(createHttpError({
+                message: "Incorrect OTP. Please try again.",
+                status: 400,
+                code: errorCode.invalid,
+            }))
+        }
+
+        const verifyToken = generateToken()
+        const otpData = {
+            verifyToken,
+            error: 0,
+            count: 1
+        }
+
+        const result = await updateOTP(otpRow!.id, otpData)
+
+        res.status(200).json({
+            message: "OTP is successfully verified to reset password.",
+            phone: result.phone,
+            token: result.verifyToken
+        })
+    }
+]
+
+export const resetPassword = [
+    body("phone", "Invalid phone number.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 5, max: 12 }),
+    body("password", "Password must be at least 8 digits.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 8, max: 8 }),
+    body('token', "Invalid Token.")
+        .trim()
+        .notEmpty()
+        .escape(),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid,
+        }))
+
+        const { phone, password, token } = req.body
+
+        const user = await getUserByPhone(phone)
+        checkUserIfNotExist(user)
+
+        //* OTP row must be in db
+        const otpRow = await getOTPByPhone(phone)
+
+        if (otpRow!.error >= 5) return next(createHttpError({
+            message: "Your request is over-limit. Please try again.",
+            status: 400,
+            code: errorCode.attack,
+        }))
+
+        if (otpRow!.verifyToken !== token) {
+            const otpData = {
+                error: 5
+            }
+            await updateOTP(otpRow!.id, otpData)
+            return next(createHttpError({
+                message: "Your request is over-limit. Please try again.",
+                status: 400,
+                code: errorCode.attack,
+            }))
+        }
+
+        const isExpired = moment().diff(otpRow!.updatedAt, "minutes") > 10
+
+        if (isExpired) return next(createHttpError({
+            message: "OTP is expired.",
+            status: 400,
+            code: errorCode.otpExpired,
+        }))
+
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(password, salt)
+
+        const accessPayload = { id: user!.id }
+        const refreshPayload = { id: user!.id, phone: user!.phone }
+
+        const accessToken = jwt.sign(
+            accessPayload,
+            process.env.ACCESS_TOKEN_SECRET!,
+            { expiresIn: 60 * 15 }
+        )
+        const refreshToken = jwt.sign(
+            refreshPayload,
+            process.env.REFRESH_TOKEN_SECRET!,
+            { expiresIn: "30d" }
+        )
+
+        const userUpdatedData = {
+            password: hashPassword,
+            randToken: refreshToken
+        }
+
+        await updateUser(user!.id, userUpdatedData)
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 1000 * 60 * 15
+        })
+            .cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+                maxAge: 1000 * 60 * 60 * 24 * 30
+            })
+            .status(200).json({
+                message: "Password is successfully reset.",
+                userId: user!.id
+            })
+    }
+]

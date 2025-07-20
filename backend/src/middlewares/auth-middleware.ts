@@ -73,7 +73,7 @@ export const auth = async (req: CustomRequest, res: Response, next: NextFunction
         const newAccessToken = jwt.sign(
             accessTokenPayload,
             process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: 60 * 2 }
+            { expiresIn: 60 * 15 }
         )
 
         const newRefreshToken = jwt.sign(

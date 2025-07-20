@@ -7,5 +7,6 @@ export const errorCode = {
     overLimit: 'Error_OverLimit',
     otpExpired: 'Error_OTPExpired',
     requestExpired: 'Error_RequestExpired',
-    accountFreeze: 'Error_AccountFreeze'
+    accountFreeze: 'Error_AccountFreeze',
+    unauthorized: 'Error_Unauthorized',
 }
