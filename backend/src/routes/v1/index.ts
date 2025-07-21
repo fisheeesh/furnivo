@@ -9,13 +9,13 @@ import userRoutes from "./user/user-routes"
 
 const router = express.Router()
 
-router.use('/api/v1', authRoutes)
-router.use('/api/v1/user', userRoutes)
-router.use('/api/v1/admin', auth, authorize(true, "ADMIN"), adminRoutes)
+// router.use('/api/v1', authRoutes)
+// router.use('/api/v1/user', userRoutes)
+// router.use('/api/v1/admin', auth, authorize(true, "ADMIN"), adminRoutes)
 
 //* Maintenance mode
-// router.use('/api/v1', maintenance, authRoutes)
-// router.use('/api/v1/user', maintenance, userRoutes)
-// router.use('/api/v1/admin', maintenance, auth, authorize(true, "ADMIN"), adminRoutes)
+router.use('/api/v1', maintenance, authRoutes)
+router.use('/api/v1/user', maintenance, userRoutes)
+router.use('/api/v1/admin', maintenance, auth, authorize(true, "ADMIN"), adminRoutes)
 
 export default router

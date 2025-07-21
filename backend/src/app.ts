@@ -9,7 +9,10 @@ import i18next from "i18next"
 import Backend from "i18next-fs-backend"
 import middleware from "i18next-http-middleware"
 import path from 'path'
+import cron from "node-cron"
+
 import routes from './routes/v1'
+import { createOrUpdateSettingStatus, getSettignStatus } from "./services/system-service"
 
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
@@ -68,4 +71,15 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     res.status(status).json({
         message, error: errorCode
     })
+})
+
+//* cron job work on every specific time we set and use main thread
+//* For heavy tasks, it is ideal  for worker thread
+cron.schedule("* * * * *", async () => {
+    console.log('Running a taks every minute for testing purpose.')
+    const setting = await getSettignStatus("maintenance")
+    if (setting?.value === 'true') {
+        await createOrUpdateSettingStatus("maintenance", 'false')
+        console.log("Now maintainance mode is off.")
+    }
 })
