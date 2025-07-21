@@ -9,12 +9,7 @@ import i18next from "i18next"
 import Backend from "i18next-fs-backend"
 import middleware from "i18next-http-middleware"
 import path from 'path'
-
-import authRoutes from "./routes/v1/auth/auth-routes"
-import adminRoutes from './routes/v1/admin/admin-routes'
-import userRoutes from './routes/v1/user/user-routes'
-import { auth } from "./middlewares/auth-middleware"
-import { authorize } from "./middlewares/authorize-middleware"
+import routes from './routes/v1'
 
 //* client -> req -> middleware -> controller -> res -> client
 export const app = express()
@@ -63,10 +58,7 @@ i18next.use(Backend)
     })
 
 app.use(middleware.handle(i18next))
-
-app.use('/api/v1', authRoutes)
-app.use('/api/v1/admin', auth, authorize(true, "ADMIN"), adminRoutes)
-app.use('/api/v1/', userRoutes)
+app.use(routes)
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500
