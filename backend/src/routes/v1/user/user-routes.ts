@@ -1,5 +1,5 @@
 import express from "express"
-import { changeLanguage, testPermission } from "../../../contorllers/user/user-controller"
+import { changeLanguage, testPermission } from "../../../controllers/user/user-controller"
 import { auth } from "../../../middlewares/auth-middleware"
 
 const router = express.Router()

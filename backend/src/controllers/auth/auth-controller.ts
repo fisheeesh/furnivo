@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import moment from 'moment'
 
 import { errorCode } from '../../config/error-code'
-import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser, updateUserByPhone } from '../../services/auth-service'
+import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../../services/auth-service'
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../../utils/auth'
 import { generateToken } from '../../utils/generate'
 
