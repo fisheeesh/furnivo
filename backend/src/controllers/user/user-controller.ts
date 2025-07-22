@@ -63,14 +63,14 @@ export const uploadProfile = async (req: CustomRequest, res: Response, next: Nex
 
     const fileName = image!.filename
 
-    // if (user?.image) {
-    //     try {
-    //         const filePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
-    //         await unlink(filePath)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+    if (user?.image) {
+        try {
+            const filePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
+            await unlink(filePath)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const userData = {
         image: fileName
