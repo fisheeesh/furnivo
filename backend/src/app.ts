@@ -75,8 +75,8 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
 //* cron job work on every specific time we set and use main thread
 //* For heavy tasks, it is ideal  for worker thread
-cron.schedule("* * * * *", async () => {
-    console.log('Running a taks every minute for testing purpose.')
+cron.schedule("* 5 * * *", async () => {
+    console.log('Running a taks atnevery 5 minutes for testing purpose.')
     const setting = await getSettignStatus("maintenance")
     if (setting?.value === 'true') {
         await createOrUpdateSettingStatus("maintenance", 'false')
