@@ -26,8 +26,14 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
 const upload = multer({
     storage: fileStorage,
     fileFilter,
-    //* Maximum file size is 10MB. So, image optimization is needed
     limits: { fileSize: 1024 * 1024 * 2 }
+})
+
+export const uploadMemory = multer({
+    storage: multer.memoryStorage(),
+    fileFilter,
+    //* Maximum file size is 10MB. So, image optimization is needed
+    limits: { fileSize: 1024 * 1024 * 10 }
 })
 
 export default upload

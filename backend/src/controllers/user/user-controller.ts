@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { query, validationResult } from 'express-validator';
 import { unlink } from "node:fs/promises";
 import path from "path";
+import sharp from "sharp";
 
 import { errorCode } from "../../config/error-code";
+import { getUserById, updateUser } from "../../services/auth-service";
 import { checkUserIfNotExist, createHttpError } from "../../utils/auth";
 import { authorize } from "../../utils/authorize";
-import { getUserById, updateUser } from "../../services/auth-service";
 import { checkUploadFile } from "../../utils/helpers";
 
 interface CustomRequest extends Request {
@@ -78,5 +79,85 @@ export const uploadProfile = async (req: CustomRequest, res: Response, next: Nex
 
     await updateUser(user!.id, userData)
 
-    res.status(200).json({ message: "Upload profile successfully.", image: fileName })
+    res.status(200).json({
+        message: "Upload profile successfully.",
+        image: fileName
+    })
+}
+
+export const uploadProfileMultiple = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userId = req.userId
+    const images = req.files
+    const user = await getUserById(userId!)
+    checkUserIfNotExist(user)
+
+    console.log(images)
+
+    res.status(200).json({
+        message: "Multiple Upload profile successfully.",
+    })
+}
+
+export const uploadProfileOptimize = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userId = req.userId
+    const image = req.file
+    const user = await getUserById(userId!)
+
+    checkUserIfNotExist(user)
+    checkUploadFile(image)
+
+    const fileName = Date.now() + '-' + `${Math.round(Math.random() * 1E9)}.webp`
+
+    try {
+        const optimizeImagePath = path.join(
+            __dirname,
+            '../../../',
+            "uploads/images",
+            fileName
+        )
+        await sharp(req.file?.buffer)
+            .resize(200, 200)
+            .webp({ quality: 50 })
+            .toFile(optimizeImagePath)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "Image optimization failed."
+        })
+        return
+    }
+
+    if (user?.image) {
+        try {
+            const filePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
+            await unlink(filePath)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const userData = {
+        image: fileName
+    }
+
+    await updateUser(user!.id, userData)
+
+    res.status(200).json({
+        message: "Upload profile successfully.",
+        image: fileName
+    })
+}
+
+//* for testing
+export const getMyPhoto = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const file = path.join(
+        __dirname,
+        '../../../',
+        '/uploads/images',
+        "1753178375515-484754777-ken.jpg"
+    )
+
+    res.sendFile(file, (err) => {
+        res.status(404).send("File not found")
+    })
 }
