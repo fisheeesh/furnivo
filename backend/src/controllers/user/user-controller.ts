@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { query, validationResult } from 'express-validator';
+import { unlink } from "node:fs/promises";
+import path from "path";
+
 import { errorCode } from "../../config/error-code";
 import { checkUserIfNotExist, createHttpError } from "../../utils/auth";
 import { authorize } from "../../utils/authorize";
-import { getUserById } from "../../services/auth-service";
+import { getUserById, updateUser } from "../../services/auth-service";
+import { checkUploadFile } from "../../utils/helpers";
 
 interface CustomRequest extends Request {
     userId?: number;
@@ -47,4 +51,32 @@ export const testPermission = async (req: CustomRequest, res: Response, next: Ne
     }
 
     res.status(200).json({ info })
+}
+
+export const uploadProfile = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userId = req.userId
+    const image = req.file
+    const user = await getUserById(userId!)
+
+    checkUserIfNotExist(user)
+    checkUploadFile(image)
+
+    const fileName = image!.filename
+
+    // if (user?.image) {
+    //     try {
+    //         const filePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
+    //         await unlink(filePath)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const userData = {
+        image: fileName
+    }
+
+    await updateUser(user!.id, userData)
+
+    res.status(200).json({ message: "Upload profile successfully.", image: fileName })
 }
