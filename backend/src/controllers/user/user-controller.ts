@@ -9,6 +9,7 @@ import { getUserById, updateUser } from "../../services/auth-service";
 import { checkUserIfNotExist, createHttpError } from "../../utils/auth";
 import { authorize } from "../../utils/authorize";
 import { checkUploadFile } from "../../utils/helpers";
+import ImageQueue from "../../jobs/queues/image-queue";
 
 interface CustomRequest extends Request {
     userId?: number;
@@ -106,45 +107,41 @@ export const uploadProfileOptimize = async (req: CustomRequest, res: Response, n
     checkUserIfNotExist(user)
     checkUploadFile(image)
 
-    const fileName = Date.now() + '-' + `${Math.round(Math.random() * 1E9)}.webp`
+    //* make file name unique and set extension
+    const splitFileName = req.file?.filename.split('.')[0]
 
-    try {
-        const optimizeImagePath = path.join(
-            __dirname,
-            '../../../',
-            "uploads/images",
-            fileName
-        )
-        await sharp(req.file?.buffer)
-            .resize(200, 200)
-            .webp({ quality: 50 })
-            .toFile(optimizeImagePath)
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            message: "Image optimization failed."
-        })
-        return
-    }
+    const job = await ImageQueue.add("optimize-image", {
+        filePath: req.file!.path,
+        fileName: `${splitFileName}.webp`
+    }, {
+        attempts: 3,
+        backoff: {
+            type: "exponential",
+            delay: 1000
+        }
+    })
 
     if (user?.image) {
         try {
-            const filePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
-            await unlink(filePath)
+            const originalFilePath = path.join(__dirname, '../../../', '/uploads/images', user!.image)
+            const optimizeFilePath = path.join(__dirname, '../../../', '/uploads/optimize', user!.image.split('.')[0] + ".webp")
+            await unlink(originalFilePath)
+            await unlink(optimizeFilePath)
         } catch (error) {
             console.log(error)
         }
     }
 
     const userData = {
-        image: fileName
+        image: req.file?.filename
     }
 
     await updateUser(user!.id, userData)
 
     res.status(200).json({
         message: "Upload profile successfully.",
-        image: fileName
+        image: splitFileName + '.webp',
+        jobId: job.id
     })
 }
 
