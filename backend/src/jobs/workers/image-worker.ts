@@ -12,7 +12,7 @@ const connection = new Redis({
 
 //* Create a worker to process the image optimization job
 const imageWorker = new Worker("imageQueue", async (job) => {
-    const { filePath, fileName } = job.data
+    const { filePath, fileName, width, height, quality } = job.data
 
     //* We have to tell sharp that where to store by passing the path cus sharp only do optimization
     const optimizeImagePath = path.join(
@@ -23,8 +23,8 @@ const imageWorker = new Worker("imageQueue", async (job) => {
     )
 
     await sharp(filePath)
-        .resize(200, 200)
-        .webp({ quality: 50 })
+        .resize(width, height)
+        .webp({ quality: quality })
         .toFile(optimizeImagePath)
 }, { connection })
 

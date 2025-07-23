@@ -2,6 +2,7 @@ import express from "express"
 import { changeLanguage, getMyPhoto, testPermission, uploadProfile, uploadProfileMultiple, uploadProfileOptimize } from "../../../controllers/user/user-controller"
 import { auth } from "../../../middlewares/auth-middleware"
 import upload, { uploadMemory } from "../../../middlewares/upload-file"
+import { getPost, getPostsByPagination } from "../../../controllers/user/post-controller"
 
 const router = express.Router()
 
@@ -12,5 +13,8 @@ router.patch("/profile/upload/optimize", auth, upload.single("avatar"), uploadPr
 router.patch("/profile/upload/multiple", auth, upload.array('avatar'), uploadProfileMultiple)
 
 router.get('/profile/my-photo', getMyPhoto)
+
+router.get("/posts", auth, getPostsByPagination)
+router.get("/posts/:id", auth, getPost)
 
 export default router

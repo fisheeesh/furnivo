@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { query, validationResult } from 'express-validator';
 import { unlink } from "node:fs/promises";
 import path from "path";
-import sharp from "sharp";
 
 import { errorCode } from "../../config/error-code";
 import { getUserById, updateUser } from "../../services/auth-service";
@@ -112,7 +111,10 @@ export const uploadProfileOptimize = async (req: CustomRequest, res: Response, n
 
     const job = await ImageQueue.add("optimize-image", {
         filePath: req.file!.path,
-        fileName: `${splitFileName}.webp`
+        fileName: `${splitFileName}.webp`,
+        width: 200,
+        height: 200,
+        quality: 50
     }, {
         attempts: 3,
         backoff: {

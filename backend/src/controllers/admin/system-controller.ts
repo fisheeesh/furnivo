@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { errorCode } from "../../../config/error-code";
-import { createHttpError } from "../../../utils/auth";
-import { createOrUpdateSettingStatus } from "../../../services/system-service";
+import { errorCode } from "../../config/error-code";
+import { createHttpError } from "../../utils/auth";
+import { createOrUpdateSettingStatus } from "../../services/system-service";
 
 interface CustomRequest extends Request {
     userId?: number
