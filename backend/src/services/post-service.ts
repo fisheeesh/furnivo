@@ -50,9 +50,27 @@ export const createOnePost = async (postData: PostArgs) => {
     })
 }
 
+export const getPostByIdWithRealtions = async (id: number) => {
+    return await prisma.post.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            body: true,
+            image: true,
+            updatedAt: true,
+            author: { select: { firstName: true, lastName: true } },
+            category: { select: { name: true } },
+            type: { select: { name: true } },
+            tags: { select: { name: true } }
+        }
+    })
+}
+
 export const getPostById = async (id: number) => {
     return await prisma.post.findUnique({
-        where: { id }
+        where: { id },
     })
 }
 
