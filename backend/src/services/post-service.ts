@@ -115,3 +115,7 @@ export const deleteOnePost = async (id: number) => {
         where: { id }
     })
 }
+
+export const getPostsList = async (options: any) => {
+    return await prisma.post.findMany(options)
+}

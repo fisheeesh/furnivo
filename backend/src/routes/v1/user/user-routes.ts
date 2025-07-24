@@ -14,8 +14,8 @@ router.patch("/profile/upload/multiple", auth, upload.array('avatar'), uploadPro
 
 router.get('/profile/my-photo', getMyPhoto)
 
-router.get("/posts", auth, getPostsByPagination)
-router.get("/posts/infinite", auth, getInfinitePostsByPagination)
+router.get("/posts", auth, getPostsByPagination) //* Offset pagination
+router.get("/posts/infinite", auth, getInfinitePostsByPagination) //* Cursor-based pagination
 router.get("/posts/:id", auth, getPost)
 
 export default router

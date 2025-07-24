@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { body, param, validationResult } from "express-validator"
+import { body, param, query, validationResult } from "express-validator"
 import { errorCode } from "../../config/error-code"
 import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 import { getUserById } from "../../services/auth-service"
-import { getPostById, getPostByIdWithRealtions } from "../../services/post-service"
+import { getPostById, getPostByIdWithRealtions, getPostsList } from "../../services/post-service"
 
 interface CustomRequest extends Request {
     userId?: number
@@ -48,8 +48,10 @@ export const getPost = [
     }
 ]
 
+//* Offset Pagination
 export const getPostsByPagination = [
-    body(""),
+    query("page", "Page number must be unsigned integer.").isInt({ gt: 0 }).optional(),
+    query("limit", "Limit number must be unsigned integer.").isInt({ gt: 4 }).optional(),
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
         if (errors.length > 0) return next(createHttpError({
@@ -58,9 +60,48 @@ export const getPostsByPagination = [
             code: errorCode.invalid
         }))
 
+        const { page = 1, limit = 5 } = req.query
+        const userId = req.userId
+        const user = await getUserById(userId!)
+        checkUserIfNotExist(user)
+
+        const skip = (+page - 1) * +limit
+        const take = +limit + 1
+
+        const options = {
+            skip,
+            take,
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                image: true,
+                updatedAt: true,
+                author: { select: { fullName: true } }
+            },
+            orderBy: {
+                updatedAt: 'desc'
+            }
+        }
+
+        const posts = await getPostsList(options)
+
+        const hasNextPage = posts.length > +limit
+        let nextPage = null
+        const previousPage = +page !== 1 ? +page - 1 : null
+
+        if (hasNextPage) {
+            posts.pop()
+            nextPage = +page + 1
+        }
 
         res.status(200).json({
-            message: "Create post successfully."
+            message: "Get All Posts",
+            currentPage: page,
+            hasNextPage,
+            nextPage,
+            previousPage,
+            posts,
         })
     }
 ]
