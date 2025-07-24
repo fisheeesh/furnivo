@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express"
-import { body, param, query, validationResult } from "express-validator"
+import { param, query, validationResult } from "express-validator"
 import { errorCode } from "../../config/error-code"
-import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 import { getUserById } from "../../services/auth-service"
-import { getPostById, getPostByIdWithRealtions, getPostsList } from "../../services/post-service"
+import { getPostByIdWithRealtions, getPostsList } from "../../services/post-service"
+import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 
 interface CustomRequest extends Request {
     userId?: number
@@ -107,7 +107,8 @@ export const getPostsByPagination = [
 ]
 
 export const getInfinitePostsByPagination = [
-    body(""),
+    query("cursor", "Cursor must be PostId.").isInt({ gt: 0 }).optional(),
+    query("limit", "Limit number must be unsigned integer.").isInt({ gt: 4 }).optional(),
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
         if (errors.length > 0) return next(createHttpError({
@@ -116,9 +117,42 @@ export const getInfinitePostsByPagination = [
             code: errorCode.invalid
         }))
 
+        const { cursor: lastCursor, limit = 5 } = req.query
+        const userId = req.userId
+        const user = await getUserById(userId!)
+        checkUserIfNotExist(user)
+
+        const options = {
+            take: +limit + 1,
+            skip: lastCursor ? 1 : 0,
+            cursor: lastCursor ? { id: +lastCursor } : undefined,
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                image: true,
+                updatedAt: true,
+                author: { select: { fullName: true } }
+            },
+            orderBy: {
+                id: 'asc'
+            }
+        }
+
+        const posts = await getPostsList(options)
+        const hasNextPage = posts.length > +limit
+
+        if (hasNextPage) {
+            posts.pop()
+        }
+
+        const newCursor = posts.length > 0 ? posts[posts.length - 1].id : null
 
         res.status(200).json({
-            message: "Create post successfully."
+            message: "Get all infinite posts.",
+            hasNextPage,
+            newCursor,
+            posts
         })
     }
 ]
