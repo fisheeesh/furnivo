@@ -7,14 +7,19 @@ import ImageQueue from "../../jobs/queues/image-queue";
 import { getUserById } from "../../services/auth-service";
 import { createOnePost, PostArgs } from "../../services/post-service";
 
+import sanitizeHtml from 'sanitize-html';
+
 interface CustomRequest extends Request {
     userId?: number
 }
 
 export const createPost = [
     body("title", "Title is required.").trim().notEmpty().escape(),
-    body("content", "Content is required.").trim().notEmpty().escape(),
-    body("body", "Body is required.").trim().notEmpty().escape(),
+    body("content", "Content is required.").trim().notEmpty(),
+    body("body", "Body is required.")
+        .trim()
+        .notEmpty()
+        .customSanitizer(value => sanitizeHtml(value)).notEmpty(),
     body("category", "Category is required.").trim().notEmpty().escape(),
     body("type", "Type is required.").trim().notEmpty().escape(),
     body("tags", "Tag is invalid.").optional({ nullable: true }).customSanitizer((value) => {
