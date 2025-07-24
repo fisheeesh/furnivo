@@ -8,9 +8,25 @@ import { getUserById } from "../../services/auth-service";
 import { createOnePost, PostArgs } from "../../services/post-service";
 
 import sanitizeHtml from 'sanitize-html';
+import { unlink } from "node:fs/promises";
+import path from "path";
 
 interface CustomRequest extends Request {
     userId?: number
+}
+
+const removeFiles = async (originalFile: string, optimizedFile?: string | null) => {
+    try {
+        const originalFilePath = path.join(__dirname, '../../../', '/uploads/images', originalFile)
+        await unlink(originalFilePath)
+
+        if (optimizedFile) {
+            const optimizeFilePath = path.join(__dirname, '../../../', '/uploads/optimize', originalFile)
+            await unlink(optimizeFilePath)
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export const createPost = [
@@ -30,18 +46,32 @@ export const createPost = [
     }),
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
-        if (errors.length > 0) return next(createHttpError({
-            message: errors[0].msg,
-            status: 400,
-            code: errorCode.invalid
-        }))
+        if (errors.length > 0) {
+            if (req.file) {
+                await removeFiles(req.file.filename, null)
+            }
+            return next(createHttpError({
+                message: errors[0].msg,
+                status: 400,
+                code: errorCode.invalid
+            }))
+        }
 
         const { title, content, body, category, type, tags } = req.body
         const userId = req.userId
         const image = req.file
-        const user = await getUserById(userId!)
-        checkUserIfNotExist(user)
         checkUploadFile(image)
+        const user = await getUserById(userId!)
+        if (!user) {
+            if (req.file) {
+                await removeFiles(req.file.filename, null)
+            }
+            return next(createHttpError({
+                message: 'This phone has not been registered.',
+                status: 401,
+                code: errorCode.unauthenticated
+            }))
+        }
 
         const splitFileName = req.file?.filename.split('.')[0]
 
