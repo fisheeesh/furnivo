@@ -5,7 +5,7 @@ import path from "path";
 
 import { errorCode } from "../../config/error-code";
 import { getUserById, updateUser } from "../../services/auth-service";
-import { checkUserIfNotExist, createHttpError } from "../../utils/auth";
+import { checkUserIfNotExist, createHttpError } from "../../utils/check";
 import { authorize } from "../../utils/authorize";
 import { checkUploadFile } from "../../utils/helpers";
 import ImageQueue from "../../jobs/queues/image-queue";

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { getSettignStatus } from "../services/system-service";
 import { errorCode } from "../config/error-code";
-import { createHttpError } from "../utils/auth";
+import { createHttpError } from "../utils/check";
 
 const whiteLists = ["127.0.0.1"]
 
 export const maintenance = async (req: Request, res: Response, next: NextFunction) => {
     const ip: any = req.headers["x-forwarded-for"] || req.socket.remoteAddress
-    
+
     if (whiteLists.includes(ip)) {
         console.log(`Allowed IP: ${ip}`)
         next()

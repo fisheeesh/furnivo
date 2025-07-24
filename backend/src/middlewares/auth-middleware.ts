@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createHttpError } from "../utils/auth";
+import { createHttpError } from "../utils/check";
 import jwt from "jsonwebtoken"
 import { errorCode } from "../config/error-code";
 import { getUserById, updateUser } from "../services/auth-service";

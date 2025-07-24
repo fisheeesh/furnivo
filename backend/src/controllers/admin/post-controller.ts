@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
-import { checkUserIfNotExist, createHttpError } from "../../utils/auth";
+import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check";
 import { errorCode } from "../../config/error-code";
 import { checkUploadFile } from "../../utils/helpers";
 import ImageQueue from "../../jobs/queues/image-queue";
 import { getUserById } from "../../services/auth-service";
-import { createOnePost, getPostById, PostArgs, updateOnePost } from "../../services/post-service";
+import { createOnePost, deleteOnePost, getPostById, PostArgs, updateOnePost } from "../../services/post-service";
 
 import sanitizeHtml from 'sanitize-html';
 import { unlink } from "node:fs/promises";
@@ -110,7 +110,7 @@ export const createPost = [
 ]
 
 export const updatePost = [
-    body("postId", "Post id is required.").trim().notEmpty().isInt({ min: 1 }),
+    body("postId", "PostId is required.").trim().notEmpty().isInt({ min: 1 }),
     body("title", "Title is required.").trim().notEmpty().escape(),
     body("content", "Content is required.").trim().notEmpty(),
     body("body", "Body is required.")
@@ -220,7 +220,7 @@ export const updatePost = [
 ]
 
 export const deletePost = [
-    body(""),
+    body("postId", "PostId is required.").trim().notEmpty().isInt({ min: 1 }),
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
         if (errors.length > 0) return next(createHttpError({
@@ -229,9 +229,27 @@ export const deletePost = [
             code: errorCode.invalid
         }))
 
+        const { postId } = req.body
+        const userId = req.userId
+        const user = await getUserById(userId!)
+        checkUserIfNotExist(user)
+        const post = await getPostById(+postId)
+        checkModalIfExist(post)
+
+        if (post!.authorId !== userId) return next(createHttpError({
+            message: "You are not allowed to delete this post.",
+            status: 403,
+            code: errorCode.unauthorized
+        }))
+
+        const deletedPost = await deleteOnePost(post!.id)
+
+        const optimzedFile = post!.image.split('.')[0] + '.webp'
+        await removeFiles(post!.image, optimzedFile)
 
         res.status(200).json({
-            message: "Create post successfully."
+            message: "Successfully deleted the post.",
+            postId: deletedPost.id
         })
     }
 ]

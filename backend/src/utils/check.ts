@@ -44,3 +44,12 @@ export const checkOTPRow = (otpRow: any) => {
         throw error
     }
 }
+
+export const checkModalIfExist = (modal: any) => {
+    if (!modal) {
+        const error: any = new Error('Modal is not exist.')
+        error.status = 400
+        error.code = errorCode.invalid
+        throw error
+    }
+}

@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import { errorCode } from '../../config/error-code'
 import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, updateOTP, updateUser } from '../../services/auth-service'
-import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../../utils/auth'
+import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../../utils/check'
 import { generateToken } from '../../utils/generate'
 
 export const register = [
