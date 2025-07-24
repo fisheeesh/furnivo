@@ -1,6 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
-
-const prisma = new PrismaClient()
+import { prisma } from "./prisma-client";
 
 export type PostArgs = {
     title: string;
@@ -60,7 +58,7 @@ export const getPostByIdWithRealtions = async (id: number) => {
             body: true,
             image: true,
             updatedAt: true,
-            author: { select: { firstName: true, lastName: true } },
+            author: { select: { fullName: true } },
             category: { select: { name: true } },
             type: { select: { name: true } },
             tags: { select: { name: true } }
