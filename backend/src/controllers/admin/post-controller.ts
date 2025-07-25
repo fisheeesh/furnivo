@@ -205,8 +205,8 @@ export const updatePost = [
                 }
             })
 
-            const optmizedFile = post.image.split('.')[0] + '.webp'
-            await removeFiles(post.image, optmizedFile)
+            const optimizedFile = post.image.split('.')[0] + '.webp'
+            await removeFiles(post.image, optimizedFile)
         }
 
         const updatedPost = await updateOnePost(post.id, data)
