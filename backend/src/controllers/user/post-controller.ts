@@ -25,8 +25,11 @@ export const getPost = [
         const user = await getUserById(userId!)
         checkUserIfNotExist(user)
 
-        const post = await getPostByIdWithRealtions(+postId)
+        // const post = await getPostByIdWithRealtions(+postId)
+        const cacheKey = `post:${JSON.stringify(postId)}`
+        const post = await getOrSetCache(cacheKey, async () => await getPostByIdWithRealtions(+postId))
         checkModalIfExist(post)
+        
         // const modifiedPost = {
         //     id: post!.id,
         //     title: post!.title,
@@ -85,7 +88,9 @@ export const getPostsByPagination = [
             }
         }
 
-        const posts = await getPostsList(options)
+        // const posts = await getPostsList(options)
+        const cacheKey = `posts:${JSON.stringify(req.query)}`
+        const posts = await getOrSetCache(cacheKey, async () => await getPostsList(options))
 
         const hasNextPage = posts.length > +limit
         let nextPage = null

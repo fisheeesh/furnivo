@@ -1,7 +1,6 @@
 import { redis } from "../config/redis-client";
 
 /**
- * 
  * * @param key for retrieve
  * * @param cb for store
  */
