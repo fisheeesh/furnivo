@@ -26,10 +26,11 @@ export const getPost = [
         checkUserIfNotExist(user)
 
         // const post = await getPostByIdWithRealtions(+postId)
-        const cacheKey = `post:${JSON.stringify(postId)}`
+        //* Check cache first, refresh data later
+        const cacheKey = `posts:${JSON.stringify(postId)}`
         const post = await getOrSetCache(cacheKey, async () => await getPostByIdWithRealtions(+postId))
         checkModalIfExist(post)
-        
+
         // const modifiedPost = {
         //     id: post!.id,
         //     title: post!.title,
@@ -89,6 +90,7 @@ export const getPostsByPagination = [
         }
 
         // const posts = await getPostsList(options)
+        //* Check cache first, refresh data later
         const cacheKey = `posts:${JSON.stringify(req.query)}`
         const posts = await getOrSetCache(cacheKey, async () => await getPostsList(options))
 
@@ -146,6 +148,7 @@ export const getInfinitePostsByPagination = [
         }
 
         // const posts = await getPostsList(options)
+        //* Check cache first, refresh data later
         const cacheKey = `posts:${JSON.stringify(req.query)}`
         const posts = await getOrSetCache(
             cacheKey,

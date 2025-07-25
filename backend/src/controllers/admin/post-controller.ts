@@ -10,6 +10,7 @@ import { createOnePost, deleteOnePost, getPostById, PostArgs, updateOnePost } fr
 import sanitizeHtml from 'sanitize-html';
 import { unlink } from "node:fs/promises";
 import path from "path";
+import CacheQueue from "../../jobs/queues/cache-queue";
 
 interface CustomRequest extends Request {
     userId?: number
@@ -101,6 +102,14 @@ export const createPost = [
         }
 
         const post = await createOnePost(data)
+
+        //* Invalidate cache
+        await CacheQueue.add("invalidate-post-cache", {
+            pattern: 'posts:*'
+        }, {
+            jobId: `invalidate-${Date.now()}`,
+            priority: 1
+        })
 
         res.status(201).json({
             message: "Create post successfully.",
@@ -211,6 +220,13 @@ export const updatePost = [
 
         const updatedPost = await updateOnePost(post.id, data)
 
+        //* Invalidate cache
+        await CacheQueue.add("invalidate-post-cache", {
+            pattern: 'posts:*'
+        }, {
+            jobId: `invalidate-${Date.now()}`,
+            priority: 1
+        })
 
         res.status(200).json({
             message: "Successfully updated the post.",
@@ -243,6 +259,14 @@ export const deletePost = [
         }))
 
         const deletedPost = await deleteOnePost(post!.id)
+
+        //* Invalidate cache
+        await CacheQueue.add("invalidate-post-cache", {
+            pattern: 'posts:*'
+        }, {
+            jobId: `invalidate-${Date.now()}`,
+            priority: 1
+        })
 
         const optimzedFile = post!.image.split('.')[0] + '.webp'
         await removeFiles(post!.image, optimzedFile)
