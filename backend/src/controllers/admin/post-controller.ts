@@ -14,6 +14,7 @@ import CacheQueue from "../../jobs/queues/cache-queue";
 
 interface CustomRequest extends Request {
     userId?: number
+    user?: any
 }
 
 const removeFiles = async (originalFile: string, optimizedFile?: string | null) => {
@@ -59,20 +60,9 @@ export const createPost = [
         }
 
         const { title, content, body, category, type, tags } = req.body
-        const userId = req.userId
+        const user = req.user
         const image = req.file
         checkUploadFile(image)
-        const user = await getUserById(userId!)
-        if (!user) {
-            if (req.file) {
-                await removeFiles(req.file.filename, null)
-            }
-            return next(createHttpError({
-                message: 'This phone has not been registered.',
-                status: 401,
-                code: errorCode.unauthenticated
-            }))
-        }
 
         const splitFileName = req.file?.filename.split('.')[0]
 
@@ -148,19 +138,7 @@ export const updatePost = [
         }
 
         const { postId, title, content, body, category, type, tags } = req.body
-        const userId = req.userId
-        const user = await getUserById(userId!)
-        if (!user) {
-            if (req.file) {
-                await removeFiles(req.file.filename, null)
-            }
-            return next(createHttpError({
-                message: 'This phone has not been registered.',
-                status: 401,
-                code: errorCode.unauthenticated
-            }))
-        }
-
+        const user = req.user
         const post = await getPostById(+postId)
         if (!post) {
             if (req.file) {
@@ -246,13 +224,11 @@ export const deletePost = [
         }))
 
         const { postId } = req.body
-        const userId = req.userId
-        const user = await getUserById(userId!)
-        checkUserIfNotExist(user)
+        const user = req.user
         const post = await getPostById(+postId)
         checkModalIfExist(post)
 
-        if (post!.authorId !== userId) return next(createHttpError({
+        if (post!.authorId !== user.id) return next(createHttpError({
             message: "You are not allowed to delete this post.",
             status: 403,
             code: errorCode.unauthorized
