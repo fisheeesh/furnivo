@@ -5,9 +5,10 @@ import path from "path";
 import { errorCode } from "../../config/error-code";
 import CacheQueue from "../../jobs/queues/cache-queue";
 import ImageQueue from "../../jobs/queues/image-queue";
-import { createOneProduct, getProductById, updateOneProduct } from "../../services/product-service";
-import { createHttpError } from "../../utils/check";
+import { createOneProduct, deleteOneProduct, getProductById, updateOneProduct } from "../../services/product-service";
+import { checkModalIfExist, createHttpError } from "../../utils/check";
 import { checkUploadFile } from "../../utils/helpers";
+import { getPostById } from "../../services/post-service";
 
 interface CustomRequest extends Request {
     userId?: number,
@@ -238,5 +239,38 @@ export const updateProduct = [
         })
     }
 ]
-export const deleteProduct = async (req: CustomRequest, res: Response, next: NextFunction) => { }
+export const deleteProduct = [
+    body("productId", "ProductId is required.").isInt({ min: 1 }),
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid
+        }))
+
+        const { productId } = req.body
+        const product = await getProductById(+productId)
+        checkModalIfExist(product)
+
+        for (const image of product!.images) {
+            const optimizeFile = image.path.split('.')[0] + ".webp"
+            await removeFiles([image.path], [optimizeFile])
+        }
+
+        const deletedProduct = await deleteOneProduct(product!.id)
+
+        await CacheQueue.add("invalidate-product-cache", {
+            pattern: "products:*"
+        }, {
+            jobId: `invalidate-${Date.now()}`,
+            priority: 1
+        })
+
+        res.status(200).json({
+            message: "Product deleted successfully.",
+            productId: deletedProduct.id
+        })
+    }
+]
 
