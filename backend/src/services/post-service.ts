@@ -97,6 +97,8 @@ export const updateOnePost = async (id: number, postData: PostArgs) => {
 
     if (postData.tags && postData.tags.length > 0) {
         data.tags = {
+            //! remove all the relations
+            set: [],
             connectOrCreate: postData.tags.map(tagName => ({
                 where: { name: tagName },
                 create: { name: tagName }

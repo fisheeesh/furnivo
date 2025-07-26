@@ -1,15 +1,14 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check";
 import { errorCode } from "../../config/error-code";
-import { checkUploadFile } from "../../utils/helpers";
 import ImageQueue from "../../jobs/queues/image-queue";
-import { getUserById } from "../../services/auth-service";
 import { createOnePost, deleteOnePost, getPostById, PostArgs, updateOnePost } from "../../services/post-service";
+import { checkModalIfExist, createHttpError } from "../../utils/check";
+import { checkUploadFile } from "../../utils/helpers";
 
-import sanitizeHtml from 'sanitize-html';
 import { unlink } from "node:fs/promises";
 import path from "path";
+import sanitizeHtml from 'sanitize-html';
 import CacheQueue from "../../jobs/queues/cache-queue";
 
 interface CustomRequest extends Request {
