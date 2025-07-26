@@ -19,6 +19,7 @@ export const prisma = new PrismaClient().$extends({
                 }
             },
         },
+        
         post: {
             image: {
                 needs: { image: true },

@@ -75,7 +75,7 @@ model Product {
   typeId      Int
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
-  image       Image[]
+  images      Image[]
   category    Category           @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   type        Type               @relation(fields: [typeId], references: [id], onDelete: Cascade)
   orders      ProductsOnOrders[]
