@@ -21,7 +21,7 @@ const removeFiles = async (originalFiles: string[], optimizeFiles: string[] | nu
             const originalFilePath = path.join(
                 __dirname,
                 '../../..',
-                '/upload/images',
+                '/uploads/images',
                 originalFile
             )
             await unlink(originalFilePath)
@@ -32,7 +32,7 @@ const removeFiles = async (originalFiles: string[], optimizeFiles: string[] | nu
                 const optimizeFilePath = path.join(
                     __dirname,
                     '../../..',
-                    '/upload/optimize',
+                    '/uploads/optimize',
                     optimizeFile
                 )
                 await unlink(optimizeFilePath)
@@ -48,7 +48,7 @@ export const createProduct = [
     body("description", "Description is required.").trim().notEmpty().escape(),
     body("price", "Price is required.")
         .isFloat({ min: 0.1 })
-        .isDecimal({ decimal_digits: "1,2" }),
+        .isDecimal({ decimal_digits: "1, 2" }),
     body("discount", "Discount is required.").isFloat({ min: 0 }).isDecimal({ decimal_digits: "1, 2" }),
     body("inventory", "Inventory is required.").isInt({ min: 1 }),
     body("category", "Category is required.").trim().notEmpty().escape(),
@@ -77,46 +77,28 @@ export const createProduct = [
         const { name, description, price, discount, inventory, category, type, tags } = req.body
         checkUploadFile(req.files && req.files.length > 0)
 
-        for (const file of req.files) {
-            const splitFileName = file.filename.split(".")[0];
-
-            await ImageQueue.add("optimize-image", {
-                filePath: file.path,
-                fileName: `${splitFileName}.webp`,
-                width: 835,
-                height: 577,
-                quality: 100,
-            }, {
-                attempts: 3,
-                backoff: {
-                    type: "exponential",
-                    delay: 1000,
-                },
+        await Promise.all(
+            req.files.map(async (file: any) => {
+                const splitFileName = file.filename.split(".")[0];
+                return await ImageQueue.add(
+                    "optimize-image",
+                    {
+                        filePath: file.path,
+                        fileName: `${splitFileName}.webp`,
+                        width: 835,
+                        height: 577,
+                        quality: 100,
+                    },
+                    {
+                        attempts: 3,
+                        backoff: {
+                            type: "exponential",
+                            delay: 1000,
+                        },
+                    }
+                );
             })
-        }
-
-        // await Promise.all(
-        //     req.files.map(async (file: any) => {
-        //         const splitFileName = file.filename.split(".")[0];
-        //         return await ImageQueue.add(
-        //             "optimize-image",
-        //             {
-        //                 filePath: file.path,
-        //                 fileName: `${splitFileName}.webp`,
-        //                 width: 835,
-        //                 height: 577,
-        //                 quality: 100,
-        //             },
-        //             {
-        //                 attempts: 3,
-        //                 backoff: {
-        //                     type: "exponential",
-        //                     delay: 1000,
-        //                 },
-        //             }
-        //         );
-        //     })
-        // );
+        );
 
         const originalFileNames = req.files.map((file: any) => ({ path: file.filename }))
 
