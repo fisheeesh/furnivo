@@ -3,8 +3,8 @@ import { param, query, validationResult } from "express-validator"
 import { errorCode } from "../../config/error-code"
 import { getUserById } from "../../services/auth-service"
 import { getPostByIdWithRealtions, getPostsList } from "../../services/post-service"
-import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 import { getOrSetCache } from "../../utils/cache"
+import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 
 interface CustomRequest extends Request {
     userId?: number
