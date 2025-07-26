@@ -77,25 +77,46 @@ export const createProduct = [
         const { name, description, price, discount, inventory, category, type, tags } = req.body
         checkUploadFile(req.files && req.files.length > 0)
 
-        await Promise.all(
-            req.files.map(async (file: any) => {
-                const splitFileName = file.filename.split('.')[0]
+        for (const file of req.files) {
+            const splitFileName = file.filename.split(".")[0];
 
-                return ImageQueue.add('optimize-image', {
-                    filePath: file.path,
-                    fileName: `${splitFileName}.webp`,
-                    width: 835,
-                    height: 577,
-                    quality: 100
-                }, {
-                    attempts: 3,
-                    backoff: {
-                        type: "exponential",
-                        delay: 1000
-                    }
-                })
+            await ImageQueue.add("optimize-image", {
+                filePath: file.path,
+                fileName: `${splitFileName}.webp`,
+                width: 835,
+                height: 577,
+                quality: 100,
+            }, {
+                attempts: 3,
+                backoff: {
+                    type: "exponential",
+                    delay: 1000,
+                },
             })
-        )
+        }
+
+        // await Promise.all(
+        //     req.files.map(async (file: any) => {
+        //         const splitFileName = file.filename.split(".")[0];
+        //         return await ImageQueue.add(
+        //             "optimize-image",
+        //             {
+        //                 filePath: file.path,
+        //                 fileName: `${splitFileName}.webp`,
+        //                 width: 835,
+        //                 height: 577,
+        //                 quality: 100,
+        //             },
+        //             {
+        //                 attempts: 3,
+        //                 backoff: {
+        //                     type: "exponential",
+        //                     delay: 1000,
+        //                 },
+        //             }
+        //         );
+        //     })
+        // );
 
         const originalFileNames = req.files.map((file: any) => ({ path: file.filename }))
 
@@ -114,7 +135,7 @@ export const createProduct = [
         const product = await createOneProduct(data)
 
         await CacheQueue.add("invalidate-product-cache", {
-            patthern: "products:*"
+            pattern: "products:*"
         }, {
             jobId: `invalidate-${Date.now()}`,
             priority: 1
