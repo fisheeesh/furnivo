@@ -8,7 +8,6 @@ import ImageQueue from "../../jobs/queues/image-queue";
 import { createOneProduct, deleteOneProduct, getProductById, updateOneProduct } from "../../services/product-service";
 import { checkModalIfExist, createHttpError } from "../../utils/check";
 import { checkUploadFile } from "../../utils/helpers";
-import { getPostById } from "../../services/post-service";
 
 interface CustomRequest extends Request {
     userId?: number,
@@ -81,7 +80,7 @@ export const createProduct = [
         await Promise.all(
             req.files.map(async (file: any) => {
                 const splitFileName = file.filename.split(".")[0];
-                return await ImageQueue.add(
+                return ImageQueue.add(
                     "optimize-image",
                     {
                         filePath: file.path,

@@ -32,6 +32,10 @@ const prisma = new PrismaClient()
 //     },
 // ]
 
+// "prisma": {
+//     "seed": "ts-node prisma/seed.ts"
+//  }
+
 function createRandomUser() {
     return {
         phone: faker.phone.number({ style: 'international' }),

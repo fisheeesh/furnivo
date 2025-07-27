@@ -57,8 +57,8 @@ model Post {
   categoryId Int
   typeId     Int
   author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  category   Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  type       Type      @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  category   Category  @relation(fields: [categoryId], references: [id])
+  type       Type      @relation(fields: [typeId], references: [id])
   tags       PostTag[]
 }
 
@@ -76,8 +76,8 @@ model Product {
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   images      Image[]
-  category    Category           @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  type        Type               @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  category    Category           @relation(fields: [categoryId], references: [id])
+  type        Type               @relation(fields: [typeId], references: [id])
   orders      ProductsOnOrders[]
   tags        ProductTag[]
 }
