@@ -3,7 +3,7 @@ import { changeLanguage, getMyPhoto, testPermission, uploadProfile, uploadProfil
 import { auth } from "../../../middlewares/auth-middleware"
 import upload, { uploadMemory } from "../../../middlewares/upload-file"
 import { getInfinitePostsByPagination, getPost, getPostsByPagination } from "../../../controllers/user/post-controller"
-import { getProduct } from "../../../controllers/user/product-controller"
+import { getProduct, getProductsByPagination } from "../../../controllers/user/product-controller"
 
 const router = express.Router()
 
@@ -20,5 +20,7 @@ router.get("/posts/infinite", auth, getInfinitePostsByPagination) //* Cursor-bas
 router.get("/posts/:id", auth, getPost)
 
 router.get("/products/:id", auth, getProduct)
+router.get("/products", auth, getProductsByPagination)
+
 
 export default router

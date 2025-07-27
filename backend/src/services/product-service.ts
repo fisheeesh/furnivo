@@ -124,3 +124,7 @@ export const deleteOneProduct = async (id: number) => {
         where: { id }
     })
 }
+
+export const getProductsList = async (options: any) => {
+    return await prisma.product.findMany(options)
+}
