@@ -19,7 +19,6 @@ export const prisma = new PrismaClient().$extends({
                 }
             },
         },
-        
         post: {
             image: {
                 needs: { image: true },
@@ -33,6 +32,14 @@ export const prisma = new PrismaClient().$extends({
                     return post.updatedAt.toLocaleDateString("en-US", {
                         year: "numeric", month: "long", day: "numeric"
                     })
+                }
+            }
+        },
+        image: {
+            path: {
+                needs: { path: true },
+                compute(image) {
+                    return `/optimize/${image.path.split('.')[0]}.webp`
                 }
             }
         }

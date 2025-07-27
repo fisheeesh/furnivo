@@ -1,6 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
-
-const prisma = new PrismaClient()
+import { prisma } from "./prisma-client"
 
 export const createOneProduct = async (data: any) => {
     let productData: any = {
@@ -45,6 +43,35 @@ export const getProductById = async (id: number) => {
         include: {
             images: true
         }
+    })
+}
+
+export const getProductByIdWithRealtions = async (id: number) => {
+    return await prisma.product.findUnique({
+        where: { id },
+        omit: {
+            createdAt: true,
+            updatedAt: true,
+            categoryId: true,
+            typeId: true
+        },
+        include: {
+            images: { select: { id: true, path: true } },
+        }
+        // select: {
+        //     id: true,
+        //     name: true,
+        //     description: true,
+        //     price: true,
+        //     discount: true,
+        //     inventory: true,
+        //     rating: true,
+        //     status: true,
+        //     images: { select: { path: true } },
+        //     category: { select: { name: true } },
+        //     type: { select: { name: true } },
+        //     tags: { select: { name: true } }
+        // }
     })
 }
 

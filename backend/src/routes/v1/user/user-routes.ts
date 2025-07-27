@@ -3,6 +3,7 @@ import { changeLanguage, getMyPhoto, testPermission, uploadProfile, uploadProfil
 import { auth } from "../../../middlewares/auth-middleware"
 import upload, { uploadMemory } from "../../../middlewares/upload-file"
 import { getInfinitePostsByPagination, getPost, getPostsByPagination } from "../../../controllers/user/post-controller"
+import { getProduct } from "../../../controllers/user/product-controller"
 
 const router = express.Router()
 
@@ -17,5 +18,7 @@ router.get('/profile/my-photo', getMyPhoto)
 router.get("/posts", auth, getPostsByPagination) //* Offset pagination
 router.get("/posts/infinite", auth, getInfinitePostsByPagination) //* Cursor-based pagination
 router.get("/posts/:id", auth, getPost)
+
+router.get("/products/:id", auth, getProduct)
 
 export default router
