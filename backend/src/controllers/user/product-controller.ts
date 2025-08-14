@@ -66,8 +66,6 @@ export const getProductsByPagination = [
             typeList = type.toString().split(',').map(t => Number(t)).filter(t => t > 0)
         }
 
-        console.log(categoryList, typeList)
-
         const where = {
             AND: [
                 categoryList.length > 0 ? { categoryId: { in: categoryList } } : {},
