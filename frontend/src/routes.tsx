@@ -29,7 +29,7 @@ export default function Router() {
                 {
                     path: 'blogs',
                     lazy: async () => {
-                        const { default: BlogRootLayout } = await import('@/pages/blogs/BlogRootLayout');
+                        const { default: BlogRootLayout, } = await import('@/pages/blogs/BlogRootLayout');
                         return { Component: BlogRootLayout };
                     },
                     children: [

@@ -300,12 +300,14 @@ export const confirmPassword = [
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 1000 * 60 * 15
+            maxAge: 1000 * 60 * 15,
+            path: '/'
         }).cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 1000 * 60 * 60 * 24 * 30
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+            path: "/"
         }).status(201).json({
             message: 'Successfully created an account.',
             userId: newUser.id,
@@ -413,15 +415,18 @@ export const login = [
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 1000 * 60 * 15
+            maxAge: 1000 * 60 * 15,
+            path: "/"
         }).cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 1000 * 60 * 60 * 24 * 30
+            maxAge: 1000 * 60 * 60 * 24 * 30,
+            path: "/"
         }).status(200).json({
             message: 'Successfully Logged In.',
             userId: user!.id,
+
         })
     }
 ]
@@ -475,11 +480,13 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        path: "/"
     })
     res.clearCookie('refreshToken', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        path: "/"
     })
 
     res.status(200).json({ message: "Successfully logged out. See you soon.!" })
