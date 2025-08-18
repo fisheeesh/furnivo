@@ -28,7 +28,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
     ...props
 }: AuthFormProps<T>) {
     type FormData = z.infer<T>
-    const naviate = useNavigate()
+    const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
 
     const form = useForm({
@@ -38,7 +38,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
 
     const handleSubmit: SubmitHandler<FormData> = async () => {
         await new Promise(resolve => setTimeout(resolve, 2000))
-        naviate('/')
+        navigate('/')
     }
 
     const buttonText = formType === 'LOGIN' ? LOGIN : REGISTER
@@ -64,24 +64,25 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                             name={field as Path<FormData>}
                                             render={({ field }: { field: ControllerRenderProps<FormData, Path<FormData>> }) => (
                                                 <FormItem className="grid gap-3">
-                                                    <FormLabel className="flex items-center gap-1 justify-between">
-                                                        <div>
+                                                    <div className="flex items-center gap-1 justify-between">
+                                                        <FormLabel>
                                                             {field.name === 'phone' ? 'Phone Number' :
                                                                 field.name.charAt(0).toUpperCase() + field.name.slice(1)}
                                                             <span className="text-red-600"> *</span>
-                                                        </div>
+                                                        </FormLabel>
                                                         {formType === 'LOGIN' && field.name === 'password' && <Link
                                                             to="#"
                                                             className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                                                         >
                                                             Forgot your password?
                                                         </Link>}
-                                                    </FormLabel>
+                                                    </div>
                                                     <FormControl>
                                                         <div className="relative">
                                                             <Input
                                                                 disabled={form.formState.isSubmitting}
                                                                 placeholder={field.name === 'phone' ? '09924****' : '******'}
+                                                                inputMode="numeric"
                                                                 type={(field.name === 'password' || field.name === 'confirmPassword') && showPassword[field.name] ? 'text' : (field.name === 'password' || field.name === 'confirmPassword') ? 'password' : 'text'}
                                                                 {...field}
                                                             />

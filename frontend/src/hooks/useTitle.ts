@@ -2,10 +2,10 @@ import { useEffect } from "react"
 
 const useTitle = (title: string) => {
     useEffect(() => {
-        document.title = `${title} | Furniture Shop`
+        document.title = `${title} | Furnivo`
 
         return () => {
-            document.title = "Furniture Shop"
+            document.title = "Furnivo"
         }
     }, [title])
 }
