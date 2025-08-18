@@ -1,4 +1,7 @@
-import { prisma } from "./prisma-client";
+import { PrismaClient } from "../generated/prisma";
+import { prisma } from "../config/prisma-client";
+
+const prismaClient = new PrismaClient()
 
 export type PostArgs = {
     title: string;
@@ -67,7 +70,7 @@ export const getPostByIdWithRealtions = async (id: number) => {
 }
 
 export const getPostById = async (id: number) => {
-    return await prisma.post.findUnique({
+    return await prismaClient.post.findUnique({
         where: { id },
     })
 }

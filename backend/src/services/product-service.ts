@@ -1,4 +1,7 @@
-import { prisma } from "./prisma-client"
+import { PrismaClient } from "../generated/prisma"
+import { prisma } from "../config/prisma-client"
+
+const prismaClient = new PrismaClient()
 
 export const createOneProduct = async (data: any) => {
     let productData: any = {
@@ -38,7 +41,7 @@ export const createOneProduct = async (data: any) => {
 }
 
 export const getProductById = async (id: number) => {
-    return await prisma.product.findUnique({
+    return await prismaClient.product.findUnique({
         where: { id },
         include: {
             images: true
