@@ -9,6 +9,7 @@ import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
 import NotFoundPage from './pages/NotFound'
 import { Suspense } from 'react'
+import { homeLoader } from './router/loaders'
 
 export default function Router() {
 
@@ -21,6 +22,7 @@ export default function Router() {
                 {
                     index: true,
                     Component: HomePage,
+                    loader: homeLoader,
                 },
                 {
                     path: 'about',
