@@ -2,11 +2,12 @@
 import google from '@/assets/google.png';
 import { LOGIN, LOGIN_SUBTITLE, LOGIN_TITLE, REGISTER, REGISTER_SUBTITLE, REGISTER_TITLE } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm, type ControllerRenderProps, type DefaultValues, type Path, type SubmitHandler } from "react-hook-form";
-import { Link, useSubmit } from "react-router";
+import { Link, useNavigation, useSubmit } from "react-router";
 import type { z } from "zod";
+import Spinner from '../Spinner';
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
@@ -27,6 +28,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
     type FormData = z.infer<T>
     const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
     const submit = useSubmit()
+    const navigation = useNavigation()
 
     const form = useForm({
         defaultValues: defaultValues as DefaultValues<FormData>,
@@ -39,6 +41,8 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
             action: '/login'
         })
     }
+
+    const isWorking = navigation.state === 'submitting'
 
     const buttonText = formType === 'LOGIN' ? LOGIN : REGISTER
 
@@ -79,7 +83,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                                     <FormControl>
                                                         <div className="relative">
                                                             <Input
-                                                                disabled={form.formState.isSubmitting}
+                                                                disabled={isWorking}
                                                                 placeholder={field.name === 'phone' ? '09924****' : '******'}
                                                                 inputMode="numeric"
                                                                 type={(field.name === 'password' || field.name === 'confirmPassword') && showPassword[field.name] ? 'text' : (field.name === 'password' || field.name === 'confirmPassword') ? 'password' : 'text'}
@@ -111,23 +115,20 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                     <Button
                                         type="submit"
                                         className="w-ful flex items-center gap-2 justify-center"
-                                        disabled={form.formState.isSubmitting}
+                                        disabled={isWorking}
                                     >
-                                        {form.formState.isSubmitting ?
-                                            <>
-                                                <Loader className="animate-spin w-4 h-4" />
-                                                {buttonText === 'Login' ? 'Logging In...' : 'Creating...'}
-                                            </>
-                                            :
-                                            buttonText
-                                        }
+                                        <Spinner
+                                            isLoading={isWorking}
+                                            label={buttonText === 'Login' ? 'Signing In...' : 'Signing Up...'}>
+                                            {buttonText}
+                                        </Spinner>
                                     </Button>
                                     <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                                         <span className="bg-background text-muted-foreground relative z-10 px-2">
                                             Or continue with
                                         </span>
                                     </div>
-                                    <Button variant="outline" className="w-full" asChild>
+                                    <Button type="button" disabled={isWorking} variant="outline" className="w-full" asChild>
                                         <Link to='/' className="flex items-center gap-4">
                                             <img src={google} alt="Google" className="w-4 h-4" />
                                             {buttonText} with Google

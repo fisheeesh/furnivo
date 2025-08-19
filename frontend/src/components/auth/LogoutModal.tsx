@@ -7,9 +7,13 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import { Form } from "react-router"
+import { Form, useNavigation } from "react-router"
+import Spinner from "../Spinner"
 
 export default function LogoutModal() {
+    const navigation = useNavigation()
+    const isWorking = navigation.state === 'submitting'
+
     return (
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -20,11 +24,13 @@ export default function LogoutModal() {
             </DialogHeader>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline" className="cursor-pointer">Cancel</Button>
+                    <Button disabled={isWorking} variant="outline" className="cursor-pointer">Cancel</Button>
                 </DialogClose>
                 <Form method="POST" action="/logout">
-                    <Button type="submit" className="cursor-pointer">
-                        Confirm
+                    <Button disabled={isWorking} type="submit" className="cursor-pointer">
+                        <Spinner isLoading={isWorking} label={'Loggint out...'}>
+                            Confirm
+                        </Spinner>
                     </Button>
                 </Form>
             </DialogFooter>
