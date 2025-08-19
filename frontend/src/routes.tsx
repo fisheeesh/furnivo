@@ -11,6 +11,8 @@ import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
 import { loginAction, logoutAction } from './router/actions'
 import { homeLoader, loginLoader } from './router/loaders'
+import SignUpPage from './pages/auth/SignUp'
+import OTPPage from './pages/auth/OTP'
 
 export default function Router() {
 
@@ -77,9 +79,19 @@ export default function Router() {
         {
             path: '/register',
             lazy: async () => {
-                const { default: RegisterPage } = await import('@/pages/auth/Register')
-                return { Component: RegisterPage }
-            }
+                const { default: AuthRootLayout } = await import('@/pages/auth/AuthRootLayout')
+                return { Component: AuthRootLayout }
+            },
+            children: [
+                {
+                    index: true,
+                    Component: SignUpPage
+                },
+                {
+                    path: "otp",
+                    Component: OTPPage
+                }
+            ]
         },
         {
             path: "/logout",

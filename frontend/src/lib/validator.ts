@@ -44,3 +44,9 @@ export const ProductFilterSchema = z.object({
         message: "You have to select at least one item.",
     }),
 })
+
+export const OTPSchema = z.object({
+    pin: z.string().min(6, {
+        message: "Your one-time password must be 6 characters.",
+    }),
+})
