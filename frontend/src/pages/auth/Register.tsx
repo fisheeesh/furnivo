@@ -20,7 +20,6 @@ export default function Register() {
                             password: '',
                             confirmPassword: ''
                         }}
-                        onSubmit={(data) => Promise.resolve({ success: true, data })}
                     />
                 </div>
             </div>

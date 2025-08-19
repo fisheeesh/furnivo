@@ -1,14 +1,15 @@
-import { createBrowserRouter, RouterProvider } from 'react-router'
-import HomePage from '@/pages/Home'
 import AboutPage from '@/pages/About'
-import RootLayout from './pages/RootLayout'
+import HomePage from '@/pages/Home'
+import { Suspense } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import ErrorPage from './pages/Error'
+import NotFoundPage from './pages/NotFound'
+import RootLayout from './pages/RootLayout'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import NotFoundPage from './pages/NotFound'
-import { Suspense } from 'react'
+import { loginAction } from './router/actions'
 import { homeLoader } from './router/loaders'
 
 export default function Router() {
@@ -69,7 +70,8 @@ export default function Router() {
             lazy: async () => {
                 const { default: LoginPage } = await import('@/pages/auth/Login')
                 return { Component: LoginPage }
-            }
+            },
+            action: loginAction
         },
         {
             path: '/register',

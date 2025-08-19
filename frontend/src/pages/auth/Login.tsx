@@ -21,7 +21,6 @@ export default function Login() {
                                 phone: '',
                                 password: ''
                             }}
-                            onSubmit={(data) => Promise.resolve({ success: true, data })}
                         />
                     </div>
                 </div>

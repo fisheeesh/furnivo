@@ -1,44 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
-import { Link, useNavigate } from "react-router";
-import { Button } from "../ui/button";
-import google from '@/assets/google.png'
-import type { z } from "zod";
-import { useForm, type ControllerRenderProps, type DefaultValues, type Path, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import google from '@/assets/google.png';
 import { LOGIN, LOGIN_SUBTITLE, LOGIN_TITLE, REGISTER, REGISTER_SUBTITLE, REGISTER_TITLE } from "@/lib/constants";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { useState } from "react";
+import { useForm, type ControllerRenderProps, type DefaultValues, type Path, type SubmitHandler } from "react-hook-form";
+import { Link, useSubmit } from "react-router";
+import type { z } from "zod";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {
     formType: "LOGIN" | "REGISTER",
     schema: T,
     defaultValues: z.infer<T>,
-    onSubmit: (data: z.infer<T>) => Promise<{ success: boolean }>
 }
 
 export default function AuthForm<T extends z.ZodType<any, any, any>>({
     formType,
     schema,
     defaultValues,
-    onSubmit,
     ...props
 }: AuthFormProps<T>) {
     type FormData = z.infer<T>
-    const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
+    const submit = useSubmit()
 
     const form = useForm({
         defaultValues: defaultValues as DefaultValues<FormData>,
         resolver: zodResolver(schema)
     })
 
-    const handleSubmit: SubmitHandler<FormData> = async () => {
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        navigate('/')
+    const handleSubmit: SubmitHandler<FormData> = async (values) => {
+        submit(values, {
+            method: "POST",
+            action: '/login'
+        })
     }
 
     const buttonText = formType === 'LOGIN' ? LOGIN : REGISTER
@@ -123,6 +122,11 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                             buttonText
                                         }
                                     </Button>
+                                    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                                        <span className="bg-background text-muted-foreground relative z-10 px-2">
+                                            Or continue with
+                                        </span>
+                                    </div>
                                     <Button variant="outline" className="w-full" asChild>
                                         <Link to='/' className="flex items-center gap-4">
                                             <img src={google} alt="Google" className="w-4 h-4" />
