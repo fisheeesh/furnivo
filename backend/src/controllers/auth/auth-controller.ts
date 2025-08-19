@@ -9,6 +9,10 @@ import { createOTP, createUser, getOTPByPhone, getUserById, getUserByPhone, upda
 import { checkOTPErrorIfSameDate, checkOTPRow, checkUserExit, checkUserIfNotExist, createHttpError } from '../../utils/check'
 import { generateToken } from '../../utils/generate'
 
+interface CustomRequest extends Request {
+    userId?: number
+}
+
 export const register = [
     body("phone", "Invalid phone number.")
         .trim()
@@ -365,7 +369,7 @@ export const login = [
 
                 await updateUser(user!.id, userData)
             } else {
-                if (user!.errorLoginCount >= 2) {
+                if (user!.errorLoginCount >= 3) {
                     const userData = {
                         status: 'FREEZE'
                     }
@@ -766,3 +770,16 @@ export const resetPassword = [
             })
     }
 ]
+
+export const authCheck = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userId = req.userId
+    const user = await getUserById(userId!)
+    checkUserIfNotExist(user)
+
+    res.status(200).json({
+        message: "You are authenticated.",
+        userId: user?.id,
+        username: `${user?.firstName} ${user?.lastName}`,
+        image: user?.image
+    })
+}

@@ -29,7 +29,9 @@ export default function NewsLetterForm() {
     const onSubmit: SubmitHandler<z.infer<typeof NewsLetterSchema>> = async () => {
         await new Promise(resolve => setTimeout(resolve, 2000))
         form.reset()
-        toast("Subscribed to newsletter")
+        toast.error("Success", {
+            description: "Subscribed to newsletter"
+        })
     }
 
     return (

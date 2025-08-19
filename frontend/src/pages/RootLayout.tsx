@@ -10,9 +10,9 @@ export default function RootLayout() {
             <Header />
             <main className="flex-1 mt-16 px-4">
                 <Outlet />
-                <Toaster />
                 <ScrollTopBtn />
             </main>
+            <Toaster richColors />
             <Footer />
         </div>
     )

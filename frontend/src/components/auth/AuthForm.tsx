@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm, type ControllerRenderProps, type DefaultValues, type Path, type SubmitHandler } from "react-hook-form";
-import { Link, useNavigation, useSubmit } from "react-router";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import type { z } from "zod";
 import Spinner from '../Spinner';
 import { Button } from "../ui/button";
@@ -27,8 +27,13 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
 }: AuthFormProps<T>) {
     type FormData = z.infer<T>
     const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
+
     const submit = useSubmit()
     const navigation = useNavigation()
+    const actionData = useActionData() as {
+        error?: string,
+        message?: string
+    }
 
     const form = useForm({
         defaultValues: defaultValues as DefaultValues<FormData>,
@@ -110,6 +115,11 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                             )}
                                         />
                                     ))
+                                }
+                                {
+                                    actionData && <p className='text-red-600 w-full bg-red-200 text-center p-1.5 text-sm'>
+                                        {actionData.message}
+                                    </p>
                                 }
                                 <div className="flex flex-col gap-3">
                                     <Button
