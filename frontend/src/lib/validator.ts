@@ -10,20 +10,20 @@ export const LogInSchema = z.object({
         .regex(/^\d+$/, "Password must be numbers")
 })
 
-export const RegisterSchema = z.object({
-    phone: z.string().regex(/^09\d{7,9}$/, {
-        message: 'Invalid phone number format',
-    }),
-    password: z.string()
-        .min(1, { message: "Password is required" })
-        .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z.string()
-        .min(1, { message: "Confirm password is required" })
-        .min(6, { message: "Confirm password must be at least 6 characters" })
-}).refine(data => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
-})
+// export const RegisterSchema = z.object({
+//     phone: z.string().regex(/^09\d{7,9}$/, {
+//         message: 'Invalid phone number format',
+//     }),
+//     password: z.string()
+//         .min(1, { message: "Password is required" })
+//         .min(6, { message: "Password must be at least 6 characters" }),
+//     confirmPassword: z.string()
+//         .min(1, { message: "Confirm password is required" })
+//         .min(6, { message: "Confirm password must be at least 6 characters" })
+// }).refine(data => data.password === data.confirmPassword, {
+//     message: "Passwords do not match",
+//     path: ["confirmPassword"]
+// })
 
 
 export const QuantitySchema = z.object({
@@ -45,8 +45,26 @@ export const ProductFilterSchema = z.object({
     }),
 })
 
+export const RegisterSchema = z.object({
+    phone: z.string().regex(/^09\d{7,9}$/, { message: 'Invalid phone number format' }),
+})
+
 export const OTPSchema = z.object({
-    pin: z.string().min(6, {
+    otp: z.string().min(6, {
         message: "Your one-time password must be 6 characters.",
     }),
+})
+
+export const ConfirmPasswordSchema = z.object({
+    password: z.string()
+        .min(1, { message: "Password is required" })
+        .min(8, { message: "Password must be at least 8 characters" })
+        .regex(/^\d+$/, "Password must be numbers"),
+    confirmPassword: z.string()
+        .min(1, { message: "Confirm password is required" })
+        .min(8, { message: "Confirm password must be at least 8 characters" })
+        .regex(/^\d+$/, "Password must be numbers")
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
 })

@@ -89,7 +89,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                                         <div className="relative">
                                                             <Input
                                                                 disabled={isWorking}
-                                                                placeholder={field.name === 'phone' ? '09924****' : '******'}
+                                                                placeholder={field.name === 'phone' ? 'Phone Number' : 'Password'}
                                                                 inputMode="numeric"
                                                                 type={(field.name === 'password' || field.name === 'confirmPassword') && showPassword[field.name] ? 'text' : (field.name === 'password' || field.name === 'confirmPassword') ? 'password' : 'text'}
                                                                 {...field}

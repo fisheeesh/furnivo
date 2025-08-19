@@ -1,3 +1,12 @@
 import { Outlet } from "react-router";
+import { Toaster } from "sonner";
 
-export default Outlet;
+export default function AuthRootLayout() {
+    return (
+        <div>
+            <Outlet />
+            <Toaster richColors />
+        </div>
+    )
+}
+

@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme{
+@theme {
   --color-own: #3b5d50;
   --color-own-hover: #2f4a41;
 }
@@ -119,6 +119,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

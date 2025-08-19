@@ -13,6 +13,7 @@ import { loginAction, logoutAction } from './router/actions'
 import { homeLoader, loginLoader } from './router/loaders'
 import SignUpPage from './pages/auth/SignUp'
 import OTPPage from './pages/auth/OTP'
+import ConfirmPasswordPage from './pages/auth/ConfirmPassword'
 
 export default function Router() {
 
@@ -90,6 +91,10 @@ export default function Router() {
                 {
                     path: "otp",
                     Component: OTPPage
+                },
+                {
+                    path: "confirm-password",
+                    Component: ConfirmPasswordPage
                 }
             ]
         },
