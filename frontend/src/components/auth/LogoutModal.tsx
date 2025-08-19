@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import { Link } from "react-router"
+import { Form } from "react-router"
 
 export default function LogoutModal() {
     return (
@@ -22,9 +22,11 @@ export default function LogoutModal() {
                 <DialogClose asChild>
                     <Button variant="outline" className="cursor-pointer">Cancel</Button>
                 </DialogClose>
-                <Button type="submit" className="cursor-pointer" asChild>
-                    <Link to='/login'>Confirm</Link>
-                </Button>
+                <Form method="POST" action="/logout">
+                    <Button type="submit" className="cursor-pointer">
+                        Confirm
+                    </Button>
+                </Form>
             </DialogFooter>
         </DialogContent>
     )

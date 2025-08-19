@@ -9,7 +9,7 @@ import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import { loginAction } from './router/actions'
+import { loginAction, logoutAction } from './router/actions'
 import { homeLoader } from './router/loaders'
 
 export default function Router() {
@@ -79,6 +79,10 @@ export default function Router() {
                 const { default: RegisterPage } = await import('@/pages/auth/Register')
                 return { Component: RegisterPage }
             }
+        },
+        {
+            path: "/logout",
+            action: logoutAction,
         },
         {
             path: '*',

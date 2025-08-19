@@ -18,8 +18,8 @@ export default function Login() {
                             formType='LOGIN'
                             schema={LogInSchema}
                             defaultValues={{
-                                phone: '',
-                                password: ''
+                                phone: '0991479581',
+                                password: '12345678'
                             }}
                         />
                     </div>
