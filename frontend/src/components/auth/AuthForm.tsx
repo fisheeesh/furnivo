@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import AuthError from '../AuthError';
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {
     formType: "LOGIN" | "REGISTER",
@@ -117,9 +118,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                     ))
                                 }
                                 {
-                                    actionData && <p className='text-red-600 w-full bg-red-200 text-center p-1.5 text-sm'>
-                                        {actionData.message}
-                                    </p>
+                                    actionData && <AuthError text={actionData.message} />
                                 }
                                 <div className="flex flex-col gap-3">
                                     <Button

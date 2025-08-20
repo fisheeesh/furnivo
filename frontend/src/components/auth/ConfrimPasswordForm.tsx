@@ -5,11 +5,12 @@ import { cn } from "@/lib/utils"
 import { ConfirmPasswordSchema } from "@/lib/validator"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useActionData, useSubmit } from "react-router"
+import { Link, useActionData, useSubmit } from "react-router"
 import type { z } from "zod"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import AuthError from "../AuthError"
 
 export function ConfirmPasswordForm({
     className,
@@ -87,9 +88,13 @@ export function ConfirmPasswordForm({
                             </form>
                         </Form>
                         {
-                            actionData && <p className='text-red-600 w-full bg-red-200 text-center p-1.5 text-sm'>
-                                {actionData.message}
-                            </p>
+                            actionData &&
+                            <div className="flex items-center gap-2">
+                                <AuthError text={actionData.message} />
+                                <Link to="/register" className="text-xs underline underline-offset-4">
+                                    Go back to register
+                                </Link>
+                            </div>
                         }
                     </div>
                     <Button type="submit" className="w-full">

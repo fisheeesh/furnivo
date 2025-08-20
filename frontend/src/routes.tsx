@@ -5,15 +5,15 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router'
 import ErrorPage from './pages/Error'
 import NotFoundPage from './pages/NotFound'
 import RootLayout from './pages/RootLayout'
+import ConfirmPasswordPage from './pages/auth/ConfirmPassword'
+import OTPPage from './pages/auth/OTP'
+import SignUpPage from './pages/auth/SignUp'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import { loginAction, logoutAction, registerAction } from './router/actions'
-import { homeLoader, loginLoader } from './router/loaders'
-import SignUpPage from './pages/auth/SignUp'
-import OTPPage from './pages/auth/OTP'
-import ConfirmPasswordPage from './pages/auth/ConfirmPassword'
+import { confirmPasswordAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
+import { confirmPasswordLoader, homeLoader, loginLoader, OTPLoader } from './router/loaders'
 
 export default function Router() {
 
@@ -92,11 +92,15 @@ export default function Router() {
                 },
                 {
                     path: "otp",
-                    Component: OTPPage
+                    Component: OTPPage,
+                    loader: OTPLoader,
+                    action: OTPAction
                 },
                 {
                     path: "confirm-password",
-                    Component: ConfirmPasswordPage
+                    Component: ConfirmPasswordPage,
+                    loader: confirmPasswordLoader,
+                    action: confirmPasswordAction
                 }
             ]
         },

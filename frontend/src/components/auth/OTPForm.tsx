@@ -22,6 +22,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { useActionData, useSubmit } from "react-router"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
+import AuthError from "../AuthError"
 
 export function OTPForm({
     className,
@@ -80,9 +81,7 @@ export function OTPForm({
                             )}
                         />
                         {
-                            actionData && <p className='text-red-600 w-full bg-red-200 text-center p-1.5 text-sm'>
-                                {actionData.message}
-                            </p>
+                            actionData && <AuthError text={actionData.message} />
                         }
                         <Button type="submit" className="cursor-pointer w-full">
                             <Spinner label="Verifying..." isLoading={form.formState.isSubmitting}>

@@ -8,7 +8,7 @@ export const Status = {
     otp: "otp",
     confirm: "confirm",
     verify: "verify",
-    reset: " reset",
+    reset: "reset",
     none: "none"
 } as const;
 
