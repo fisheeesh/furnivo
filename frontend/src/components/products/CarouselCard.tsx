@@ -15,6 +15,8 @@ interface ProductProps {
     products: Product[]
 }
 
+const imageUrl = import.meta.env.VITE_IMG_URL
+
 export default function CarouselCard({ products }: ProductProps) {
     const plugin = React.useRef(
         Autoplay({ delay: 1000, stopOnInteraction: true })
@@ -34,8 +36,10 @@ export default function CarouselCard({ products }: ProductProps) {
                         className="pl-1 lg:basis-1/3">
                         <div className="p-4 flex lg:px-4 gap-4">
                             <img
-                                src={product.images[0]}
+                                src={imageUrl + product.images[0].path}
                                 alt={product.name}
+                                loading="lazy"
+                                decoding="async"
                                 className="size-28 rounded-md"
                             />
                             <div className="">

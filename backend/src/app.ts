@@ -61,14 +61,16 @@ i18next.use(Backend)
     })
 
 app.use(middleware.handle(i18next))
+
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "same-site");
+    next();
+});
+
+app.use(express.static("public"));
+app.use(express.static("uploads"));
+
 app.use(routes)
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-    res.setHeader("Cross-Origin-Rescource-Policy", "same-site")
-    next()
-})
-
-app.use(express.static("uploads/images"))
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     const status = error.status || 500

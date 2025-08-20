@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
 import { posts } from '@/data/posts'
 import { products } from '@/data/products'
-import { Link } from 'react-router'
+import { Link, useLoaderData } from 'react-router'
 
 export default function Home() {
+  const { productsData, postsData } = useLoaderData()
+
   const Title = ({ title, href, sideText }: { title: string; href: string; sideText: string }) => (
     <div className='flex md:items-center flex-col mt-28 mb-10 md:flex-row md:justify-between'>
       <h2 className='text-2xl font-bold mb-4 md:mb-0'>{title}</h2>
@@ -38,7 +40,7 @@ export default function Home() {
         <img src={Couch} alt="couch" className='w-full min-[1055px]:w-3/5' />
       </div>
       {/* Carousel */}
-      <CarouselCard products={products} />
+      <CarouselCard products={productsData.products} />
       <Title title='Featured Products' href='/products' sideText='View All Products' />
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {

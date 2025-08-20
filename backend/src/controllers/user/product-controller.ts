@@ -135,13 +135,14 @@ export const getProductsByPagination = [
             select: {
                 id: true,
                 name: true,
+                description: true,
                 price: true,
                 discount: true,
                 status: true,
                 images: { select: { id: true, path: true }, take: 1 },
             },
             orderBy: {
-                id: "asc"
+                id: "desc"
             }
         }
 

@@ -116,7 +116,7 @@ export const getPostsByPagination = [
 
 export const getInfinitePostsByPagination = [
     query("cursor", "Cursor must be PostId.").isInt({ gt: 0 }).optional(),
-    query("limit", "Limit number must be unsigned integer.").isInt({ gt: 4 }).optional(),
+    query("limit", "Limit number must be unsigned integer.").isInt({ gt: 2 }).optional(),
     async (req: CustomRequest, res: Response, next: NextFunction) => {
         const errors = validationResult(req).array({ onlyFirstError: true })
         if (errors.length > 0) return next(createHttpError({
