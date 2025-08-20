@@ -9,7 +9,7 @@ import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import { loginAction, logoutAction } from './router/actions'
+import { loginAction, logoutAction, registerAction } from './router/actions'
 import { homeLoader, loginLoader } from './router/loaders'
 import SignUpPage from './pages/auth/SignUp'
 import OTPPage from './pages/auth/OTP'
@@ -86,7 +86,9 @@ export default function Router() {
             children: [
                 {
                     index: true,
-                    Component: SignUpPage
+                    Component: SignUpPage,
+                    loader: loginLoader,
+                    action: registerAction
                 },
                 {
                     path: "otp",
