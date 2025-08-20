@@ -51,7 +51,7 @@ export const RegisterSchema = z.object({
 
 export const OTPSchema = z.object({
     otp: z.string().min(6, {
-        message: "Your one-time password must be 6 characters.",
+        message: "Your OTP must be 6 characters.",
     }),
 })
 

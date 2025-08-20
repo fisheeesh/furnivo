@@ -22,9 +22,9 @@ export function ModeToggle() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuCheckboxItem checked={theme == 'system'} onClick={() => setTheme('system')}>System</DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem checked={theme == 'dark'} onClick={() => setTheme('dark')}>Dark</DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem checked={theme == 'light'} onClick={() => setTheme('light')}>Light</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem className="cursor-pointer" checked={theme == 'system'} onClick={() => setTheme('system')}>System</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem className="cursor-pointer" checked={theme == 'dark'} onClick={() => setTheme('dark')}>Dark</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem className="cursor-pointer" checked={theme == 'light'} onClick={() => setTheme('light')}>Light</DropdownMenuCheckboxItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

@@ -36,6 +36,60 @@ export const getProduct = [
     }
 ]
 
+export const getProductsListByOffset = [
+    query("page", "Page must be unsigned integer.").isInt({ gt: 0 }),
+    query("limit", "Limit must be unsigned integer.").isInt({ gt: 4 }),
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid
+        }))
+
+        const { page = 1, limit = 5 } = req.query
+        const skip = +page - 1 * +limit
+        const take = +limit + 1
+
+        const options = {
+            skip,
+            take,
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                discount: true,
+                status: true,
+                image: { select: { id: true, path: true }, take: 1 }
+            },
+            orderBy: {
+                updatedAt: "desc"
+            }
+        }
+
+        // const products = await getProductsList(options)
+        const cacheKey = `products:${JSON.stringify(req.query)}`
+        const products = await getOrSetCache(cacheKey, async () => await getProductsList(options))
+        const hasNextPage = products.length > +limit
+        let nextPage = null
+
+        const previousPage = +page !== 1 ? +page - 1 : null
+
+        if (hasNextPage) {
+            products.pop()
+            nextPage = +page + 1
+        }
+
+        res.status(200).json({
+            message: "Here is Product List.",
+            products: products,
+            hasNextPage,
+            nextPage,
+            previousPage
+        })
+    }
+]
+
 export const getProductsByPagination = [
     query("cursor", "Cursor must be ProductId.").isInt({ gt: 0 }).optional(),
     query("limit", "Limit number must be unsigned integer.").isInt({ gt: 4 }).optional(),
@@ -87,7 +141,7 @@ export const getProductsByPagination = [
                 images: { select: { id: true, path: true }, take: 1 },
             },
             orderBy: {
-                id: "desc"
+                id: "asc"
             }
         }
 
@@ -99,12 +153,13 @@ export const getProductsByPagination = [
             products.pop()
         }
 
-        const newCursor = products.length > 0 ? products[products.length - 1].id : null
+        const nextCursor = products.length > 0 ? products[products.length - 1].id : null
 
         res.status(200).json({
             message: "Here is Product List.",
             hasNextPage,
-            newCursor,
+            nextCursor,
+            prevCursor: lastCursor,
             products
         })
     }

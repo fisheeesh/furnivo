@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
@@ -11,11 +10,14 @@ import Logo from "../Logo"
 import Spinner from "../Spinner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import AuthError from "../AuthError"
+import { useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
 
 export function ConfirmPasswordForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
     const submit = useSubmit()
     const actionData = useActionData()
     const form = useForm<z.infer<typeof ConfirmPasswordSchema>>({
@@ -51,16 +53,30 @@ export function ConfirmPasswordForm({
                                     control={form.control}
                                     name="password"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="space-y-1">
                                             <FormLabel>Password <span className="text-red-600">*</span></FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    id="password"
-                                                    type="password"
-                                                    placeholder="Create a password"
-                                                    {...field}
-                                                    inputMode="numeric"
-                                                />
+                                                <div className="relative">
+                                                    <Input
+                                                        id="password"
+                                                        type="password"
+                                                        placeholder="Create a password"
+                                                        {...field}
+                                                        inputMode="numeric"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setShowPassword(prev => ({
+                                                                ...prev,
+                                                                [field.name]: !prev[field.name]
+                                                            }))
+                                                        }
+                                                        className="absolute cursor-pointer right-3 top-2.5 text-muted-foreground"
+                                                    >
+                                                        {showPassword[field.name] ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                    </button>
+                                                </div>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -70,16 +86,30 @@ export function ConfirmPasswordForm({
                                     control={form.control}
                                     name="confirmPassword"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="space-y-1">
                                             <FormLabel>Confirm Password <span className="text-red-600">*</span></FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    id="confirmPassword"
-                                                    type="password"
-                                                    placeholder="Repeat your password"
-                                                    {...field}
-                                                    inputMode="numeric"
-                                                />
+                                                <div className="relative">
+                                                    <Input
+                                                        id="confirmPassword"
+                                                        type="password"
+                                                        placeholder="Repeat your password"
+                                                        {...field}
+                                                        inputMode="numeric"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setShowPassword(prev => ({
+                                                                ...prev,
+                                                                [field.name]: !prev[field.name]
+                                                            }))
+                                                        }
+                                                        className="absolute cursor-pointer right-3 top-2.5 text-muted-foreground"
+                                                    >
+                                                        {showPassword[field.name] ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                    </button>
+                                                </div>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -95,7 +125,7 @@ export function ConfirmPasswordForm({
                                     </div>
                                 }
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full cursor-pointera">
                                 <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>
                                     Confirm
                                 </Spinner>

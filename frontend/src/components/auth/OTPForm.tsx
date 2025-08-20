@@ -47,7 +47,7 @@ export function OTPForm({
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <div className="flex flex-col gap-6">
-                <div className="flex flex-col items-center gap-2 mb-3">
+                <div className="flex flex-col items-center gap-2">
                     <Logo />
                     <h1 className="text-muted-foreground text-center">Please enter the OTP sent to your phone.</h1>
                 </div>
@@ -57,7 +57,7 @@ export function OTPForm({
                             control={form.control}
                             name="otp"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="flex flex-col items-center">
                                     <FormControl>
                                         <InputOTP maxLength={6} {...field} pattern={REGEXP_ONLY_DIGITS}>
                                             <InputOTPGroup>

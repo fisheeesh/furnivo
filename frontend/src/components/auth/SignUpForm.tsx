@@ -50,18 +50,18 @@ export function SignUpForm({
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-3">
-
                                 <FormField
                                     control={form.control}
                                     name="phone"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="space-y-1">
                                             <FormLabel>Phone Number <span className="text-red-600">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     id="phone"
                                                     type="tel"
                                                     placeholder="Enter your phone number"
+                                                    inputMode="numeric"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -69,12 +69,11 @@ export function SignUpForm({
                                         </FormItem>
                                     )}
                                 />
-
                                 {
                                     actionData && <AuthError text={actionData.message} />
                                 }
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full cursor-pointer">
                                 <Spinner label="Registering..." isLoading={form.formState.isSubmitting}>
                                     Register
                                 </Spinner>

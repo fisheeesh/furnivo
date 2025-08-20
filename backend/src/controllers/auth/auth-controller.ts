@@ -201,7 +201,7 @@ export const verifyOtp = [
 
         const result = await updateOTP(otpRow!.id, otpData)
 
-        res.status(201).json({
+        res.status(200).json({
             message: "OTP is successfully verified.",
             phone: result.phone,
             token: result.verifyToken
@@ -312,7 +312,7 @@ export const confirmPassword = [
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 1000 * 60 * 60 * 24 * 30,
             path: "/"
-        }).status(200).json({
+        }).status(201).json({
             message: 'Successfully created an account.',
             userId: newUser.id,
         })
