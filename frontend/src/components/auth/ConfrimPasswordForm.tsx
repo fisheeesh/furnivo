@@ -43,10 +43,10 @@ export function ConfirmPasswordForm({
                         Passwords must be 8 digits long and contain only numbers. They <b>MUST</b> match.
                     </p>
                 </div>
-                <div className="flex flex-col gap-6">
-                    <div className="grid gap-3">
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
+                        <div className="flex flex-col gap-6">
+                            <div className="grid gap-3">
                                 <FormField
                                     control={form.control}
                                     name="password"
@@ -58,7 +58,7 @@ export function ConfirmPasswordForm({
                                                     id="password"
                                                     type="password"
                                                     placeholder="Create a password"
-                                                    required {...field}
+                                                    {...field}
                                                     inputMode="numeric"
                                                 />
                                             </FormControl>
@@ -77,7 +77,7 @@ export function ConfirmPasswordForm({
                                                     id="confirmPassword"
                                                     type="password"
                                                     placeholder="Repeat your password"
-                                                    required {...field}
+                                                    {...field}
                                                     inputMode="numeric"
                                                 />
                                             </FormControl>
@@ -85,24 +85,24 @@ export function ConfirmPasswordForm({
                                         </FormItem>
                                     )}
                                 />
-                            </form>
-                        </Form>
-                        {
-                            actionData &&
-                            <div className="flex items-center gap-2">
-                                <AuthError text={actionData.message} />
-                                <Link to="/register" className="text-xs underline underline-offset-4">
-                                    Go back to register
-                                </Link>
+                                {
+                                    actionData &&
+                                    <div className="flex-col flex items-center gap-2">
+                                        <AuthError text={actionData.message} />
+                                        <Link to="/register" className="text-xs underline underline-offset-4">
+                                            Go back to register
+                                        </Link>
+                                    </div>
+                                }
                             </div>
-                        }
-                    </div>
-                    <Button type="submit" className="w-full">
-                        <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>
-                            Confirm
-                        </Spinner>
-                    </Button>
-                </div>
+                            <Button type="submit" className="w-full">
+                                <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>
+                                    Confirm
+                                </Spinner>
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
             </div>
         </div >
     )

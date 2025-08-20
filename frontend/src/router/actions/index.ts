@@ -105,7 +105,7 @@ export const confirmPasswordAction = async ({ request }: ActionFunctionArgs) => 
 
     try {
         const res = await authApi.post("confirm-password", credentials)
-        if (res.status !== 200) {
+        if (res.status !== 201) {
             return {
                 error: res.data || "Registration failed."
             }

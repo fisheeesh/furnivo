@@ -123,7 +123,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                 <div className="flex flex-col gap-3">
                                     <Button
                                         type="submit"
-                                        className="w-ful flex items-center gap-2 justify-center"
+                                        className="w-full flex items-center gap-2 justify-center"
                                         disabled={isWorking}
                                     >
                                         <Spinner

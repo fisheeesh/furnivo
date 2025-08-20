@@ -11,6 +11,7 @@ import Logo from "../Logo"
 import Spinner from "../Spinner"
 import google from '@/assets/google.png';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import AuthError from "../AuthError"
 
 export function SignUpForm({
     className,
@@ -45,10 +46,11 @@ export function SignUpForm({
                         </Link>
                     </div>
                 </div>
-                <div className="flex flex-col gap-6">
-                    <div className="grid gap-3">
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" autoComplete="off">
+                        <div className="flex flex-col gap-6">
+                            <div className="grid gap-3">
+
                                 <FormField
                                     control={form.control}
                                     name="phone"
@@ -60,27 +62,26 @@ export function SignUpForm({
                                                     id="phone"
                                                     type="tel"
                                                     placeholder="Enter your phone number"
-                                                    required {...field}
+                                                    {...field}
                                                 />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                            </form>
-                        </Form>
-                        {
-                            actionData && <p className='text-red-600 w-full bg-red-200 text-center p-1.5 text-sm'>
-                                {actionData.message}
-                            </p>
-                        }
-                    </div>
-                    <Button type="submit" className="w-full">
-                        <Spinner label="Registering..." isLoading={form.formState.isSubmitting}>
-                            Register
-                        </Spinner>
-                    </Button>
-                </div>
+
+                                {
+                                    actionData && <AuthError text={actionData.message} />
+                                }
+                            </div>
+                            <Button type="submit" className="w-full">
+                                <Spinner label="Registering..." isLoading={form.formState.isSubmitting}>
+                                    Register
+                                </Spinner>
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                     <span className="bg-background text-muted-foreground relative z-10 px-2">
                         Or
