@@ -10,12 +10,11 @@ import {
 } from "@/components/ui/carousel"
 import type { Product } from "@/types"
 import { Link } from "react-router"
+import { IMG_URL } from "@/lib/constants"
 
 interface ProductProps {
     products: Product[]
 }
-
-const imageUrl = import.meta.env.VITE_IMG_URL
 
 export default function CarouselCard({ products }: ProductProps) {
     const plugin = React.useRef(
@@ -36,11 +35,11 @@ export default function CarouselCard({ products }: ProductProps) {
                         className="pl-1 lg:basis-1/3">
                         <div className="p-4 flex lg:px-4 gap-4">
                             <img
-                                src={imageUrl + product.images[0].path}
+                                src={IMG_URL + product.images[0].path}
                                 alt={product.name}
                                 loading="lazy"
                                 decoding="async"
-                                className="size-28 rounded-md"
+                                className="h-28 rounded-md"
                             />
                             <div className="">
                                 <h3 className="text-sm font-bold line-clamp-1">{product.name}</h3>

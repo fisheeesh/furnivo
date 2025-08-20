@@ -3,8 +3,7 @@ import CarouselCard from '@/components/products/CarouselCard'
 import ProductCard from '@/components/products/ProductCard'
 import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
-import { posts } from '@/data/posts'
-import { products } from '@/data/products'
+import type { Product } from '@/types'
 import { Link, useLoaderData } from 'react-router'
 
 export default function Home() {
@@ -44,13 +43,13 @@ export default function Home() {
       <Title title='Featured Products' href='/products' sideText='View All Products' />
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {
-          products.slice(0, 4).map(product => (
+          productsData.products.slice(0, 4).map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))
         }
       </div>
       <Title title='Recent Blog' href='/blogs' sideText='View All Posts' />
-      <BlogCard posts={posts.slice(0, 3)} />
+      <BlogCard posts={postsData.posts} />
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { IMG_URL } from "@/lib/constants"
 import type { Post } from "@/types"
 import { Link } from "react-router"
 
@@ -11,11 +12,11 @@ export default function BlogCard({ posts }: PostProps) {
             {
                 posts.map(post => (
                     <Link key={post.id} to={`/blogs/${post.id}`}>
-                        <img src={post.image} alt='Blog Post' className="w-full rounded-2xl mb-4" />
+                        <img src={IMG_URL + post.image} alt='Blog Post' className="w-full rounded-2xl mb-4" loading="lazy" decoding="async" />
                         <h3 className="line-clamp-1 ml-4 font-semibold">{post.title}</h3>
                         <div className="ml-4 mt-2 text-sm">
-                            by <span className="font-semibold">{post.author} </span>
-                            on <span className="font-semibold">{post.updated_at}</span>
+                            by <span className="font-semibold">{post.author.fullName} </span>
+                            on <span className="font-semibold">{post.updatedAt}</span>
                         </div>
                     </Link>
                 ))

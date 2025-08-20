@@ -143,7 +143,7 @@ export const getInfinitePostsByPagination = [
                 author: { select: { fullName: true } }
             },
             orderBy: {
-                id: 'asc'
+                id: 'desc'
             }
         }
 

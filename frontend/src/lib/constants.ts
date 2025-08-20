@@ -6,3 +6,5 @@ export const LOGIN_SUBTITLE = "Enter your phone number below to login to your ac
 
 export const REGISTER_TITLE = "Create your account"
 export const REGISTER_SUBTITLE = "Enter your phone number below to create your account"
+
+export const IMG_URL = import.meta.env.VITE_IMG_URL

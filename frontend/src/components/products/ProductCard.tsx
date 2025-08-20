@@ -4,6 +4,7 @@ import { cn, formatPrice } from "@/lib/utils"
 import type { Product } from "@/types"
 import { Link } from "react-router"
 import { Icons } from "../Icons"
+import { IMG_URL } from "@/lib/constants"
 
 interface ProductProps extends React.HTMLAttributes<HTMLDivElement> {
     product: Product
@@ -15,7 +16,7 @@ export default function ProductCard({ product, className }: ProductProps) {
             <Link to={`/products/${product.id}`} aria-label={product.name} className="p-0">
                 <div className="p-0">
                     <AspectRatio ratio={1 / 1} className="border-b">
-                        <img src={product.images[0]} alt={product.name} className="size-full object-cover" loading="lazy" />
+                        <img decoding="async" src={IMG_URL + product.images[0].path} alt={product.name} className="size-full object-contain" loading="lazy" />
                     </AspectRatio>
                 </div>
             </Link>

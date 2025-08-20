@@ -29,15 +29,21 @@ export type Product = {
     status: string,
 }
 
+export type Tag = {
+    name: string
+}
+
 export type Post = {
     id: number,
-    author: string,
+    author: {
+        fullName: string
+    },
     title: string,
     content: string,
     image: string,
     body: string,
-    updated_at: string,
-    tags: string[],
+    updatedAt: string,
+    tags: Tag[],
 }
 
 export type Category = {
