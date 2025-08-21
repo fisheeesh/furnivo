@@ -59,7 +59,7 @@ export function ConfirmPasswordForm({
                                                 <div className="relative">
                                                     <Input
                                                         id="password"
-                                                        type="password"
+                                                        type={showPassword[field.name] ? 'text' : 'password'}
                                                         placeholder="Create a password"
                                                         {...field}
                                                         inputMode="numeric"
@@ -92,7 +92,7 @@ export function ConfirmPasswordForm({
                                                 <div className="relative">
                                                     <Input
                                                         id="confirmPassword"
-                                                        type="password"
+                                                        type={showPassword[field.name] ? 'text' : 'password'}
                                                         placeholder="Repeat your password"
                                                         {...field}
                                                         inputMode="numeric"
@@ -125,7 +125,7 @@ export function ConfirmPasswordForm({
                                     </div>
                                 }
                             </div>
-                            <Button type="submit" className="w-full cursor-pointera">
+                            <Button type="submit" className="w-full cursor-pointer">
                                 <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>
                                     Confirm
                                 </Spinner>

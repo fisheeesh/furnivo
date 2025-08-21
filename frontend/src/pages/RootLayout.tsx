@@ -1,7 +1,6 @@
 import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import ScrollTopBtn from "@/components/layouts/ScrollTopBtn";
-import { Toaster } from "@/components/ui/sonner"
 import { Outlet } from "react-router";
 
 export default function RootLayout() {
@@ -12,7 +11,6 @@ export default function RootLayout() {
                 <Outlet />
                 <ScrollTopBtn />
             </main>
-            <Toaster richColors />
             <Footer />
         </div>
     )
