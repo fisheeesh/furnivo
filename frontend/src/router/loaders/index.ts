@@ -1,8 +1,9 @@
 import api, { authApi } from '@/api'
+import { postQuery, productQuery, queryClient } from '@/api/query'
 import useAuthStore, { Status } from '@/store/authStore'
 import { redirect } from 'react-router'
 
-export const homeLoader = async () => {
+export const homeLoaderWithReactRouter = async () => {
     try {
         const products = await api.get("/user/products?limit=8")
         const posts = await api.get("/user/posts/infinite?limit=3")
@@ -14,6 +15,13 @@ export const homeLoader = async () => {
     } catch (error) {
         console.log(error)
     }
+}
+
+export const homeLoader = async () => {
+    await queryClient.ensureQueryData(productQuery("?limit=8"))
+    await queryClient.ensureQueryData(postQuery("?limit=3"))
+
+    return null
 }
 
 export const loginLoader = async () => {

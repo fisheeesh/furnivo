@@ -1,5 +1,5 @@
 export const User = {
-    id: "uuid1",
+    id: 1,
     firstName: "Swam Yi",
     lastName: "Phyo",
     username: "fisheeesh",

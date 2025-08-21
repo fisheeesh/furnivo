@@ -5,25 +5,28 @@ import ProductCard from '@/components/products/ProductCard'
 import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
 import type { Product } from '@/types'
-import { useQuery } from '@tanstack/react-query'
-import { Link, useLoaderData } from 'react-router'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { Link } from 'react-router'
 
 export default function Home() {
   // const { productsData, postsData } = useLoaderData()
 
-  const {
-    data: productsData,
-    isPending: productsPending,
-    error: productsError,
-    refetch: productRefetch
-  } = useQuery(productQuery("?limit=8"))
+  // const {
+  //   data: productsData,
+  //   isPending: productsPending,
+  //   error: productsError,
+  //   refetch: productRefetch
+  // } = useQuery(productQuery("?limit=8"))
 
-  const {
-    data: postsData,
-    isPending: postsPending,
-    error: postsError,
-    refetch: postRefetch
-  } = useQuery(postQuery("?limit=3"))
+  // const {
+  //   data: postsData,
+  //   isPending: postsPending,
+  //   error: postsError,
+  //   refetch: postRefetch
+  // } = useQuery(postQuery("?limit=3"))
+
+  const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"))
+  const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"))
 
 
   const Title = ({ title, href, sideText }: { title: string; href: string; sideText: string }) => (
@@ -33,17 +36,17 @@ export default function Home() {
     </div>
   )
 
-  if (productsPending || postsPending) {
-    return (
-      <p className='text-center'>Loading...</p>
-    )
-  }
+  // if (productsPending || postsPending) {
+  //   return (
+  //     <p className='text-center'>Loading...</p>
+  //   )
+  // }
 
-  if (productsError || postsError) {
-    return (
-      <p className='text-center'>{productsError?.message} & {postsError?.message}</p>
-    )
-  }
+  // if (productsError || postsError) {
+  //   return (
+  //     <p className='text-center'>{productsError?.message} & {postsError?.message}</p>
+  //   )
+  // }
 
   return (
     <div className='max-w-7xl mx-auto'>

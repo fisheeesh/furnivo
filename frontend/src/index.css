@@ -6,6 +6,16 @@
 @theme {
   --color-own: #3b5d50;
   --color-own-hover: #2f4a41;
+  --animate-progess: progress 2s linear infinite;
+
+  @keyframes progress {
+    0% {
+      transform: translateX(-100%);
+    },
+    100% {
+      transform: translateX(200%);
+    }
+  }
 }
 
 @theme inline {
