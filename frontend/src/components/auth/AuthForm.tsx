@@ -44,7 +44,6 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
             action: '/login'
         })
     }
-
     useError(actionData, actionData?.message)
 
     const isWorking = navigation.state === 'submitting'

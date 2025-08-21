@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useActionData, useSubmit } from "react-router"
+import { useActionData, useNavigation, useSubmit } from "react-router"
 import type { z } from "zod"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
@@ -20,6 +20,8 @@ export function ConfirmPasswordForm({
     const [showPassword, setShowPassword] = useState<Record<string, boolean>>({});
     const submit = useSubmit()
     const actionData = useActionData()
+    const navigation = useNavigation()
+
     const form = useForm<z.infer<typeof ConfirmPasswordSchema>>({
         resolver: zodResolver(ConfirmPasswordSchema),
         defaultValues: {
@@ -34,6 +36,8 @@ export function ConfirmPasswordForm({
             action: "."
         })
     }
+
+    const isWorking = navigation.state === 'submitting'
 
     useError(actionData, actionData?.message)
 
@@ -119,7 +123,7 @@ export function ConfirmPasswordForm({
                                 />
                             </div>
                             <Button type="submit" className="w-full cursor-pointer">
-                                <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>
+                                <Spinner label="Submitting..." isLoading={isWorking}>
                                     Confirm
                                 </Spinner>
                             </Button>

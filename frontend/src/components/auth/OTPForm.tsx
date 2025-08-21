@@ -20,7 +20,7 @@ import useError from "@/hooks/useError"
 import { cn } from "@/lib/utils"
 import { OTPSchema } from "@/lib/validator"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
-import { useActionData, useSubmit } from "react-router"
+import { useActionData, useNavigation, useSubmit } from "react-router"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
 
@@ -30,6 +30,8 @@ export function OTPForm({
 }: React.ComponentProps<"div">) {
     const submit = useSubmit()
     const actionData = useActionData()
+    const navigation = useNavigation()
+
     const form = useForm<z.infer<typeof OTPSchema>>({
         resolver: zodResolver(OTPSchema),
         defaultValues: {
@@ -44,7 +46,9 @@ export function OTPForm({
         })
     }
 
-    useError(actionData, actionData?.message) 
+    const isWorking = navigation.state === 'submitting'
+
+    useError(actionData, actionData?.message)
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -83,7 +87,7 @@ export function OTPForm({
                             )}
                         />
                         <Button type="submit" className="cursor-pointer w-full">
-                            <Spinner label="Verifying..." isLoading={form.formState.isSubmitting}>
+                            <Spinner label="Verifying..." isLoading={isWorking}>
                                 Verifty
                             </Spinner>
                         </Button>

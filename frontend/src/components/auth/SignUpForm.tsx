@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { RegisterSchema } from "@/lib/validator"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Link, useActionData, useSubmit } from "react-router"
+import { Link, useActionData, useNavigation, useSubmit } from "react-router"
 import type { z } from "zod"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
@@ -19,6 +19,8 @@ export function SignUpForm({
 }: React.ComponentProps<"div">) {
     const submit = useSubmit()
     const actionData = useActionData()
+    const navigation = useNavigation()
+
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
@@ -32,6 +34,8 @@ export function SignUpForm({
             action: "."
         })
     }
+
+    const isWorking = navigation.state === 'submitting'
 
     useError(actionData, actionData?.message)
 
@@ -73,7 +77,7 @@ export function SignUpForm({
                                 />
                             </div>
                             <Button type="submit" className="w-full cursor-pointer">
-                                <Spinner label="Registering..." isLoading={form.formState.isSubmitting}>
+                                <Spinner label="Registering..." isLoading={isWorking}>
                                     Register
                                 </Spinner>
                             </Button>
