@@ -13,7 +13,7 @@ import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
 import { confirmPasswordAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
-import { confirmPasswordLoader, homeLoader, loginLoader, OTPLoader } from './router/loaders'
+import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader } from './router/loaders'
 
 export default function Router() {
 
@@ -41,7 +41,8 @@ export default function Router() {
                     children: [
                         {
                             index: true,
-                            Component: BlogPage
+                            Component: BlogPage,
+                            loader: blogInfiniteLoader
                         },
                         {
                             path: ':postId',

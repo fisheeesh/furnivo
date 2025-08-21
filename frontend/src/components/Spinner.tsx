@@ -11,7 +11,7 @@ export default function Spinner({ isLoading, label, children }: SpinnerProps) {
         <>
             {
                 isLoading ? <>
-                    <Loader className='m-2 size-4 animate-spin' />
+                    <Loader className='size-4 animate-spin' />
                     <span>{label}</span>
                 </> : children
             }

@@ -1,3 +1,4 @@
+import { IMG_URL } from "@/lib/constants"
 import type { Post } from "@/types"
 import { Link } from "react-router"
 
@@ -11,12 +12,12 @@ export default function BlogPostList({ posts }: PostProps) {
             {
                 posts.map(post => (
                     <Link key={post.id} to={`/blogs/${post.id}`}>
-                        <img src={post.image} alt='Blog Post' className="w-full rounded-xl mb-4" />
+                        <img src={IMG_URL + post.image} alt='Blog Post' className="w-full rounded-xl mb-4" loading="lazy" decoding="async" />
                         <h2 className="line-clamp-1 text-xl font-extrabold">{post.title}</h2>
                         <h3 className="line-clamp-3 my-2 text-base font-[400]">{post.content}</h3>
                         <div className="text-sm">
-                            by <span className="font-[600]">{post.author} </span>
-                            on <span className="font-[600]">{post.updated_at}</span>
+                            by <span className="font-[600]">{post.author.fullName} </span>
+                            on <span className="font-[600]">{post.updatedAt}</span>
                         </div>
                     </Link>
                 ))
