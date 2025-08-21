@@ -26,7 +26,7 @@ export default function Router() {
                 {
                     index: true,
                     Component: HomePage,
-                    loader: homeLoader,
+                    // loader: homeLoader,
                 },
                 {
                     path: 'about',

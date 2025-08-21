@@ -11,23 +11,23 @@ export const queryClient = new QueryClient({
 })
 
 const fetchProducts = async (q?: string) => {
-    const res = await api.get(`/user/products?${q ?? ""}`)
+    const res = await api.get(`/user/products${q ?? ""}`)
 
     return res.data
 }
 
 export const productQuery = (q?: string) => ({
     queryKey: ['products', q],
-    queryFn: fetchProducts
+    queryFn: () => fetchProducts(q),
 })
 
 const fetchPosts = async (q?: string) => {
-    const res = await api.get(`/user/posts/infinite?${q ?? ""}`)
+    const res = await api.get(`/user/posts/infinite${q ?? ""}`)
 
     return res.data
 }
 
 export const postQuery = (q?: string) => ({
     queryKey: ['posts', q],
-    queryFn: fetchPosts
+    queryFn: () => fetchPosts(q)
 })

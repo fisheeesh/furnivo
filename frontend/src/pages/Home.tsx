@@ -1,13 +1,30 @@
+import { postQuery, productQuery } from '@/api/query'
 import BlogCard from '@/components/blogs/BlogCard'
 import CarouselCard from '@/components/products/CarouselCard'
 import ProductCard from '@/components/products/ProductCard'
 import { Button } from '@/components/ui/button'
 import Couch from '@/data/images/couch.png'
 import type { Product } from '@/types'
+import { useQuery } from '@tanstack/react-query'
 import { Link, useLoaderData } from 'react-router'
 
 export default function Home() {
-  const { productsData, postsData } = useLoaderData()
+  // const { productsData, postsData } = useLoaderData()
+
+  const {
+    data: productsData,
+    isPending: productsPending,
+    error: productsError,
+    refetch: productRefetch
+  } = useQuery(productQuery("?limit=8"))
+
+  const {
+    data: postsData,
+    isPending: postsPending,
+    error: postsError,
+    refetch: postRefetch
+  } = useQuery(postQuery("?limit=3"))
+
 
   const Title = ({ title, href, sideText }: { title: string; href: string; sideText: string }) => (
     <div className='flex md:items-center flex-col mt-28 mb-10 md:flex-row md:justify-between'>
@@ -15,6 +32,18 @@ export default function Home() {
       <Link to={href} className='text-muted-foreground hover:text-foreground duration-200 font-semibold underline'>{sideText}</Link>
     </div>
   )
+
+  if (productsPending || postsPending) {
+    return (
+      <p className='text-center'>Loading...</p>
+    )
+  }
+
+  if (productsError || postsError) {
+    return (
+      <p className='text-center'>{productsError?.message} & {postsError?.message}</p>
+    )
+  }
 
   return (
     <div className='max-w-7xl mx-auto'>
