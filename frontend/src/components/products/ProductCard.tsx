@@ -15,7 +15,7 @@ export default function ProductCard({ product, className }: ProductProps) {
         <div className={cn('size-full overflow-hidden rounded-lg p-0 pb-4 border ', className)}>
             <Link to={`/products/${product.id}`} aria-label={product.name} className="p-0">
                 <div className="p-0">
-                    <AspectRatio ratio={1 / 1} className="border-b">
+                    <AspectRatio ratio={1 / 1} className="border-b bg-gray-100">
                         <img decoding="async" src={IMG_URL + product.images[0].path} alt={product.name} className="size-full object-contain" loading="lazy" />
                     </AspectRatio>
                 </div>
@@ -23,9 +23,9 @@ export default function ProductCard({ product, className }: ProductProps) {
             <div className="space-y-1.5 px-4 py-2">
                 <p className="line-clamp-1">{product.name}</p>
                 <div className="line-clamp-1 text-gray-400">
-                    {formatPrice(product.price)}
+                    {formatPrice(product.price - product.discount)}
                     {product.discount > 0 && (
-                        <span className="ml-2 font-extralight line-through">{formatPrice(product.discount)}</span>
+                        <span className="ml-2 font-extralight line-through">{formatPrice(product.price)}</span>
                     )}
                 </div>
             </div>

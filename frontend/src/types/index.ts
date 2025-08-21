@@ -49,7 +49,12 @@ export type Post = {
 
 export type Category = {
     id: number,
-    label: string
+    name: string
+}
+
+export type Type = {
+    id: number,
+    name: string
 }
 
 export type User = {

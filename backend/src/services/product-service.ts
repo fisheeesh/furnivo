@@ -131,3 +131,11 @@ export const deleteOneProduct = async (id: number) => {
 export const getProductsList = async (options: any) => {
     return await prisma.product.findMany(options)
 }
+
+export const getAllCategories = async () => {
+    return await prisma.category.findMany()
+}
+
+export const getAllTypes = async () => {
+    return await prisma.type.findMany()
+}

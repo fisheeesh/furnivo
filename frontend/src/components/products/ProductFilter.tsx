@@ -12,12 +12,12 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import type { Category } from "@/types"
+import type { Category, Type } from "@/types"
 import { toast } from "sonner"
 import { ProductFilterSchema } from "@/lib/validator"
 
 interface FilterProps {
-    filterList: { categories: Category[], types: Category[] }
+    filterList: { categories: Category[], types: Type[] }
 }
 
 export default function ProudctFilter({ filterList }: FilterProps) {
@@ -57,20 +57,20 @@ export default function ProudctFilter({ filterList }: FilterProps) {
                                             >
                                                 <FormControl>
                                                     <Checkbox
-                                                        checked={field.value?.includes(item.id)}
+                                                        checked={field.value?.includes(String(item.id))}
                                                         onCheckedChange={(checked) => {
                                                             return checked
-                                                                ? field.onChange([...field.value, item.id])
+                                                                ? field.onChange([...field.value, String(item.id)])
                                                                 : field.onChange(
                                                                     field.value?.filter(
-                                                                        (value) => value !== item.id
+                                                                        (value) => value !== String(item.id)
                                                                     )
                                                                 )
                                                         }}
                                                     />
                                                 </FormControl>
                                                 <FormLabel className="text-sm font-normal">
-                                                    {item.label}
+                                                    {item.name}
                                                 </FormLabel>
                                             </FormItem>
                                         )
@@ -102,20 +102,20 @@ export default function ProudctFilter({ filterList }: FilterProps) {
                                             >
                                                 <FormControl>
                                                     <Checkbox
-                                                        checked={field.value?.includes(item.id)}
+                                                        checked={field.value?.includes(String(item.id))}
                                                         onCheckedChange={(checked) => {
                                                             return checked
-                                                                ? field.onChange([...field.value, item.id])
+                                                                ? field.onChange([...field.value, String(item.id)])
                                                                 : field.onChange(
                                                                     field.value?.filter(
-                                                                        (value) => value !== item.id
+                                                                        (value) => value !== String(item.id)
                                                                     )
                                                                 )
                                                         }}
                                                     />
                                                 </FormControl>
                                                 <FormLabel className="text-sm font-normal">
-                                                    {item.label}
+                                                    {item.name}
                                                 </FormLabel>
                                             </FormItem>
                                         )

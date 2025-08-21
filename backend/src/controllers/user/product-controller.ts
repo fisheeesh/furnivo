@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express"
+import { NextFunction, Request, Response } from "express"
 import { param, query, validationResult } from "express-validator"
-import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 import { errorCode } from "../../config/error-code"
 import { getUserById } from "../../services/auth-service"
-import { getProductByIdWithRealtions, getProductsList } from "../../services/product-service"
+import { getAllCategories, getAllTypes, getProductByIdWithRealtions, getProductsList } from "../../services/product-service"
 import { getOrSetCache } from "../../utils/cache"
+import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
 
 interface CustomRequest extends Request {
     userId?: number
@@ -165,3 +165,13 @@ export const getProductsByPagination = [
         })
     }
 ]
+
+export const getAllCategoriesAndTypes = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const allCategories = await getAllCategories()
+    const allTypes = await getAllTypes()
+
+    res.status(200).json({
+        categories: allCategories,
+        types: allTypes
+    })
+}
