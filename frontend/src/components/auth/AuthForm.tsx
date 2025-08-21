@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import google from '@/assets/google.png';
+import useError from '@/hooks/useError';
 import { LOGIN, LOGIN_SUBTITLE, LOGIN_TITLE, REGISTER, REGISTER_SUBTITLE, REGISTER_TITLE } from "@/lib/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
@@ -7,7 +8,6 @@ import { useState } from "react";
 import { useForm, type ControllerRenderProps, type DefaultValues, type Path, type SubmitHandler } from "react-hook-form";
 import { Link, useActionData, useNavigation, useSubmit } from "react-router";
 import type { z } from "zod";
-import AuthError from '../AuthError';
 import Spinner from '../Spinner';
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -31,10 +31,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
 
     const submit = useSubmit()
     const navigation = useNavigation()
-    const actionData = useActionData() as {
-        error?: string,
-        message?: string
-    }
+    const actionData = useActionData()
 
     const form = useForm({
         defaultValues: defaultValues as DefaultValues<FormData>,
@@ -47,6 +44,8 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
             action: '/login'
         })
     }
+
+    useError(actionData, actionData?.message)
 
     const isWorking = navigation.state === 'submitting'
 
@@ -116,9 +115,6 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                             )}
                                         />
                                     ))
-                                }
-                                {
-                                    actionData && <AuthError text={actionData.message} />
                                 }
                                 <div className="flex flex-col gap-3">
                                     <Button

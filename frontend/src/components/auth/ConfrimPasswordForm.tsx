@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import useError from "@/hooks/useError"
 import { cn } from "@/lib/utils"
 import { ConfirmPasswordSchema } from "@/lib/validator"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Eye, EyeOff } from "lucide-react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Link, useActionData, useSubmit } from "react-router"
+import { useActionData, useSubmit } from "react-router"
 import type { z } from "zod"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import AuthError from "../AuthError"
-import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
 
 export function ConfirmPasswordForm({
     className,
@@ -34,6 +34,8 @@ export function ConfirmPasswordForm({
             action: "."
         })
     }
+
+    useError(actionData, actionData?.message)
 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -115,15 +117,6 @@ export function ConfirmPasswordForm({
                                         </FormItem>
                                     )}
                                 />
-                                {
-                                    actionData &&
-                                    <div className="flex-col flex items-center gap-2">
-                                        <AuthError text={actionData.message} />
-                                        <Link to="/register" className="text-xs underline underline-offset-4">
-                                            Go back to register
-                                        </Link>
-                                    </div>
-                                }
                             </div>
                             <Button type="submit" className="w-full cursor-pointer">
                                 <Spinner label="Submitting..." isLoading={form.formState.isSubmitting}>

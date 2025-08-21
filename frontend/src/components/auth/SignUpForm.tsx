@@ -1,6 +1,8 @@
 
+import google from '@/assets/google.png'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import useError from '@/hooks/useError'
 import { cn } from "@/lib/utils"
 import { RegisterSchema } from "@/lib/validator"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -9,9 +11,7 @@ import { Link, useActionData, useSubmit } from "react-router"
 import type { z } from "zod"
 import Logo from "../Logo"
 import Spinner from "../Spinner"
-import google from '@/assets/google.png';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import AuthError from "../AuthError"
 
 export function SignUpForm({
     className,
@@ -33,6 +33,8 @@ export function SignUpForm({
         })
     }
 
+    useError(actionData, actionData?.message)
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <div className="flex flex-col gap-6">
@@ -40,7 +42,7 @@ export function SignUpForm({
                     <Logo />
                     <h1 className="text-xl font-bold">Your space just got cozier ✨</h1>
                     <div className="text-center text-sm">
-                        Aldready have an account?{" "}
+                        Already have an account?{" "}
                         <Link to="/login" className="underline underline-offset-4">
                             Login
                         </Link>
@@ -69,9 +71,6 @@ export function SignUpForm({
                                         </FormItem>
                                     )}
                                 />
-                                {
-                                    actionData && <AuthError text={actionData.message} />
-                                }
                             </div>
                             <Button type="submit" className="w-full cursor-pointer">
                                 <Spinner label="Registering..." isLoading={form.formState.isSubmitting}>
