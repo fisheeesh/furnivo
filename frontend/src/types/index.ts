@@ -30,6 +30,7 @@ export type Product = {
 }
 
 export type Tag = {
+    id: number
     name: string
 }
 
