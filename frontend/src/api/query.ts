@@ -1,4 +1,5 @@
-import { QueryClient, keepPreviousData } from '@tanstack/react-query';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { QueryClient } from '@tanstack/react-query';
 import api from '.';
 
 export const queryClient = new QueryClient({
@@ -44,7 +45,26 @@ export const postInfiniteQuery = () => ({
     queryFn: fetchInfinitePosts,
     //* start with no cursor
     initialPageParam: null,
+    // @ts-expect-error ignore type check
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor ?? undefined,
     // getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor ?? undefined
     // maxPages: 6
+})
+
+const fetchOnePost = async (id: number) => {
+    const res = await api.get(`/user/posts/${id}`)
+
+    if (!res) {
+        throw new Response("", {
+            status: 404,
+            statusText: "Not Found"
+        })
+    }
+
+    return res.data
+}
+
+export const onePostQuery = (id: number) => ({
+    queryKey: ['post', id],
+    queryFn: () => fetchOnePost(id)
 })

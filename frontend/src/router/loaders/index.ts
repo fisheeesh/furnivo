@@ -1,7 +1,7 @@
 import api, { authApi } from '@/api'
-import { postInfiniteQuery, postQuery, productQuery, queryClient } from '@/api/query'
+import { onePostQuery, postInfiniteQuery, postQuery, productQuery, queryClient } from '@/api/query'
 import useAuthStore, { Status } from '@/store/authStore'
-import { redirect } from 'react-router'
+import { redirect, type LoaderFunctionArgs } from 'react-router'
 
 export const homeLoaderWithReactRouter = async () => {
     try {
@@ -62,4 +62,15 @@ export const blogInfiniteLoader = async () => {
     await queryClient.ensureInfiniteQueryData(postInfiniteQuery())
 
     return null
+}
+
+export const postLoader = async ({ params }: LoaderFunctionArgs) => {
+    if (!params.postId) {
+        throw new Error("No Post ID provided.")
+    }
+
+    await queryClient.ensureQueryData(postQuery("?limit=6"))
+    await queryClient.ensureQueryData(onePostQuery(+params.postId))
+
+    return { postId: params.postId }
 }
