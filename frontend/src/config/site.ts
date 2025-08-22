@@ -7,7 +7,7 @@ const links = {
 
 export const siteConfig = {
     name: "Furnivo",
-    description: "A Furniture Shop build with react router.",
+    description: "Your one stop to furnish the world you love",
     mainNav: [
         {
             title: "Products",

@@ -13,7 +13,7 @@ import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
 import { confirmPasswordAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
-import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productsLoader } from './router/loaders'
+import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productsInfiniteLoader } from './router/loaders'
 
 export default function Router() {
 
@@ -61,7 +61,7 @@ export default function Router() {
                         {
                             index: true,
                             Component: ProductPage,
-                            loader: productsLoader
+                            loader: productsInfiniteLoader
                         },
                         {
                             path: ':productId',
