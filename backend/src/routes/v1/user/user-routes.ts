@@ -3,7 +3,7 @@ import { changeLanguage, getMyPhoto, testPermission, uploadProfile, uploadProfil
 import { auth } from "../../../middlewares/auth-middleware"
 import upload, { uploadMemory } from "../../../middlewares/upload-file"
 import { getInfinitePostsByPagination, getPost, getPostsByPagination } from "../../../controllers/user/post-controller"
-import { getAllCategoriesAndTypes, getProduct, getProductsByPagination } from "../../../controllers/user/product-controller"
+import { getAllCategoriesAndTypes, getProduct, getProductsByPagination, toggleFavorites } from "../../../controllers/user/product-controller"
 
 const router = express.Router()
 
@@ -23,6 +23,8 @@ router.get("/products/:id", auth, getProduct)
 router.get("/products", auth, getProductsByPagination)
 
 router.get("/filter-type", auth, getAllCategoriesAndTypes)
+
+router.patch("/products/toggle-favorite", auth, toggleFavorites)
 
 
 export default router

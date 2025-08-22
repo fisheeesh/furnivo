@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express"
-import { param, query, validationResult } from "express-validator"
+import { body, param, query, validationResult } from "express-validator"
 import { errorCode } from "../../config/error-code"
 import { getUserById } from "../../services/auth-service"
-import { getAllCategories, getAllTypes, getProductByIdWithRealtions, getProductsList } from "../../services/product-service"
+import { getAllCategories, getAllTypes, getProductById, getProductByIdWithRealtions, getProductsList } from "../../services/product-service"
+import { addProductToFavorite, removeProductFromFavorite } from "../../services/user-service"
 import { getOrSetCache } from "../../utils/cache"
 import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
+import CacheQueue from "../../jobs/queues/cache-queue"
 
 interface CustomRequest extends Request {
     userId?: number
@@ -175,3 +177,41 @@ export const getAllCategoriesAndTypes = async (req: CustomRequest, res: Response
         types: allTypes
     })
 }
+
+export const toggleFavorites = [
+    body("productId", "Product ID is required.").isInt({ gt: 0 }),
+    body("favorite", "Favorite must be boolean.").isBoolean(),
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) return next(createHttpError({
+            message: errors[0].msg,
+            status: 400,
+            code: errorCode.invalid
+        }))
+
+        const { productId, favorite } = req.body
+        const userId = req.userId
+
+        const user = await getUserById(userId!)
+
+        const product = await getProductById(+productId)
+        checkModalIfExist(product)
+
+        if (favorite) {
+            await addProductToFavorite(user!.id, product!.id)
+        } else {
+            await removeProductFromFavorite(user!.id, product!.id)
+        }
+
+        await CacheQueue.add("invalidate-product-cache", {
+            pattern: "products:*"
+        }, {
+            jobId: `invalidate-${Date.now()}`,
+            priority: 1
+        })
+
+        res.status(200).json({
+            message: favorite ? "Successfully added to favorite." : "Successfully removed from favorite."
+        })
+    }
+]
