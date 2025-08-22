@@ -1,35 +1,54 @@
-import { categoryTypeQuery, productQuery } from "@/api/query";
-import Pagination from "@/components/products/Pagination";
+import { categoryTypeQuery, productInfiniteQuery } from "@/api/query";
 import ProductCard from "@/components/products/ProductCard";
 import ProductFilter from "@/components/products/ProductFilter";
+import { Button } from "@/components/ui/button";
 import useTitle from "@/hooks/useTitle";
 import type { Product } from "@/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 export default function Product() {
     useTitle("Products")
 
-    const { data } = useSuspenseQuery(categoryTypeQuery())
-    const { data: productsData } = useSuspenseQuery(productQuery("?limit=6"))
+    const { data: catTypes } = useSuspenseQuery(categoryTypeQuery())
+    const {
+        status,
+        data,
+        error,
+        isFetching,
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage
+    } = useInfiniteQuery(productInfiniteQuery())
 
-    return (
-        <div className="max-w-7xl mx-auto">
-            <section className="flex flex-col lg:flex-row">
-                <section className="my-8 w-full lg:w-1/5">
-                    <ProductFilter filterList={data} />
+    const allProducts = data?.pages.flatMap(page => page.products) ?? []
+
+    return status === 'pending'
+        ? (<p>Loading...</p>)
+        : status === 'error'
+            ? (<p>Error: {error.message}</p>)
+            : (<div className="max-w-7xl mx-auto">
+                <section className="flex flex-col lg:flex-row">
+                    <section className="my-8 w-full lg:w-1/5">
+                        <ProductFilter filterList={catTypes} />
+                    </section>
+                    <section className="w-full lg:w-4/5 my-8 space-y-4">
+                        <h1 className="text-2xl font-bold">All Products</h1>
+                        <div className="mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-6">
+                            {
+                                allProducts.map((product: Product) => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))
+                            }
+                        </div>
+                        <div className="my-4 flex items-center justify-center">
+                            <Button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage} variant={!hasNextPage ? 'ghost' : 'secondary'}>
+                                {isFetchingNextPage ? "Loading more..." : hasNextPage ? "Load More" : "Nothing more to load"}
+                            </Button>
+                        </div>
+                        <div className="">
+                            {isFetching && !isFetchingNextPage ? "Background Updating..." : null}
+                        </div>
+                    </section>
                 </section>
-                <section className="w-full lg:w-4/5 my-8 space-y-4">
-                    <h1 className="text-2xl font-bold">All Products</h1>
-                    <div className="mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-6">
-                        {
-                            productsData.products.map((product: Product) => (
-                                <ProductCard key={product.id} product={product} />
-                            ))
-                        }
-                    </div>
-                    <Pagination />
-                </section>
-            </section>
-        </div>
-    )
+            </div>)
 }
