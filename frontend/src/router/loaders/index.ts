@@ -1,5 +1,5 @@
 import api, { authApi } from '@/api'
-import { categoryTypeQuery, onePostQuery, postInfiniteQuery, postQuery, productInfiniteQuery, productQuery, queryClient } from '@/api/query'
+import { categoryTypeQuery, onePostQuery, oneProductQuery, postInfiniteQuery, postQuery, productInfiniteQuery, productQuery, queryClient } from '@/api/query'
 import useAuthStore, { Status } from '@/store/authStore'
 import { redirect, type LoaderFunctionArgs } from 'react-router'
 
@@ -86,4 +86,15 @@ export const productsInfiniteLoader = async () => {
     await queryClient.prefetchInfiniteQuery(productInfiniteQuery())
 
     return null
+}
+
+export const productLoader = async ({ params }: LoaderFunctionArgs) => {
+    if (!params.productId) {
+        throw new Error("Not Product ID provided.")
+    }
+
+    await queryClient.ensureQueryData(oneProductQuery(+params.productId))
+    await queryClient.ensureQueryData(productQuery("?limit=6"))
+
+    return { productId: params.productId }
 }

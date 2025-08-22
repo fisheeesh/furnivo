@@ -12,25 +12,27 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import type { Category, Type } from "@/types"
-import { toast } from "sonner"
 import { ProductFilterSchema } from "@/lib/validator"
+import type { Category, Type } from "@/types"
 
 interface FilterProps {
-    filterList: { categories: Category[], types: Type[] }
+    filterList: { categories: Category[], types: Type[] },
+    selectedCategories: string[],
+    selectedTypes: string[],
+    onFilterChange: (categories: string[], types: string[]) => void
 }
 
-export default function ProudctFilter({ filterList }: FilterProps) {
+export default function ProudctFilter({ filterList, selectedCategories, selectedTypes, onFilterChange }: FilterProps) {
     const form = useForm<z.infer<typeof ProductFilterSchema>>({
         resolver: zodResolver(ProductFilterSchema),
         defaultValues: {
-            categories: [],
-            types: [],
+            categories: selectedCategories,
+            types: selectedTypes,
         },
     })
 
     function onSubmit(data: z.infer<typeof ProductFilterSchema>) {
-        toast.success(`You have selected ${data.categories.length} categories and ${data.types.length} types`)
+        onFilterChange(data.categories, data.types)
     }
 
     return (

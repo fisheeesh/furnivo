@@ -1,4 +1,4 @@
-import { categoryTypeQuery, productInfiniteQuery } from "@/api/query";
+import { categoryTypeQuery, productInfiniteQuery, queryClient } from "@/api/query";
 import ProductCard from "@/components/products/ProductCard";
 import ProductFilter from "@/components/products/ProductFilter";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { useSearchParams } from "react-router";
 export default function Product() {
     useTitle("Products")
 
-    const [searchParams] = useSearchParams()
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const rawCategory = searchParams.get('categories')
     const rawTypes = searchParams.get('types')
@@ -39,10 +39,28 @@ export default function Product() {
         isFetching,
         isFetchingNextPage,
         fetchNextPage,
-        hasNextPage
+        hasNextPage,
+        refetch
     } = useInfiniteQuery(productInfiniteQuery(cat, type))
 
     const allProducts = data?.pages.flatMap(page => page.products) ?? []
+
+    const handleFilterChange = (categories: string[], types: string[]) => {
+        const newParams = new URLSearchParams()
+        if (categories.length > 0)
+            newParams.set("categories", encodeURIComponent(categories.join(",")))
+        if (types.length > 0)
+            newParams.set("types", encodeURIComponent(types.join(",")))
+
+        //* Updates URL & triggers refetch via query key
+        setSearchParams(newParams)
+        //* Cancel In-flight queries
+        queryClient.cancelQueries({ queryKey: ["products", "infinite"] })
+        //* Clear cache
+        queryClient.removeQueries({ queryKey: ["products", "infinite"] })
+        //* refetch
+        refetch()
+    }
 
     return status === 'pending'
         ? (<p>Loading...</p>)
@@ -51,7 +69,10 @@ export default function Product() {
             : (<div className="max-w-7xl mx-auto">
                 <section className="flex flex-col lg:flex-row">
                     <section className="my-8 w-full lg:w-1/5">
-                        <ProductFilter filterList={catTypes} />
+                        <ProductFilter filterList={catTypes}
+                            selectedCategories={selectedCategories}
+                            selectedTypes={selectedTypes}
+                            onFilterChange={handleFilterChange} />
                     </section>
                     <section className="w-full lg:w-4/5 my-8 space-y-4">
                         <h1 className="text-2xl font-bold">All Products</h1>

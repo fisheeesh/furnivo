@@ -87,8 +87,8 @@ const fetchInfiniteProducts = async ({ pageParam = null, categories = null, type
     types?: string | null
 }) => {
     let query = pageParam ? `?limit=9&cursor=${pageParam}` : "?limit=9";
-    if (categories) query += `&categories=${categories}`
-    if (types) query += `&types=${types}`
+    if (categories) query += `&category=${categories}`
+    if (types) query += `&type=${types}`
     const res = await api.get(`/user/products${query}`)
 
     return res.data
@@ -102,4 +102,15 @@ export const productInfiniteQuery = (categories: string | null = null, types: st
     initialPageParam: null,
     // @ts-expect-error ignore type check
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor ?? undefined
+})
+
+const fetchOneProduct = async (id: number) => {
+    const res = await api.get(`/user/products/${id}`)
+
+    return res.data
+}
+
+export const oneProductQuery = (id: number) => ({
+    queryKey: ['product', id],
+    queryFn: () => fetchOneProduct(id)
 })

@@ -37,12 +37,14 @@ export const NewsLetterSchema = z.object({
 })
 
 export const ProductFilterSchema = z.object({
-    categories: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    }),
-    types: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    }),
+    categories: z.array(z.string()),
+    // .refine((value) => value.some((item) => item), {
+    //     message: "You have to select at least one item.",
+    // }),
+    types: z.array(z.string())
+    // .refine((value) => value.some((item) => item), {
+    //     message: "You have to select at least one item.",
+    // }),
 })
 
 export const RegisterSchema = z.object({
