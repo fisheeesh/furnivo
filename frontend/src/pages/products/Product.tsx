@@ -5,9 +5,31 @@ import { Button } from "@/components/ui/button";
 import useTitle from "@/hooks/useTitle";
 import type { Product } from "@/types";
 import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router";
 
 export default function Product() {
     useTitle("Products")
+
+    const [searchParams] = useSearchParams()
+
+    const rawCategory = searchParams.get('categories')
+    const rawTypes = searchParams.get('types')
+
+    //* Decode & parase search params
+    const selectedCategories = rawCategory ? decodeURIComponent(rawCategory)
+        .split(",")
+        .map(cat => Number(cat.trim()))
+        .filter(cat => !isNaN(cat))
+        .map(cat => cat.toString()) : []
+
+    const selectedTypes = rawTypes ? decodeURIComponent(rawTypes)
+        .split(",")
+        .map(type => Number(type.trim()))
+        .filter(type => !isNaN(type))
+        .map(type => type.toString()) : []
+
+    const cat = selectedCategories?.length > 0 ? selectedCategories?.join(",") : null
+    const type = selectedTypes.length > 0 ? selectedTypes.join(",") : null
 
     const { data: catTypes } = useSuspenseQuery(categoryTypeQuery())
     const {
@@ -18,7 +40,7 @@ export default function Product() {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage
-    } = useInfiniteQuery(productInfiniteQuery())
+    } = useInfiniteQuery(productInfiniteQuery(cat, type))
 
     const allProducts = data?.pages.flatMap(page => page.products) ?? []
 

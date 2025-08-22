@@ -15,7 +15,7 @@ export default function ProductCard({ product, className }: ProductProps) {
         <div className={cn('size-full overflow-hidden rounded-lg p-0 pb-4 border ', className)}>
             <Link to={`/products/${product.id}`} aria-label={product.name} className="p-0">
                 <div className="p-0">
-                    <AspectRatio ratio={1 / 1} className="border-b bg-gray-100">
+                    <AspectRatio ratio={1 / 1} className="border-b bg-[#F6F6F6]">
                         <img decoding="async" src={IMG_URL + product.images[0].path} alt={product.name} className="size-full object-contain" loading="lazy" />
                     </AspectRatio>
                 </div>

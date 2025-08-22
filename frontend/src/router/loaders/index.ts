@@ -18,6 +18,7 @@ export const homeLoaderWithReactRouter = async () => {
 }
 
 export const homeLoader = async () => {
+    //* ensureQueryData -> fetch and store in cache. For future use, check in cache fist if cache hit return it or miss fetch it
     await queryClient.ensureQueryData(productQuery("?limit=8"))
     await queryClient.ensureQueryData(postQuery("?limit=3"))
 
@@ -59,6 +60,7 @@ export const confirmPasswordLoader = () => {
 }
 
 export const blogInfiniteLoader = async () => {
+    //* check if cache hit return it or miss fetch it
     await queryClient.ensureInfiniteQueryData(postInfiniteQuery())
 
     return null
@@ -77,6 +79,10 @@ export const postLoader = async ({ params }: LoaderFunctionArgs) => {
 
 export const productsInfiniteLoader = async () => {
     await queryClient.ensureQueryData(categoryTypeQuery())
+    /**
+     * * mu yin data is always changing -> might be a problem in UI and if we use ensureQueryData we are not sure that data is already in cache 
+     * * so we need to prefetch and show previous data while waiting for new data (we made it in query)
+     */
     await queryClient.prefetchInfiniteQuery(productInfiniteQuery())
 
     return null

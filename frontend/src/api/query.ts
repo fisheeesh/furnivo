@@ -97,6 +97,7 @@ const fetchInfiniteProducts = async ({ pageParam = null, categories = null, type
 export const productInfiniteQuery = (categories: string | null = null, types: string | null = null) => ({
     queryKey: ['products', 'infinite', categories ?? undefined, types ?? undefined],
     queryFn: ({ pageParam }: { pageParam?: number | null }) => fetchInfiniteProducts({ pageParam, categories, types }),
+    //* nouk hr twy fetch ny tae a chain pya loh ya ag or error tat nai
     placeholderData: keepPreviousData,
     initialPageParam: null,
     // @ts-expect-error ignore type check
