@@ -6,7 +6,6 @@ import Autoplay from "embla-carousel-autoplay"
 
 import { oneProductQuery, productQuery } from "@/api/query"
 import AddToCartForm from "@/components/products/AddToCartForm"
-import AddToFavorite from "@/components/products/AddToFavorite"
 import ProductCard from "@/components/products/ProductCard"
 import Rating from "@/components/products/Rating"
 import {
@@ -29,6 +28,8 @@ import type { Product } from "@/types"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useRef } from "react"
+import AddToFavorite from "@/components/products/TanstackOptimistic"
+// import AddToFavorite from "@/components/products/AddToFavorite"
 
 export default function ProductDetail() {
     const { productId } = useLoaderData()
