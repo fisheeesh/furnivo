@@ -14,18 +14,23 @@ interface FavoriteProps {
 export default function AddToFavorite({ productId, rating, isFavorite, className, ...props }: FavoriteProps) {
     const fetcher = useFetcher({ key: `product:${productId}` })
 
+    let favorite = isFavorite
+    if (fetcher.formData) {
+        favorite = fetcher.formData.get("favorite") === 'true'
+    }
+
     return (
         <fetcher.Form method="POST">
             <Button
                 name="favorite"
-                value={isFavorite ? 'false' : 'true'}
-                title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                value={favorite ? 'false' : 'true'}
+                title={favorite ? "Remove from favorites" : "Add to favorites"}
                 variant='secondary'
                 size='icon'
                 className={cn('size-8 shrink-0 cursor-pointer', className)}
                 {...props}
             >
-                {isFavorite
+                {favorite
                     ? (<Icons.heartFill className="size-4 text-red-600" />)
                     : (<Icons.heart className="size-4" />)
                 }
