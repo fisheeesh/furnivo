@@ -80,7 +80,11 @@ export default function ProductDetail() {
                     <p className="text-base text-muted-foreground">{productData.product?.inventory} in stock</p>
                     <div className="flex items-center justify-between">
                         <Rating rating={Number(productData.product?.rating)} />
-                        <AddToFavorite productId={String(productData.product?.id)} rating={Number(productData.product?.rating)} />
+                        <AddToFavorite
+                            productId={String(productData.product?.id)}
+                            rating={Number(productData.product?.rating)}
+                            isFavorite={productData.product.users.length === 1}
+                        />
                     </div>
                     <AddToCartForm sold={productData.product?.status === 'ACTIVE' ? false : true} />
                     <Separator className="mt-5" />

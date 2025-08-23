@@ -27,7 +27,7 @@ export const getProduct = [
         const user = await getUserById(userId!)
         checkUserIfNotExist(user)
 
-        const cacheKey = `product:${JSON.stringify(id)}`
+        const cacheKey = `products:${JSON.stringify(id)}`
         const product = await getOrSetCache(cacheKey, async () => await getProductByIdWithRealtions(+id, userId!))
         checkModalIfExist(product)
 

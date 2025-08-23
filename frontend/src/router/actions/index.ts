@@ -123,34 +123,34 @@ export const confirmPasswordAction = async ({ request }: ActionFunctionArgs) => 
     }
 }
 
-export const favoriteAction = async ({ request, params }: ActionFunctionArgs) => {
-    const formData = await request.formData()
-
+export const favoriteAction = async ({
+    request,
+    params,
+}: ActionFunctionArgs) => {
+    const formData = await request.formData();
     if (!params.productId) {
-        throw new Error("No Product ID provided.")
+        throw new Error("No Product ID provided");
     }
 
     const data = {
-        productId: params.productId,
-        favorite: formData.get("favorite") === 'true'
-    }
+        productId: Number(params.productId),
+        favorite: formData.get("favorite") === "true",
+    };
 
     try {
-        const res = await api.patch("/user/products/toggle-favorite", data)
-
-        if (res.status !== 200) {
-            return {
-                error: res.data || "Setting favorite failed."
-            }
+        const response = await api.patch("/user/products/toggle-favorite", data);
+        if (response.status !== 200) {
+            return { error: response.data || "Setting favourite Failed!" };
         }
 
-        await queryClient.invalidateQueries({ queryKey: ['product', params.productId] })
+        await queryClient.invalidateQueries({
+            queryKey: ["products", "detail", params.productId],
+        });
 
-        return null
+        return null;
     } catch (error) {
         if (error instanceof AxiosError) {
-            return error.response?.data || { error: "Setting favorite failed." }
-        }
-        throw error
+            return error.response?.data || { error: "Setting favourite failed!" };
+        } else throw error;
     }
-}
+};

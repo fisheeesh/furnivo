@@ -2,18 +2,34 @@
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Icons } from "../Icons";
+import { useFetcher } from "react-router";
 
 interface FavoriteProps {
     productId: string;
     rating: number;
+    isFavorite: boolean,
     className?: string;
 }
 
-export default function AddToFavorite({ productId, rating, className, ...props }: FavoriteProps) {
+export default function AddToFavorite({ productId, rating, isFavorite, className, ...props }: FavoriteProps) {
+    const fetcher = useFetcher({ key: `product:${productId}` })
+
     return (
-        <Button variant='secondary' size='icon' className={cn('size-8 shrink-0 cursor-pointer', className)} {...props}>
-            {/* <Icons.heart className="size-4" /> */}
-            <Icons.heartFill className="size-4 text-red-600" />
-        </Button>
+        <fetcher.Form method="POST">
+            <Button
+                name="favorite"
+                value={isFavorite ? 'false' : 'true'}
+                title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+                variant='secondary'
+                size='icon'
+                className={cn('size-8 shrink-0 cursor-pointer', className)}
+                {...props}
+            >
+                {isFavorite
+                    ? (<Icons.heartFill className="size-4 text-red-600" />)
+                    : (<Icons.heart className="size-4" />)
+                }
+            </Button>
+        </fetcher.Form>
     )
 }

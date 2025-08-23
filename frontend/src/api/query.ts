@@ -66,7 +66,7 @@ const fetchOnePost = async (id: number) => {
 }
 
 export const onePostQuery = (id: number) => ({
-    queryKey: ['post', id],
+    queryKey: ['posts', 'detail', id],
     queryFn: () => fetchOnePost(id)
 })
 
@@ -111,6 +111,6 @@ const fetchOneProduct = async (id: number) => {
 }
 
 export const oneProductQuery = (id: number) => ({
-    queryKey: ['product', id],
+    queryKey: ['products', 'detail', id],
     queryFn: () => fetchOneProduct(id)
 })
