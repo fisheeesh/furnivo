@@ -49,7 +49,7 @@ export const getProductById = async (id: number) => {
     })
 }
 
-export const getProductByIdWithRealtions = async (id: number) => {
+export const getProductByIdWithRealtions = async (id: number, userId: number) => {
     return await prisma.product.findUnique({
         where: { id },
         omit: {
@@ -59,6 +59,14 @@ export const getProductByIdWithRealtions = async (id: number) => {
             typeId: true
         },
         include: {
+            users: {
+                where: {
+                    id: userId
+                },
+                select: {
+                    id: true,
+                }
+            },
             images: { select: { id: true, path: true } },
         }
         // select: {

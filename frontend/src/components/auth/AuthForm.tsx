@@ -123,7 +123,7 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                     >
                                         <Spinner
                                             isLoading={isWorking}
-                                            label={buttonText === 'Login' ? 'Signing In...' : 'Signing Up...'}>
+                                            label={buttonText === 'Login' ? 'Logging In...' : 'Signing Up...'}>
                                             {buttonText}
                                         </Spinner>
                                     </Button>

@@ -80,7 +80,7 @@ model Product {
   type        Type               @relation(fields: [typeId], references: [id])
   orders      ProductsOnOrders[]
   tags        ProductTag[]
-  user        User[]
+  users        User[]
 }
 
 model ProductsOnOrders {
