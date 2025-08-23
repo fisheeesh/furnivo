@@ -12,7 +12,7 @@ import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import { confirmPasswordAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
+import { confirmPasswordAction, favoriteAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
 import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productLoader, productsInfiniteLoader } from './router/loaders'
 
 export default function Router() {
@@ -67,7 +67,7 @@ export default function Router() {
                             path: ':productId',
                             Component: ProductDetailPage,
                             loader: productLoader,
-                            // action: favoriteAction
+                            action: favoriteAction
                         }
                     ]
                 },

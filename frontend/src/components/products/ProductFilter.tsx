@@ -46,12 +46,12 @@ export default function ProudctFilter({ filterList, selectedCategories, selected
                             <div className="mb-4">
                                 <FormLabel className="text-base">Furniture Made By</FormLabel>
                             </div>
-                            {filterList.categories.map((item) => (
+                            {filterList.types.map((item) => (
                                 <FormField
                                     key={item.id}
                                     control={form.control}
-                                    name="categories"
-                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "categories"> }) => {
+                                    name="types"
+                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "types"> }) => {
                                         return (
                                             <FormItem
                                                 key={item.id}
@@ -91,12 +91,12 @@ export default function ProudctFilter({ filterList, selectedCategories, selected
                             <div className="mb-4">
                                 <FormLabel className="text-base">Furniture Types</FormLabel>
                             </div>
-                            {filterList.types.map((item) => (
+                            {filterList.categories.map((item) => (
                                 <FormField
                                     key={item.id}
                                     control={form.control}
-                                    name="types"
-                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "types"> }) => {
+                                    name="categories"
+                                    render={({ field }: { field: ControllerRenderProps<z.infer<typeof ProductFilterSchema>, "categories"> }) => {
                                         return (
                                             <FormItem
                                                 key={item.id}

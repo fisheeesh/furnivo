@@ -14,17 +14,17 @@ export const siteConfig = {
             card: [
                 {
                     title: "Wooden",
-                    href: "/products?categories=1",
+                    href: "/products?types=1",
                     description: "comfortable with Wooden furniture.",
                 },
                 {
                     title: "Bamboo",
-                    href: "/products?categories=2",
+                    href: "/products?types=2",
                     description: "Build your own Bamboo furniture.",
                 },
                 {
                     title: "Metal",
-                    href: "/products?categories=3",
+                    href: "/products?types=3",
                     description: "Buy our latest metal furniture.",
                 },
             ],

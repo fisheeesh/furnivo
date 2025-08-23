@@ -28,8 +28,8 @@ import type { Product } from "@/types"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useRef } from "react"
-import AddToFavorite from "@/components/products/TanstackOptimistic"
-// import AddToFavorite from "@/components/products/AddToFavorite"
+// import AddToFavorite from "@/components/products/TanstackOptimistic"
+import AddToFavorite from "@/components/products/AddToFavorite"
 
 export default function ProductDetail() {
     const { productId } = useLoaderData()
