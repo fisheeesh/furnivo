@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useIsFetching, useMutation } from "@tanstack/react-query";
 import { Icons } from "../Icons";
 import { Button } from "../ui/button";
 import api from "@/api";
@@ -14,10 +14,13 @@ interface FavoriteProps {
 }
 
 export default function AddToFavorite({ productId, rating, isFavorite, className, ...props }: FavoriteProps) {
-    const { mutate } = useMutation({
+    const fetching = useIsFetching() > 0
+
+    let favorite = isFavorite
+    const { mutate, isPending } = useMutation({
         mutationFn: async () => {
             const data = {
-                productId,
+                productId: Number(productId),
                 favorite: !isFavorite
             }
             const res = await api.patch("/user/products/toggle-favorite", data)
@@ -41,6 +44,10 @@ export default function AddToFavorite({ productId, rating, isFavorite, className
         }
     })
 
+    if (isPending || fetching) {
+        favorite = !isFavorite
+    }
+
     return (
         <Button
             onClick={() => mutate()}
@@ -50,7 +57,7 @@ export default function AddToFavorite({ productId, rating, isFavorite, className
             className={cn('size-8 shrink-0 cursor-pointer', className)}
             {...props}
         >
-            {isFavorite
+            {favorite
                 ? (<Icons.heartFill className="size-4 text-red-600" />)
                 : (<Icons.heart className="size-4" />)
             }
