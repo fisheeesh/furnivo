@@ -12,11 +12,11 @@ export default function Product() {
 
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const rawCategory = searchParams.get('categories')
+    const rawCategories = searchParams.get('categories')
     const rawTypes = searchParams.get('types')
 
     //* Decode & parase search params
-    const selectedCategories = rawCategory ? decodeURIComponent(rawCategory)
+    const selectedCategories = rawCategories ? decodeURIComponent(rawCategories)
         .split(",")
         .map(cat => Number(cat.trim()))
         .filter(cat => !isNaN(cat))
