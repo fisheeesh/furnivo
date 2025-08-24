@@ -5,12 +5,28 @@ import type { Product } from "@/types"
 import { Link } from "react-router"
 import { Icons } from "../Icons"
 import { IMG_URL } from "@/lib/constants"
+import useCartStore from "@/store/cartStore"
+import { CheckCircle } from "lucide-react"
 
 interface ProductProps extends React.HTMLAttributes<HTMLDivElement> {
     product: Product
 }
 
 export default function ProductCard({ product, className }: ProductProps) {
+    const { carts, addItem } = useCartStore()
+
+    const cartItem = carts.find(item => item.id === product.id)
+
+    const handleAddToCart = () => {
+        addItem({
+            id: product.id,
+            name: product.name,
+            image: product.images[0].path,
+            price: product.price - product.discount,
+            quantity: 1
+        })
+    }
+
     return (
         <div className={cn('size-full overflow-hidden rounded-lg p-0 pb-4 border ', className)}>
             <Link to={`/products/${product.id}`} aria-label={product.name} className="p-0">
@@ -31,15 +47,22 @@ export default function ProductCard({ product, className }: ProductProps) {
             </div>
             <div className="px-4">
                 {
-                    product.status === 'sold' ?
+                    product.status === 'INACTIVE' ?
                         (
                             <Button size='sm' disabled={true} aria-label="Sold Out Button" className="h-10 w-full rounded-sm font-bold">
                                 Sold Out
                             </Button>
                         ) :
                         (
-                            <Button size='sm' aria-label="Add to Cart Button" className="w-full cursor-pointer text-white h-10 rounded-sm font-bold bg-own hover:bg-own-hover">
-                                <Icons.plus /> Add to Cart
+                            <Button
+                                onClick={handleAddToCart}
+                                disabled={!!cartItem}
+                                size='sm'
+                                aria-label="Add to Cart Button"
+                                className="w-full cursor-pointer text-white h-10 rounded-sm font-bold bg-own hover:bg-own-hover"
+                            >
+                                {!cartItem ? <Icons.plus /> : <CheckCircle />}
+                                {!cartItem ? "Add to Cart" : "Added to Cart"}
                             </Button>
                         )
                 }

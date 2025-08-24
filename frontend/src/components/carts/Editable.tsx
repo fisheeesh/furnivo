@@ -34,7 +34,7 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
     const currentQuantity = Number(watch("quantity"))
 
     const handleDecrease = () => {
-        const newQuantity = Math.max(currentQuantity - 1, 0) //* Min limit 0
+        const newQuantity = Math.max(currentQuantity - 1, 1) //* Min limit 0
         setValue("quantity", newQuantity.toString(), { shouldValidate: true })
         onUpdate(newQuantity)
     }
