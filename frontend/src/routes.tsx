@@ -1,19 +1,22 @@
 import AboutPage from '@/pages/About'
 import HomePage from '@/pages/Home'
 import { Suspense } from 'react'
-import { createBrowserRouter, redirect, RouterProvider } from 'react-router'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import ErrorPage from './pages/Error'
 import NotFoundPage from './pages/NotFound'
 import RootLayout from './pages/RootLayout'
 import ConfirmPasswordPage from './pages/auth/ConfirmPassword'
+import ForgetPassword from './pages/auth/ForgetPassword'
 import OTPPage from './pages/auth/OTP'
+import ResetPassword from './pages/auth/ResetPassword'
 import SignUpPage from './pages/auth/SignUp'
+import VerifyOTP from './pages/auth/VerifyOTP'
 import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
-import { confirmPasswordAction, favoriteAction, loginAction, logoutAction, OTPAction, registerAction } from './router/actions'
-import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productLoader, productsInfiniteLoader } from './router/loaders'
+import { confirmPasswordAction, favoriteAction, forgetPasswordAction, loginAction, OTPAction, registerAction, resetPasswordAction, verifyOTPAction } from './router/actions'
+import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productLoader, productsInfiniteLoader, resetPasswordLoader, verifyOTPLoader } from './router/loaders'
 
 export default function Router() {
 
@@ -83,6 +86,33 @@ export default function Router() {
             action: loginAction
         },
         {
+            path: '/forget-password',
+            lazy: async () => {
+                const { default: AuthRootLayout } = await import("@/pages/auth/AuthRootLayout")
+                return { Component: AuthRootLayout }
+            },
+            children: [
+                {
+                    index: true,
+                    Component: ForgetPassword,
+                    loader: loginLoader,
+                    action: forgetPasswordAction,
+                },
+                {
+                    path: 'verify-otp',
+                    Component: VerifyOTP,
+                    loader: verifyOTPLoader,
+                    action: verifyOTPAction
+                },
+                {
+                    path: 'reset-password',
+                    Component: ResetPassword,
+                    loader: resetPasswordLoader,
+                    action: resetPasswordAction
+                }
+            ]
+        },
+        {
             path: '/register',
             lazy: async () => {
                 const { default: AuthRootLayout } = await import('@/pages/auth/AuthRootLayout')
@@ -109,11 +139,11 @@ export default function Router() {
                 }
             ]
         },
-        {
-            path: "/logout",
-            action: logoutAction,
-            loader: () => redirect("/")
-        },
+        // {
+        //     path: "/logout",
+        //     action: logoutAction,
+        //     loader: () => redirect("/")
+        // },
         {
             path: '*',
             Component: NotFoundPage
