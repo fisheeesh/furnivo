@@ -58,7 +58,7 @@ export default function AddToCartForm({ sold, onHandleCart, idInCart }: AddToCar
     const onSubmit: SubmitHandler<z.infer<typeof QuantitySchema>> = (data) => {
         onHandleCart(Number(data.quantity))
         toast.success("Success", {
-            description: ""
+            description: cartItem ? "Successfully updated quantity" : "Successfully added to cart"
         })
     }
 

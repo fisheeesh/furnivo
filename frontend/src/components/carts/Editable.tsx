@@ -56,7 +56,7 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
                         type="button"
                         variant='outline'
                         size='icon'
-                        className="size-8 shrink-0 rounded-r-none"
+                        className="size-8 shrink-0 rounded-r-none cursor-pointer"
                     >
                         <Icons.minus className="size-3" aria-hidden="true" />
                         <span className="sr-only">Remove one item</span>
@@ -88,7 +88,7 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
                         type="button"
                         variant='outline'
                         size='icon'
-                        className="size-8 shrink-0 rounded-l-none"
+                        className="size-8 shrink-0 rounded-l-none cursor-pointer"
                     >
                         <Icons.plus className="size-3" aria-hidden="true" />
                         <span className="sr-only">Add one item</span>
@@ -99,6 +99,7 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
                     type="button"
                     size='icon'
                     variant='outline'
+                    className="cursor-pointer"
                     aria-label="Delete cart item"
                 >
                     <Icons.trash className="size-3" aria-hidden="true" />

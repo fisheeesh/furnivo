@@ -35,7 +35,8 @@ const useCartStore = create<CartState & CartActions>()(
             ...initialState,
             getTotalItems: () => {
                 const { carts } = get()
-                return carts.reduce((acc, cur) => acc + cur.quantity, 0)
+                // return carts.reduce((acc, cur) => acc + cur.quantity, 0)
+                return carts.length
             },
             getTotalPrice: () => {
                 const { carts } = get()
