@@ -33,7 +33,7 @@ export function ConfirmPasswordForm({
     function onSubmit(values: z.infer<typeof ConfirmPasswordSchema>) {
         submit(values, {
             method: "post",
-            action: "."
+            action: "/register/confirm-password"
         })
     }
 

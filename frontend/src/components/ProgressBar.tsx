@@ -10,8 +10,10 @@ export default function ProgressBar() {
 
     useEffect(() => {
         if (fetching > 0 || navigation.state !== "idle") {
+            console.log(navigation.state)
             NProgress.start()
         } else {
+            console.log(navigation.state)
             NProgress.done()
         }
     }, [fetching, navigation.state])

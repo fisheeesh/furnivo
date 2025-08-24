@@ -26,14 +26,15 @@ export const loginAction = async ({ request }: ActionFunctionArgs) => {
     }
 }
 
-export const logoutAction = async () => {
-    try {
-        await api.post("logout")
-        return redirect("/login")
-    } catch (error) {
-        console.error("Logout failed: ", error)
-    }
-}
+// export const logoutAction = async () => {
+//     try {
+//         await authApi.post("logout")
+//         queryClient.removeQueries()
+//         return redirect("/login")
+//     } catch (error) {
+//         console.error("Logout failed: ", error)
+//     }
+// }
 
 export const registerAction = async ({ request }: ActionFunctionArgs) => {
     const authStore = useAuthStore.getState()
@@ -154,3 +155,84 @@ export const favoriteAction = async ({
         } else throw error;
     }
 };
+
+export const forgetPasswordAction = async ({ request }: ActionFunctionArgs) => {
+    const authStore = useAuthStore.getState()
+    const formData = await request.formData()
+    const credentials = Object.fromEntries(formData)
+
+    try {
+        const res = await authApi.post("forget-password", credentials)
+
+        if (res.status !== 200) {
+            return {
+                error: res.data || "Sending OTP Failed. Please Try again."
+            }
+        }
+
+        authStore.setAuth(res.data.phone, res.data.token, Status.verify)
+        return redirect("/forget-password/verify-otp")
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            return error.response?.data || { error: "Sending OTP Failed." }
+        } else throw error
+    }
+}
+
+export const verifyOTPAction = async ({ request }: ActionFunctionArgs) => {
+    const formData = await request.formData()
+    const authStore = useAuthStore.getState()
+
+    const data = {
+        phone: authStore.phone,
+        otp: formData.get("otp"),
+        token: authStore.token
+    }
+
+    try {
+        const res = await authApi.post("verify", data)
+
+        if (res.status !== 200) {
+            return {
+                error: res.data || "Verifying OTP Failed."
+            }
+        }
+
+        authStore.setAuth(res.data.phone, res.data.token, Status.reset)
+        return redirect("/forget-password/reset-password")
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            return error.response?.data || { error: "Verifying OTP Failed." }
+        }
+        throw error
+    }
+}
+
+export const resetPasswordAction = async ({ request }: ActionFunctionArgs) => {
+    const formData = await request.formData()
+    const authStore = useAuthStore.getState()
+
+    const data = {
+        phone: authStore.phone,
+        password: formData.get("password"),
+        token: authStore.token
+    }
+
+    try {
+        const res = await authApi.post("reset-password", data)
+
+        if (res.status !== 200) {
+            return {
+                error: res.data || "Verifying OTP Failed."
+            }
+        }
+
+        authStore.clearAuth()
+        return redirect("/")
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            return error.response?.data || { error: "Verifying OTP Failed." }
+        }
+        throw error
+    }
+}

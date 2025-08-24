@@ -1,24 +1,23 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import useError from '@/hooks/useError'
-import { cn } from "@/lib/utils"
-import { RegisterSchema } from "@/lib/validator"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { Link, useActionData, useNavigation, useSubmit } from "react-router"
-import type { z } from "zod"
-import Logo from "../Logo"
-import Spinner from "../Spinner"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
-import GoogleBtn from "../GoogleBtn"
+import { cn } from "@/lib/utils";
+import Logo from "../Logo";
+import Spinner from "../Spinner";
+import { Button } from "../ui/button";
+import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { RegisterSchema } from "@/lib/validator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type z from "zod";
+import { Link, useActionData, useNavigation, useSubmit } from "react-router";
+import useError from "@/hooks/useError";
 
-export function SignUpForm({
+export default function ForgetPasswordForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
     const submit = useSubmit()
-    const actionData = useActionData()
     const navigation = useNavigation()
+    const actionData = useActionData()
 
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
@@ -27,8 +26,8 @@ export function SignUpForm({
         }
     })
 
-    function onSubmit(values: z.infer<typeof RegisterSchema>) {
-        submit(values, {
+    const onSubmit: SubmitHandler<z.infer<typeof RegisterSchema>> = (data) => {
+        submit(data, {
             method: "post",
             action: "."
         })
@@ -43,9 +42,9 @@ export function SignUpForm({
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center gap-2">
                     <Logo />
-                    <h1 className="text-xl font-bold">Your space just got cozier ✨</h1>
+                    <h1 className="text-xl font-bold">Don't worry we get your back 😉</h1>
                     <div className="text-center text-sm">
-                        Already have an account?{" "}
+                        Remember your password?{" "}
                         <Link to="/login" className="underline underline-offset-4">
                             Login
                         </Link>
@@ -76,23 +75,13 @@ export function SignUpForm({
                                 />
                             </div>
                             <Button type="submit" className="w-full cursor-pointer">
-                                <Spinner label="Registering..." isLoading={isWorking}>
-                                    Register
+                                <Spinner label="Sending..." isLoading={isWorking}>
+                                    Send OTP
                                 </Spinner>
                             </Button>
                         </div>
                     </form>
                 </Form>
-                <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                    <span className="bg-background text-muted-foreground relative z-10 px-2">
-                        Or
-                    </span>
-                </div>
-                <GoogleBtn />
-            </div>
-            <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-                By clicking continue, you agree to our <Link to="/">Terms of Service</Link>{" "}
-                and <Link to="/">Privacy Policy</Link>.
             </div>
         </div >
     )

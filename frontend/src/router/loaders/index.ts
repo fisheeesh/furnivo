@@ -98,3 +98,23 @@ export const productLoader = async ({ params }: LoaderFunctionArgs) => {
 
     return { productId: params.productId }
 }
+
+export const verifyOTPLoader = () => {
+    const authStore = useAuthStore.getState()
+
+    if (authStore.status !== Status.verify) {
+        return redirect("/forget-password")
+    }
+
+    return null
+}
+
+export const resetPasswordLoader = () => {
+    const authStore = useAuthStore.getState()
+
+    if (authStore.status !== Status.reset) {
+        return redirect("/forget-password")
+    }
+
+    return null
+}
