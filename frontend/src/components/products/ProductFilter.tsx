@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/form"
 import { ProductFilterSchema } from "@/lib/validator"
 import type { Category, Type } from "@/types"
+import useFilterStore from "@/store/filterStore"
+import { useEffect } from "react"
 
 interface FilterProps {
     filterList: { categories: Category[], types: Type[] },
@@ -23,15 +25,23 @@ interface FilterProps {
 }
 
 export default function ProudctFilter({ filterList, selectedCategories, selectedTypes, onFilterChange }: FilterProps) {
+    const { setFilters, categories, types } = useFilterStore()
     const form = useForm<z.infer<typeof ProductFilterSchema>>({
         resolver: zodResolver(ProductFilterSchema),
         defaultValues: {
-            categories: selectedCategories,
-            types: selectedTypes,
+            categories: selectedCategories.length > 0 ? selectedCategories : categories,
+            types: selectedTypes.length > 0 ? selectedTypes : types,
         },
     })
 
+    useEffect(() => {
+        if (categories.length > 0 || types.length > 0) {
+            onFilterChange(categories, types)
+        }
+    }, [categories, types, onFilterChange])
+
     function onSubmit(data: z.infer<typeof ProductFilterSchema>) {
+        setFilters(data.categories, data.types)
         onFilterChange(data.categories, data.types)
     }
 

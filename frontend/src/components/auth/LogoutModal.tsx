@@ -34,7 +34,7 @@ export default function LogoutModal() {
             //? After success logout, we need to remove the current user data from react query cache even though that is removed from the local storage by server.
             //? In here, we remove all of the queries from the cache.
             queryClient.removeQueries()
-            navigate('/', { replace: true })
+            navigate('/login', { replace: true })
         },
         onError: (error) => {
             toast.error("Error", {

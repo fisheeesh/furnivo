@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import useTitle from "@/hooks/useTitle";
 import type { Product } from "@/types";
 import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { useSearchParams } from "react-router";
 
 export default function Product() {
@@ -45,7 +46,7 @@ export default function Product() {
 
     const allProducts = data?.pages.flatMap(page => page.products) ?? []
 
-    const handleFilterChange = (categories: string[], types: string[]) => {
+    const handleFilterChange = useCallback((categories: string[], types: string[]) => {
         const newParams = new URLSearchParams()
         if (categories.length > 0)
             newParams.set("categories", encodeURIComponent(categories.join(",")))
@@ -60,7 +61,7 @@ export default function Product() {
         queryClient.removeQueries({ queryKey: ["products", "infinite"] })
         //* refetch
         refetch()
-    }
+    }, [refetch, setSearchParams])
 
     return status === 'pending'
         ? (<p>Loading...</p>)

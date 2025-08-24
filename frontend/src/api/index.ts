@@ -12,8 +12,8 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            // window.location.href = '/login'
-            window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
+            window.location.href = '/login'
+            // window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname)}`
         }
         return Promise.reject(error)
     }
