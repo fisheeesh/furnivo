@@ -44,7 +44,7 @@ const useCartStore = create<CartState & CartActions>()(
             addItem: (item) => set(state => {
                 const existingItem = state.carts.find(i => i.id === item.id)
                 if (existingItem) {
-                    existingItem.quantity += item.quantity || 1
+                    existingItem.quantity = item.quantity || 1
                 } else {
                     state.carts.push({ ...item, quantity: item.quantity || 1 })
                 }

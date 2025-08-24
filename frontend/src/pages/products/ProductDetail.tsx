@@ -30,11 +30,24 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { useRef } from "react"
 // import AddToFavorite from "@/components/products/TanstackOptimistic"
 import AddToFavorite from "@/components/products/AddToFavorite"
+import useCartStore from "@/store/cartStore"
 
 export default function ProductDetail() {
     const { productId } = useLoaderData()
     const { data: productData } = useSuspenseQuery(oneProductQuery(productId))
     const { data: productsData } = useSuspenseQuery(productQuery("?limit=6"))
+
+    const { addItem } = useCartStore()
+
+    const handleCart = (quantity: number) => {
+        addItem({
+            id: productData.product.id,
+            name: productData.product.name,
+            image: productData.product.images[0].path,
+            price: productData.product.price - productData.product.discount,
+            quantity
+        })
+    }
 
     const navigate = useNavigate()
 
@@ -87,7 +100,11 @@ export default function ProductDetail() {
                             isFavorite={productData.product.users.length === 1}
                         />
                     </div>
-                    <AddToCartForm sold={productData.product?.status === 'ACTIVE' ? false : true} />
+                    <AddToCartForm
+                        onHandleCart={handleCart}
+                        sold={productData.product?.status === 'ACTIVE' ? false : true}
+                        idInCart={productData.product.id}
+                    />
                     <Separator className="mt-5" />
                     <Accordion
                         type="single"

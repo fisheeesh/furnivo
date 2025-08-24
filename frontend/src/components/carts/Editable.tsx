@@ -34,9 +34,10 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
     const currentQuantity = Number(watch("quantity"))
 
     const handleDecrease = () => {
-        const newQuantity = Math.max(currentQuantity - 1, 1) //* Min limit 0
+        const newQuantity = Math.max(currentQuantity - 1, 0) //* Min limit 0
         setValue("quantity", newQuantity.toString(), { shouldValidate: true })
-        onUpdate(newQuantity)
+        if (newQuantity === 0) onDelete()
+        else onUpdate(newQuantity)
     }
 
     const handleIncrease = () => {
@@ -70,8 +71,9 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
                                     <Input
                                         type="number"
                                         inputMode="numeric"
-                                        min={0}
-                                        className="h-8 w-16 rounded-none border-x-0"
+                                        min={1}
+                                        max={9999}
+                                        className="h-8 w-16 rounded-none border-x-0 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         disabled={form.formState.isSubmitting}
                                         {...field}
                                     />
@@ -82,7 +84,7 @@ export default function Editable({ onDelete, quantity, onUpdate }: Props) {
                     />
                     <Button
                         onClick={handleIncrease}
-                        disabled={currentQuantity > 9999}
+                        disabled={currentQuantity >= 9999}
                         type="button"
                         variant='outline'
                         size='icon'
