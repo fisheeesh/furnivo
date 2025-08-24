@@ -71,11 +71,5 @@ export type Cart = {
     name: string,
     price: number,
     quantity: number,
-    image: {
-        id: number,
-        name: string,
-        url: string,
-    },
-    category: string,
-    subcategory: string,
+    image: string
 }

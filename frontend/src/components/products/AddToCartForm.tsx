@@ -25,7 +25,7 @@ interface AddToCartFormProps {
 export default function AddToCartForm({ sold }: AddToCartFormProps) {
     const form = useForm<z.infer<typeof QuantitySchema>>({
         defaultValues: {
-            quantity: 1
+            quantity: "1"
         },
         resolver: zodResolver(QuantitySchema)
     })

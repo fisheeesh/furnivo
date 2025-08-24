@@ -134,3 +134,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* #3b82f6 */
+/* Default bar */
+#nprogress .bar {
+  background: #3b82f6 !important; /* Tailwind blue-500 */
+}
+
+/* Optional: the "peg" (the glowing shadow at the end of the bar) */
+#nprogress .peg {
+  box-shadow: 0 0 10px #3b82f6, 0 0 5px #3b82f6 !important;
+}
+
+/* Optional: the spinner (if you enable it) */
+#nprogress .spinner-icon {
+  border-top-color: #3b82f6 !important;
+  border-left-color: #3b82f6 !important;
+}

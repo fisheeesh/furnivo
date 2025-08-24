@@ -27,7 +27,11 @@ export const LogInSchema = z.object({
 
 
 export const QuantitySchema = z.object({
-    quantity: z.number().min(0)
+    quantity: z
+        .string()
+        .min(1, { message: "Must not be empty." })
+        .max(4, "Too Many! Is it real?")
+        .regex(/^\d+$/, { message: "Must be digit." })
 })
 
 export const NewsLetterSchema = z.object({

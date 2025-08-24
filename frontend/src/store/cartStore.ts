@@ -19,6 +19,8 @@ interface CartActions {
     getTotalPrice: () => number
     addItem: (item: CartItem) => void
     updateItem: (id: number, quantity: number) => void
+    increaseQuantity: (id: number) => void
+    decreaseQuantity: (id: number) => void
     removeItem: (id: number) => void
     clearCart: () => void
 }
@@ -45,6 +47,20 @@ const useCartStore = create<CartState & CartActions>()(
                     existingItem.quantity += item.quantity || 1
                 } else {
                     state.carts.push({ ...item, quantity: item.quantity || 1 })
+                }
+            }),
+            increaseQuantity: (id) => set(state => {
+                const item = state.carts.find(i => i.id === id)
+                if (item) {
+                    item.quantity++
+                }
+            }),
+            decreaseQuantity: (id) => set(state => {
+                const item = state.carts.find(i => i.id === id)
+                if (item) {
+                    if (item.quantity === 1) {
+                        state.carts = state.carts.filter(i => i.id !== id)
+                    } else item.quantity--
                 }
             }),
             updateItem: (id, quantity) => set(state => {
