@@ -2,6 +2,7 @@
 //* react router + tanstack query -> 4 steps -> 1. Create fetch func -> 2. Define query -> 3. Create loader -> 4. Call in respective pages
 import { keepPreviousData, QueryClient } from '@tanstack/react-query';
 import api from '.';
+import useUserStore from '@/store/userStore';
 
 export const queryClient = new QueryClient({
     defaultOptions: {
@@ -114,4 +115,23 @@ const fetchOneProduct = async (id: number) => {
 export const oneProductQuery = (id: number) => ({
     queryKey: ['products', 'detail', id],
     queryFn: () => fetchOneProduct(id)
+})
+
+const fetchUserData = async () => {
+    const userStore = useUserStore.getState()
+    const res = await api.get("/user/get-user")
+
+    userStore.setUser({
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        email: res.data.email,
+        phone: res.data.phone,
+        avatar: res.data.image
+    })
+    return res.data
+}
+
+export const userDataQuery = () => ({
+    queryKey: ['user'],
+    queryFn: fetchUserData
 })

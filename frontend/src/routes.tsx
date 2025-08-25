@@ -15,6 +15,9 @@ import BlogPage from './pages/blogs/Blog'
 import BlogDetailPage from './pages/blogs/BlogDetail'
 import ProductPage from './pages/products/Product'
 import ProductDetailPage from './pages/products/ProductDetail'
+import MyFavorites from './pages/settings/Favorites'
+import MyOrders from './pages/settings/Orders'
+import MyProfile from './pages/settings/Profile'
 import { confirmPasswordAction, favoriteAction, forgetPasswordAction, loginAction, OTPAction, registerAction, resetPasswordAction, verifyOTPAction } from './router/actions'
 import { blogInfiniteLoader, confirmPasswordLoader, homeLoader, loginLoader, OTPLoader, postLoader, productLoader, productsInfiniteLoader, resetPasswordLoader, verifyOTPLoader } from './router/loaders'
 
@@ -74,6 +77,28 @@ export default function Router() {
                         }
                     ]
                 },
+                {
+                    path: "/settings",
+                    lazy: async () => {
+                        const { default: SettingsRootLayout } = await import("@/pages/settings/SettingsRootLayout")
+                        return { Component: SettingsRootLayout }
+                    },
+                    children: [
+                        {
+                            index: true,
+                            Component: MyProfile,
+                            // loader: profileLoader
+                        },
+                        {
+                            path: 'my-orders',
+                            Component: MyOrders,
+                        },
+                        {
+                            path: 'my-favorites',
+                            Component: MyFavorites
+                        }
+                    ]
+                },
             ]
         },
         {
@@ -86,7 +111,7 @@ export default function Router() {
             action: loginAction
         },
         {
-            path: '/forget-password',
+            path: '/forgot-password',
             lazy: async () => {
                 const { default: AuthRootLayout } = await import("@/pages/auth/AuthRootLayout")
                 return { Component: AuthRootLayout }
