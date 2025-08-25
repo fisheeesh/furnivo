@@ -1,5 +1,5 @@
 import express from "express"
-import { changeLanguage, getMyPhoto, testPermission, uploadProfile, uploadProfileMultiple, uploadProfileOptimize } from "../../../controllers/user/user-controller"
+import { changeLanguage, changePassword, getMyPhoto, getUserData, testPermission, updateProfile, uploadProfile, uploadProfileMultiple, uploadProfileOptimize } from "../../../controllers/user/user-controller"
 import { auth } from "../../../middlewares/auth-middleware"
 import upload, { uploadMemory } from "../../../middlewares/upload-file"
 import { getInfinitePostsByPagination, getPost, getPostsByPagination } from "../../../controllers/user/post-controller"
@@ -25,6 +25,10 @@ router.get("/products", auth, getProductsByPagination)
 router.get("/filter-type", auth, getAllCategoriesAndTypes)
 
 router.patch("/products/toggle-favorite", auth, toggleFavorites)
+
+router.get("/get-user", auth, getUserData)
+router.patch("/update-profile", auth, upload.single("avatar"), updateProfile)
+router.post('/change-password', auth, changePassword)
 
 
 export default router
