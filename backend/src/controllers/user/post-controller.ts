@@ -5,6 +5,7 @@ import { getUserById } from "../../services/auth-service"
 import { getPostByIdWithRealtions, getPostsList } from "../../services/post-service"
 import { getOrSetCache } from "../../utils/cache"
 import { checkModalIfExist, checkUserIfNotExist, createHttpError } from "../../utils/check"
+import { Prisma } from "../../generated/prisma"
 
 interface CustomRequest extends Request {
     userId?: number
@@ -126,11 +127,20 @@ export const getInfinitePostsByPagination = [
         }))
 
         const { cursor: lastCursor, limit = 5 } = req.query
+        const query = req.query.search
         const userId = req.userId
+
         const user = await getUserById(userId!)
         checkUserIfNotExist(user)
 
+        const queryFilter: Prisma.PostWhereInput = query ? {
+            title: { contains: query, mode: 'insensitive' } as Prisma.StringFilter
+        } : {}
+
         const options = {
+            where: {
+                ...queryFilter
+            },
             take: +limit + 1,
             skip: lastCursor ? 1 : 0,
             cursor: lastCursor ? { id: +lastCursor } : undefined,

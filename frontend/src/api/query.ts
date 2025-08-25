@@ -36,16 +36,20 @@ export const postQuery = (q?: string) => ({
     queryFn: () => fetchPosts(q)
 })
 
-const fetchInfinitePosts = async ({ pageParam = null }) => {
-    const query = pageParam ? `?limit=6&cursor=${pageParam}` : "?limit=6"
+const fetchInfinitePosts = async ({ pageParam = null, q = null }: {
+    pageParam?: number | null,
+    q?: string | null
+}) => {
+    let query = pageParam ? `?limit=6&cursor=${pageParam}` : "?limit=6"
+    if (q) query += `&search=${q}`
     const res = await api.get(`/user/posts/infinite${query}`)
 
     return res.data
 }
 
-export const postInfiniteQuery = () => ({
-    queryKey: ['posts', "infinite"],
-    queryFn: fetchInfinitePosts,
+export const postInfiniteQuery = (q: string | null = null) => ({
+    queryKey: ['posts', "infinite", q ?? undefined],
+    queryFn: ({ pageParam }: { pageParam?: number | null }) => fetchInfinitePosts({ pageParam, q }),
     //* start with no cursor
     initialPageParam: null,
     // @ts-expect-error ignore type check

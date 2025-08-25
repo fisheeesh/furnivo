@@ -25,10 +25,10 @@ const navLinks = [
 export default function SideNavigation() {
     const location = useLocation()
 
-    const isActive = (href: string) => `${location.pathname === href ? 'bg-own text-white' : ''} py-3 px-5 hover:bg-own hover:text-white transition-colors flex items-center gap-4 font-semibold`
+    const isActive = (href: string) => `${location.pathname === href ? 'bg-own text-white' : ''} py-3 px-5 hover:bg-own hover:text-white rounded-md transition-colors flex items-center gap-4 font-semibold`
 
     return (
-        <nav className='border-r hidden lg:block border-own'>
+        <nav className='hidden lg:block'>
             <ul className='flex flex-col gap-2 h-full'>
                 {navLinks.map((link) => (
                     <li key={link.name} className="">

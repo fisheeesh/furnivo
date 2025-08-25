@@ -7,6 +7,7 @@ import { Icons } from "../Icons"
 import { IMG_URL } from "@/lib/constants"
 import useCartStore from "@/store/cartStore"
 import { CheckCircle } from "lucide-react"
+import { toast } from "sonner"
 
 interface ProductProps extends React.HTMLAttributes<HTMLDivElement> {
     product: Product
@@ -24,6 +25,9 @@ export default function ProductCard({ product, className }: ProductProps) {
             image: product.images[0].path,
             price: product.price - product.discount,
             quantity: 1
+        })
+        toast.success("Success", {
+            description: "Successfully added to cart"
         })
     }
 

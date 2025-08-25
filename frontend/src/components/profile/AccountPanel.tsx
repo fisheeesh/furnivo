@@ -24,11 +24,11 @@ const navLinks = [
 export default function AccountPanel() {
     const location = useLocation()
 
-    const isActive = (href: string) => `${location.pathname === href ? 'bg-own text-white' : ''} py-2 px-5 hover:bg-own hover:text-white text-sm transition-colors flex items-center gap-4 font-semibold`
+    const isActive = (href: string) => `${location.pathname === href ? 'bg-own text-white' : ''} py-2 px-5 first:rounded-l-sm last:rounded-r-sm hover:bg-own hover:text-white text-sm transition-colors flex items-center gap-4 font-semibold`
 
     return (
         <div className="flex h-fit lg:hidden justify-end">
-            <div className="border border-own flex justify-end items-center">
+            <div className="border rounded-md border-own flex justify-end items-center">
                 {
                     navLinks.map(link => (
                         <Link

@@ -1,4 +1,5 @@
 import { categoryTypeQuery, productInfiniteQuery, queryClient } from "@/api/query";
+import LcoalSearch from "@/components/LocalSearch";
 import ProductCard from "@/components/products/ProductCard";
 import ProductFilter from "@/components/products/ProductFilter";
 import { Button } from "@/components/ui/button";
@@ -76,7 +77,10 @@ export default function Product() {
                             onFilterChange={handleFilterChange} />
                     </section>
                     <section className="w-full lg:w-4/5 my-8 space-y-4">
-                        <h1 className="text-2xl font-bold">All Products</h1>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <h1 className="text-2xl font-bold">All Products</h1>
+                            <LcoalSearch />
+                        </div>
                         <div className="mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-6">
                             {
                                 allProducts.map((product: Product) => (
