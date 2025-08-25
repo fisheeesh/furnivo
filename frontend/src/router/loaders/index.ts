@@ -120,3 +120,9 @@ export const resetPasswordLoader = () => {
 
     return null
 }
+
+export const profileLoader = async () => {
+    await queryClient.ensureQueryData(userDataQuery())
+
+    return null
+}

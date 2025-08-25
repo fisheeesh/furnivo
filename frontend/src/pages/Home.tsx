@@ -40,7 +40,7 @@ export default function Home() {
         lastName: userData.user.lastName,
         email: userData.user.email,
         phone: userData.user.phone,
-        avatar: userData.user.image
+        avatar: userData.user.image ?? ""
       })
     }
   }, [userData, setUser])

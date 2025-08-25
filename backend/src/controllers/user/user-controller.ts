@@ -5,7 +5,7 @@ import path from "path";
 import bcrypt from 'bcrypt'
 
 import { errorCode } from "../../config/error-code";
-import { getUserById, getUserDataById, updateUser } from "../../services/auth-service";
+import { getUserById, getUserDataById, updateUser, updateUserById } from "../../services/auth-service";
 import { checkUserIfNotExist, createHttpError } from "../../utils/check";
 import { authorize } from "../../utils/authorize";
 import { checkUploadFile } from "../../utils/helpers";
@@ -231,7 +231,8 @@ export const updateProfile = [
         const data: any = {
             email,
             firstName,
-            lastName
+            lastName,
+            image: user.image
         }
 
         if (req.file) {
@@ -255,7 +256,7 @@ export const updateProfile = [
             await removeFiles(user.image!, user!.image?.split(".")[0] + ".webp")
         }
 
-        const updatedUser = await updateUser(userId!, data)
+        const updatedUser = await updateUserById(userId!, data)
 
         res.status(200).json({
             message: "Update profile successfully.",

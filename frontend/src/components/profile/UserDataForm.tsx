@@ -64,8 +64,6 @@ export default function UserDataForm({
                 throw new Error("Something went wrong. Please try again.")
             }
 
-            console.log(res.data)
-
             return res.data
         },
         onSuccess: (data) => {
@@ -75,7 +73,7 @@ export default function UserDataForm({
                 firstName: data.user.firstName,
                 lastName: data.user.lastName,
                 email: data.user.email,
-                avatar: data.user.avatar
+                avatar: data.user.image
             })
             toast.success("Success", {
                 description: "Profile updated successfully"
