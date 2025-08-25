@@ -16,7 +16,9 @@ export const loginAction = async ({ request }: ActionFunctionArgs) => {
             }
         }
 
-        const redirectTo = new URL(request.url).searchParams.get("redirect") || "/"
+        //* Get redirect parameter from current page URL, not form submission URL
+        const urlParams = new URLSearchParams(window.location.search)
+        const redirectTo = urlParams.get("redirect") || "/"
         return redirect(redirectTo)
     } catch (error) {
         if (error instanceof AxiosError) {
@@ -171,7 +173,7 @@ export const forgetPasswordAction = async ({ request }: ActionFunctionArgs) => {
         }
 
         authStore.setAuth(res.data.phone, res.data.token, Status.verify)
-        return redirect("/forget-password/verify-otp")
+        return redirect("/forgot-password/verify-otp")
     } catch (error) {
         if (error instanceof AxiosError) {
             return error.response?.data || { error: "Sending OTP Failed." }
@@ -199,7 +201,7 @@ export const verifyOTPAction = async ({ request }: ActionFunctionArgs) => {
         }
 
         authStore.setAuth(res.data.phone, res.data.token, Status.reset)
-        return redirect("/forget-password/reset-password")
+        return redirect("/forgot-password/reset-password")
     } catch (error) {
         if (error instanceof AxiosError) {
             return error.response?.data || { error: "Verifying OTP Failed." }

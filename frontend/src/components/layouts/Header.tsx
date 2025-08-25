@@ -3,7 +3,6 @@ import MainNavigation from "./MainNavigation";
 import MobileNavigation from "./MobileNavigation";
 import { ModeToggle } from "../ModeToggle";
 import AuthDropdown from "./AuthDropdown";
-import { User } from "@/data/user";
 import CartSheet from "./CartSheet";
 import ProgressBar from "../ProgressBar";
 
@@ -17,7 +16,7 @@ export default function Header() {
                 <div className="flex flex-1 justify-end items-center space-x-4">
                     <CartSheet />
                     <ModeToggle />
-                    <AuthDropdown user={User} />
+                    <AuthDropdown/>
                 </div>
             </nav>
         </header>

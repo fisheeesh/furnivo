@@ -42,7 +42,7 @@ export function VerifyOTPForm({
     function onSubmit(data: z.infer<typeof OTPSchema>) {
         submit(data, {
             method: "POST",
-            action: '/forget-password/verify-otp'
+            action: '/forgot-password/verify-otp'
         })
     }
 

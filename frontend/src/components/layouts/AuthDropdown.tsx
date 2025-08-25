@@ -1,4 +1,3 @@
-import type { User } from "@/types"
 import { Link } from "react-router"
 import { Button } from "../ui/button"
 
@@ -17,18 +16,18 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { IMG_URL } from "@/lib/constants"
+import useUserStore from "@/store/userStore"
+import { DialogTrigger } from "@radix-ui/react-dialog"
+import { useRef } from "react"
 import { Icons } from "../Icons"
 import LogoutModal from "../auth/LogoutModal"
-import { useRef } from "react"
 import { Dialog } from "../ui/dialog"
-import { DialogTrigger } from "@radix-ui/react-dialog"
 
-interface UserProps {
-    user: User
-}
-
-export default function AuthDropdown({ user }: UserProps) {
+export default function AuthDropdown() {
     const dialogTriggerRef = useRef<HTMLButtonElement>(null)
+
+    const { user } = useUserStore()
 
     if (!user) {
         return (
@@ -41,7 +40,7 @@ export default function AuthDropdown({ user }: UserProps) {
         )
     }
 
-    const initialName = `${user.firstName.charAt(0).toUpperCase()}${user.lastName.charAt(0).toUpperCase()}`
+    const initialName = `${user.firstName?.charAt(0).toUpperCase()}${user.lastName?.charAt(0).toUpperCase()}`
 
     return (
         <Dialog>
@@ -49,7 +48,7 @@ export default function AuthDropdown({ user }: UserProps) {
                 <DropdownMenuTrigger asChild>
                     <Button variant="secondary" className="size-8 rounded-full cursor-pointer">
                         <Avatar className="size-8">
-                            <AvatarImage src={user.imageUrl} alt={initialName} />
+                            <AvatarImage src={IMG_URL + user.avatar} alt={initialName} />
                             <AvatarFallback>{initialName}</AvatarFallback>
                         </Avatar>
                     </Button>
@@ -57,8 +56,8 @@ export default function AuthDropdown({ user }: UserProps) {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal mb-1">
                         <div className="flex flex-col space-y-1">
-                            <p className="textsm font-medium leading-none">{user.firstName} {user.lastName}</p>
-                            <p className="text-sm leading-none text-muted-foreground">{user.email}</p>
+                            <p className="text-sm font-medium leading-none truncate">{user.firstName} {user.lastName}</p>
+                            <p className="text-xs leading-none text-muted-foreground truncate">{user.email || "unspecified"}</p>
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuGroup>
@@ -77,7 +76,7 @@ export default function AuthDropdown({ user }: UserProps) {
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild className="cursor-pointer">
-                            <Link to='/admin'>
+                            <Link to='/settings'>
                                 <Icons.settings className="size-4 text-black mr-1 dark:text-white" aria-hidden="true" />
                                 Settings
                                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>

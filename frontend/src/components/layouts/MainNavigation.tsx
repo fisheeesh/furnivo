@@ -9,15 +9,17 @@ import {
 } from "@/components/ui/navigation-menu"
 import { siteConfig } from "@/config/site"
 import type { MainNavItem } from "@/types"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Icons } from "../Icons"
 import Logo from "../Logo"
+import useFilterStore from "@/store/filterStore"
 
 interface MainNavigationProps {
     items?: MainNavItem[]
 }
 
 export default function MainNavigation({ items }: MainNavigationProps) {
+
     return (
         <div className="hidden md:flex gap-4">
             <Logo />
@@ -81,15 +83,21 @@ function ListItem({
     href,
     ...props
 }: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
+    const { setFilters } = useFilterStore()
+    const navigate = useNavigate()
+
     return (
         <li {...props}>
             <NavigationMenuLink asChild>
-                <Link to={href}>
+                <div onClick={() => {
+                    setFilters([], [href.split("=")[1]])
+                    navigate(href)
+                }}>
                     <div className="text-sm leading-none font-medium">{title}</div>
                     <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
                         {children}
                     </p>
-                </Link>
+                </div>
             </NavigationMenuLink>
         </li>
     )

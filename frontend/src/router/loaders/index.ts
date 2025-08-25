@@ -1,5 +1,5 @@
 import api, { authApi } from '@/api'
-import { categoryTypeQuery, onePostQuery, oneProductQuery, postInfiniteQuery, postQuery, productInfiniteQuery, productQuery, queryClient } from '@/api/query'
+import { categoryTypeQuery, onePostQuery, oneProductQuery, postInfiniteQuery, postQuery, productInfiniteQuery, productQuery, queryClient, userDataQuery } from '@/api/query'
 import useAuthStore, { Status } from '@/store/authStore'
 import { redirect, type LoaderFunctionArgs } from 'react-router'
 
@@ -21,6 +21,7 @@ export const homeLoader = async () => {
     //* ensureQueryData -> fetch and store in cache. For future use, check in cache fist if cache hit return it or miss fetch it
     await queryClient.ensureQueryData(productQuery("?limit=8"))
     await queryClient.ensureQueryData(postQuery("?limit=3"))
+    await queryClient.ensureQueryData(userDataQuery())
 
     return null
 }
@@ -36,6 +37,7 @@ export const loginLoader = async () => {
         return redirect("/")
     } catch (error) {
         console.log(error)
+        return null
     }
 }
 
@@ -103,7 +105,7 @@ export const verifyOTPLoader = () => {
     const authStore = useAuthStore.getState()
 
     if (authStore.status !== Status.verify) {
-        return redirect("/forget-password")
+        return redirect("/forgot-password")
     }
 
     return null
@@ -113,7 +115,7 @@ export const resetPasswordLoader = () => {
     const authStore = useAuthStore.getState()
 
     if (authStore.status !== Status.reset) {
-        return redirect("/forget-password")
+        return redirect("/forgot-password")
     }
 
     return null

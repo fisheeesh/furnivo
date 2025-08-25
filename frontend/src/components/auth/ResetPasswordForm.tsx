@@ -33,7 +33,7 @@ export function ResetPasswordForm({
     function onSubmit(values: z.infer<typeof ConfirmPasswordSchema>) {
         submit(values, {
             method: "post",
-            action: "/forget-password/reset-password"
+            action: "/forgot-password/reset-password"
         })
     }
 

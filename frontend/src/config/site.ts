@@ -15,16 +15,19 @@ export const siteConfig = {
                 {
                     title: "Wooden",
                     href: "/products?types=1",
+                    value: "1",
                     description: "comfortable with Wooden furniture.",
                 },
                 {
                     title: "Bamboo",
                     href: "/products?types=2",
+                    value: "2",
                     description: "Build your own Bamboo furniture.",
                 },
                 {
                     title: "Metal",
                     href: "/products?types=3",
+                    value: "3",
                     description: "Buy our latest metal furniture.",
                 },
             ],

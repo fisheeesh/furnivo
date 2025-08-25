@@ -78,10 +78,10 @@ export default function AuthForm<T extends z.ZodType<any, any, any>>({
                                                             <span className="text-red-600"> *</span>
                                                         </FormLabel>
                                                         {formType === 'LOGIN' && field.name === 'password' && <Link
-                                                            to="/forget-password"
+                                                            to="/forgot-password"
                                                             className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                                                         >
-                                                            Forget password?
+                                                            Forgot password?
                                                         </Link>}
                                                     </div>
                                                     <FormControl>

@@ -1,11 +1,13 @@
-import { postQuery, productQuery } from '@/api/query'
+import { postQuery, productQuery, userDataQuery } from '@/api/query'
 import BlogCard from '@/components/blogs/BlogCard'
 import CarouselCard from '@/components/products/CarouselCard'
 import ProductCard from '@/components/products/ProductCard'
 import { Button } from '@/components/ui/button'
-import Couch from '@/data/images/couch.png'
+import Couch from '/couch.png'
+import useUserStore from '@/store/userStore'
 import type { Product } from '@/types'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 
 export default function Home() {
@@ -25,9 +27,23 @@ export default function Home() {
   //   refetch: postRefetch
   // } = useQuery(postQuery("?limit=3"))
 
+  const { setUser } = useUserStore()
+
   const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"))
   const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"))
+  const { data: userData } = useSuspenseQuery(userDataQuery())
 
+  useEffect(() => {
+    if (userData) {
+      setUser({
+        firstName: userData.user.firstName,
+        lastName: userData.user.lastName,
+        email: userData.user.email,
+        phone: userData.user.phone,
+        avatar: userData.user.image
+      })
+    }
+  }, [userData, setUser])
 
   const Title = ({ title, href, sideText }: { title: string; href: string; sideText: string }) => (
     <div className='flex md:items-center flex-col mt-28 mb-10 md:flex-row md:justify-between'>

@@ -1,6 +1,6 @@
 import AuthForm from '@/components/auth/AuthForm'
 import Logo from '@/components/Logo'
-import banner from '@/data/images/house.webp'
+import banner from '/house.webp'
 import useTitle from '@/hooks/useTitle'
 import { LogInSchema } from '@/lib/validator'
 
