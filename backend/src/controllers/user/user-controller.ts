@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { query, validationResult } from 'express-validator';
+import { body, query, validationResult } from 'express-validator';
 import { unlink } from "node:fs/promises";
 import path from "path";
+import bcrypt from 'bcrypt'
 
 import { errorCode } from "../../config/error-code";
-import { getUserById, updateUser } from "../../services/auth-service";
+import { getUserById, getUserDataById, updateUser } from "../../services/auth-service";
 import { checkUserIfNotExist, createHttpError } from "../../utils/check";
 import { authorize } from "../../utils/authorize";
 import { checkUploadFile } from "../../utils/helpers";
@@ -12,6 +13,25 @@ import ImageQueue from "../../jobs/queues/image-queue";
 
 interface CustomRequest extends Request {
     userId?: number;
+}
+
+const removeFiles = async (originalFile: string, optimizeFile?: string | null) => {
+    try {
+        const originalFilePath = path.join(
+            __dirname,
+            "../../../",
+            "/uploads/images",
+            originalFile
+        )
+        await unlink(originalFilePath)
+
+        if (optimizeFile) {
+            const optimizeFilePath = path.join(__dirname, "../../../", '/uploads/optimize', optimizeFile)
+            await unlink(optimizeFilePath)
+        }
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export const changeLanguage = [
@@ -160,3 +180,138 @@ export const getMyPhoto = async (req: CustomRequest, res: Response, next: NextFu
         res.status(404).send("File not found")
     })
 }
+
+export const getUserData = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    const userId = req.userId
+    const user = await getUserById(userId!)
+
+    checkUserIfNotExist(user)
+
+    const userData = await getUserDataById(user!.id)
+
+    res.status(200).json({
+        message: "Get user data successfully.",
+        user: userData,
+    })
+}
+
+export const updateProfile = [
+    body("email", "Invalid eamil format.").trim().notEmpty().escape(),
+    body("firstName", "First name is required.").trim().notEmpty().escape(),
+    body("lastName", "Last name is required.").trim().notEmpty().escape(),
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) {
+            if (req.file) {
+                await removeFiles(req.file.filename, null)
+            }
+            return next(createHttpError({
+                message: errors[0].msg,
+                status: 400,
+                code: errorCode.invalid
+            }))
+        }
+
+        const { email, firstName, lastName } = req.body
+        const userId = req.userId
+
+        const user = await getUserById(userId!)
+        if (!user) {
+            if (req.file) {
+                await removeFiles(req.file.filename, null)
+            }
+
+            return next(createHttpError({
+                message: 'User not found.',
+                status: 401,
+                code: errorCode.invalid
+            }))
+        }
+
+        const data: any = {
+            email,
+            firstName,
+            lastName
+        }
+
+        if (req.file) {
+            data.image = req.file.filename
+
+            const splitFileName = req.file.filename.split(".")[0]
+            await ImageQueue.add("optimize-image", {
+                filePath: req.file.path,
+                fileName: splitFileName + ".webp",
+                width: 200,
+                height: 200,
+                quality: 80
+            }, {
+                attempts: 3,
+                backoff: {
+                    type: "exponential",
+                    delay: 1000
+                }
+            })
+
+            await removeFiles(user.image!, user!.image?.split(".")[0] + ".webp")
+        }
+
+        const updatedUser = await updateUser(userId!, data)
+
+        res.status(200).json({
+            message: "Update profile successfully.",
+            user: updatedUser
+        })
+    }
+]
+
+export const changePassword = [
+    body("oldPassword", "Password must be at least 8 digits.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 8, max: 8 }),
+    body("newPassword", "Password must be at least 8 digits.")
+        .trim()
+        .notEmpty()
+        .matches(/^[\d]+$/)
+        .isLength({ min: 8, max: 8 }),
+    async (req: CustomRequest, res: Response, next: NextFunction) => {
+        const errors = validationResult(req).array({ onlyFirstError: true })
+        if (errors.length > 0) {
+            return next(createHttpError({
+                message: errors[0].msg,
+                status: 400,
+                code: errorCode.invalid
+            }))
+        }
+
+        const { oldPassword, newPassword } = req.body
+        const userId = req.userId
+
+        const user = await getUserById(userId!)
+        checkUserIfNotExist(user)
+
+        const isMatchOldPassword = await bcrypt.compare(oldPassword, user!.password)
+
+        if (!isMatchOldPassword) return next(createHttpError({
+            message: "To change your password, you have to enter your old password correctly.",
+            status: 400,
+            code: errorCode.invalid
+        }))
+
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(newPassword, salt)
+
+        const userData = {
+            password: hashPassword
+        }
+
+        await updateUser(user!.id, userData)
+
+        res.status(200).json({
+            message: "Your password is successfully changed.",
+            userId: user!.id
+        })
+    }
+]
+
