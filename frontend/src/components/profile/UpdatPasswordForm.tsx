@@ -47,7 +47,8 @@ export default function UpdatPasswordForm() {
         },
         onError: (error) => {
             toast.error("Error", {
-                description: error instanceof Error ? error.message : "Something went wrong. Please try again."
+                // @ts-expect-error ignore type check
+                description: error.response.data.message
             })
             form.reset()
         }

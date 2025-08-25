@@ -79,9 +79,10 @@ export default function UserDataForm({
                 description: "Profile updated successfully"
             })
         },
-        onError: () => {
+        onError: (error) => {
             toast.error("Error", {
-                description: "Something went wrong. Please try again."
+                // @ts-expect-error ignore type check
+                description: error.response.data.message
             })
         }
     })
