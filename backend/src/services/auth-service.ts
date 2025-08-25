@@ -1,54 +1,61 @@
+import { prisma } from "../config/prisma-client";
 import { PrismaClient } from "../generated/prisma";
 
-const prisma = new PrismaClient()
+const prismaClient = new PrismaClient()
 
 export const getUserByPhone = async (phone: string) => {
-    return await prisma.user.findUnique({
+    return await prismaClient.user.findUnique({
         where: { phone }
     })
 }
 
 export const getUserById = async (id: number) => {
-    return await prisma.user.findUnique({
+    return await prismaClient.user.findUnique({
         where: { id }
     })
 }
 
 export const createUser = async (userData: any) => {
-    return await prisma.user.create({
+    return await prismaClient.user.create({
         data: userData
     })
 }
 
 export const updateUser = async (id: number, userData: any) => {
-    return await prisma.user.update({
+    return await prismaClient.user.update({
         where: { id },
         data: userData
     })
 }
 
 export const updateUserByPhone = async (phone: string, userData: any) => {
-    return await prisma.user.update({
+    return await prismaClient.user.update({
         where: { phone },
         data: userData
     })
 }
 
 export const createOTP = async (otpData: any) => {
-    return await prisma.otp.create({
+    return await prismaClient.otp.create({
         data: otpData
     })
 }
 
 export const getOTPByPhone = async (phone: string) => {
-    return await prisma.otp.findUnique({
+    return await prismaClient.otp.findUnique({
         where: { phone }
     })
 }
 
 export const updateOTP = async (id: number, otpData: any) => {
-    return await prisma.otp.update({
+    return await prismaClient.otp.update({
         where: { id },
         data: otpData
+    })
+}
+
+export const getUserDataById = async (id: number) => {
+    return await prisma.user.findUnique({
+        where: { id }
     })
 }
