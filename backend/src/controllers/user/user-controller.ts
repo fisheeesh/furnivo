@@ -1,15 +1,15 @@
+import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from "express";
 import { body, query, validationResult } from 'express-validator';
 import { unlink } from "node:fs/promises";
 import path from "path";
-import bcrypt from 'bcrypt'
 
 import { errorCode } from "../../config/error-code";
-import { getUserById, getUserDataById, updateUser, updateUserById } from "../../services/auth-service";
-import { checkUserIfNotExist, createHttpError } from "../../utils/check";
-import { authorize } from "../../utils/authorize";
-import { checkUploadFile } from "../../utils/helpers";
 import ImageQueue from "../../jobs/queues/image-queue";
+import { getUserById, getUserDataById, updateUser, updateUserById } from "../../services/auth-service";
+import { authorize } from "../../utils/authorize";
+import { checkUserIfNotExist, createHttpError } from "../../utils/check";
+import { checkUploadFile } from "../../utils/helpers";
 
 interface CustomRequest extends Request {
     userId?: number;
@@ -232,7 +232,6 @@ export const updateProfile = [
             email,
             firstName,
             lastName,
-            image: user.image
         }
 
         if (req.file) {

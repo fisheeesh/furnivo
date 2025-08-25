@@ -25,6 +25,7 @@ import { toast } from "sonner"
 import z from "zod"
 import Spinner from "../Spinner"
 import useUserStore from "@/store/userStore"
+import { useRef } from "react"
 
 interface Props {
     phone: string,
@@ -37,6 +38,8 @@ export default function UserDataForm({
     phone, email, firstName, lastName
 }: Props) {
     const { setUser } = useUserStore()
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
     const form = useForm<z.infer<typeof UpadateUserDataSchema>>({
         resolver: zodResolver(UpadateUserDataSchema),
         defaultValues: {
@@ -55,10 +58,17 @@ export default function UserDataForm({
             formData.append("email", values.email)
             formData.append("firstName", values.firstName)
             formData.append("lastName", values.lastName)
-            if (formData.get("image") !== "") {
-                formData.append("avatar", values.image as File)
+
+            //* Check if a file was selected
+            if (fileInputRef.current?.files?.[0]) {
+                formData.append("avatar", fileInputRef.current.files[0])
             }
-            const res = await api.patch("/user/update-profile", formData)
+
+            const res = await api.patch("/user/update-profile", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
 
             if (res.status !== 200) {
                 throw new Error("Something went wrong. Please try again.")
@@ -82,12 +92,16 @@ export default function UserDataForm({
         onError: (error) => {
             toast.error("Error", {
                 // @ts-expect-error ignore type check
-                description: error.response.data.message
+                description: error.response?.data?.message || "An error occurred"
             })
         }
     })
 
-    const currentImage = form.watch("image")
+    //* Get the selected file name for display
+    const getFileName = () => {
+        const file = fileInputRef.current?.files?.[0]
+        return file ? file.name : "No file chosen"
+    }
 
     function onSubmit(values: z.infer<typeof UpadateUserDataSchema>) {
         mutate(values)
@@ -170,6 +184,7 @@ export default function UserDataForm({
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="lastName"
@@ -194,24 +209,27 @@ export default function UserDataForm({
                         <FormField
                             control={form.control}
                             name="image"
-                            render={({ field }) => (
+                            render={() => (
                                 <FormItem className="flex flex-col md:flex-row md:items-center gap-4">
                                     <FormLabel className="w-full md:w-1/3 text-sm font-medium">Avatar Image</FormLabel>
                                     <FormControl className="w-full md:w-1/3">
                                         <div className="w-full">
-                                            <label className="inline-block text-white font-medium px-4 py-2 rounded-md cursor-pointer transition bg-own">
+                                            <label className="inline-block text-white font-medium px-4 py-2 rounded-md cursor-pointer transition bg-own hover:bg-own-hover">
                                                 Choose File
                                                 <Input
+                                                    ref={fileInputRef}
                                                     disabled={isWorking}
                                                     accept="image/*"
                                                     type="file"
                                                     className="hidden"
-                                                    {...field}
+                                                    onChange={() => {
+                                                        //* Force re-render to update the file name display
+                                                        form.setValue('image', getFileName())
+                                                    }}
                                                 />
                                             </label>
                                             <span className="ml-3 text-sm">
-                                                {currentImage ? currentImage.split('\\')[2] : "No file Chosen"}
-                                                {/* No File Chosen */}
+                                                {getFileName()}
                                             </span>
                                         </div>
                                     </FormControl>
@@ -225,7 +243,12 @@ export default function UserDataForm({
                         <div className="flex justify-end gap-2">
                             <Button
                                 disabled={isWorking}
-                                onClick={() => form.reset()}
+                                onClick={() => {
+                                    form.reset()
+                                    if (fileInputRef.current) {
+                                        fileInputRef.current.value = ''
+                                    }
+                                }}
                                 type='button'
                                 className='cursor-pointer'
                                 variant='outline'
